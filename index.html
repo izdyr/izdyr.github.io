@@ -248,6 +248,10 @@ body.open .modal {
 .trash-icon:active {
     transform: scale(0.9);
 }
+.footer button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
 
 
 </style>
@@ -335,6 +339,7 @@ body.open .modal {
             });
             document.getElementById("cartTotal").innerText = total.toFixed(2);
             updateCartButtonCount();
+            updateCheckoutButtonState();
         }
 
         function updateCartButtonCount() {
@@ -366,6 +371,12 @@ body.open .modal {
         function checkout() {
             alert("Proceeding to checkout with total $" + document.getElementById("cartTotal").innerText);
         }
+        function updateCheckoutButtonState() {
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    const checkoutBtn = document.querySelector(".footer button");
+    if (!checkoutBtn) return;
+    checkoutBtn.disabled = totalQty === 0;
+}
 
         // initialize from API
         loadCartFromAPI();
