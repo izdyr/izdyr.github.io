@@ -1,16 +1,18 @@
-<div id="circle"></div>
+<div id="circle" title="Click to start voice recognition"></div>
 <div class="shadow"></div>
 <div id="output" style="color: white; text-align: center; margin-top: 2rem; font-size: 1.5rem;"></div>
 
 <style>
- body {
+  body {
     margin: 0;
     display: grid;
     place-content: center;
     height: 100vh;
     background: #111;
     font-family: sans-serif;
+    position: relative;
   }
+
   #circle {
     height: 10rem;
     width: 10rem;
@@ -20,6 +22,7 @@
     animation: rotate 10s infinite linear;
     box-shadow: 0 0px 20px 20px rgba(255, 255, 255, 0.6) inset;
     transition: filter 0.3s, transform 0.3s, background 0.3s;
+    cursor: pointer;
   }
 
   .shadow {
@@ -50,15 +53,13 @@
   let silenceTimer;
   let recognition;
 
-  // Speech Recognition setup
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  function startRecognition() {
-    if (!SpeechRecognition) {
-      alert("Your browser doesn't support Speech Recognition.");
-      return;
-    }
+  if (!SpeechRecognition) {
+    alert("Your browser does not support Speech Recognition.");
+  }
 
+  function startRecognition() {
     recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -75,73 +76,52 @@
     };
 
     recognition.onend = () => {
-      stopListening();
+      stopRecognition();
     };
 
     recognition.onerror = (event) => {
       console.error('Speech recognition error:', event.error);
-      stopListening();
+      stopRecognition();
     };
 
     recognition.start();
     isListening = true;
-    circle.style.filter = 'brightness(1.7)';
-    circle.style.transform = 'scale(1.2)';
-    circle.style.background = 'linear-gradient(125deg, #458f8d 1%, #448d89 100%)';
+    updateVisualListening(true);
     resetSilenceTimer();
   }
 
-  function stopListening() {
+  function stopRecognition() {
     if (recognition) recognition.stop();
     isListening = false;
-    output.innerText = '';
-    circle.style.filter = 'brightness(1)';
-    circle.style.transform = 'scale(1)';
-    circle.style.background = 'linear-gradient(125deg, #458f8d 1%, #448d89 100%)';
+    updateVisualListening(false);
     clearTimeout(silenceTimer);
   }
 
   function resetSilenceTimer() {
     clearTimeout(silenceTimer);
     silenceTimer = setTimeout(() => {
-      stopListening();
-    }, 4000); // 2 seconds of silence
+      stopRecognition();
+    }, 4000); // 4 seconds of silence
   }
 
-  // Wake word detection
-  async function setupWakeWord() {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const context = new AudioContext();
-    const source = context.createMediaStreamSource(stream);
-    const analyser = context.createAnalyser();
-    analyser.fftSize = 2048;
-    const dataArray = new Float32Array(analyser.fftSize);
-    source.connect(analyser);
-
-    const wakeWord = "hello";
-
-    const keywordRecognizer = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    keywordRecognizer.continuous = true;
-    keywordRecognizer.interimResults = true;
-    keywordRecognizer.lang = 'en-US';
-
-    keywordRecognizer.onresult = (event) => {
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript.toLowerCase().trim();
-        if (transcript.includes(wakeWord) && !isListening) {
-          keywordRecognizer.stop(); // pause keyword detection while listening
-          startRecognition();
-          setTimeout(() => keywordRecognizer.start(), 1000); // resume keyword detection after 3s
-        }
-      }
-    };
-
-    keywordRecognizer.onerror = (e) => {
-      console.warn('Wake-word recognizer error:', e.error);
-    };
-
-    keywordRecognizer.start();
+  function updateVisualListening(active) {
+    if (active) {
+      circle.style.filter = 'brightness(1.7)';
+      circle.style.transform = 'scale(1.2)';
+      circle.style.background = 'linear-gradient(125deg, #00ff88, #0066ff)';
+    } else {
+      circle.style.filter = 'brightness(1)';
+      circle.style.transform = 'scale(1)';
+      circle.style.background = 'linear-gradient(125deg, #458f8d 1%, #448d89 100%)';
+    }
   }
 
-  setupWakeWord();
+ 
+  circle.addEventListener('click', () => {
+    if (!isListening) {
+      startRecognition();
+    } else {
+      stopRecognition();
+    }
+  });
 </script>
