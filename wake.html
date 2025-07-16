@@ -3,7 +3,7 @@
 <div id="output" style="color: white; text-align: center; margin-top: 2rem; font-size: 1.5rem;"></div>
 
 <style>
-  body {
+ body {
     margin: 0;
     display: grid;
     place-content: center;
@@ -11,16 +11,14 @@
     background: #111;
     font-family: sans-serif;
   }
-
   #circle {
     height: 10rem;
     width: 10rem;
     border-radius: 50%;
-    border: 2px solid white;
     background: radial-gradient(18% 28% at 24% 50%, #ceffff 7%, #073aff00 100%),
-                linear-gradient(125deg, #4eb5ff 1%, #4c00fc 100%);
+                linear-gradient(125deg, #458f8d 1%, #448d89 100%);
     animation: rotate 10s infinite linear;
-    box-shadow: 0 0px 20px 20px rgba(255, 255, 255, 0.6) inset, 0 0 20px 2px black;
+    box-shadow: 0 0px 20px 20px rgba(255, 255, 255, 0.6) inset;
     transition: filter 0.3s, transform 0.3s, background 0.3s;
   }
 
@@ -89,7 +87,7 @@
     isListening = true;
     circle.style.filter = 'brightness(1.7)';
     circle.style.transform = 'scale(1.2)';
-    circle.style.background = 'linear-gradient(125deg, #00ff88, #0044ff)';
+    circle.style.background = 'linear-gradient(125deg, #458f8d 1%, #448d89 100%)';
     resetSilenceTimer();
   }
 
@@ -99,7 +97,7 @@
     output.innerText = '';
     circle.style.filter = 'brightness(1)';
     circle.style.transform = 'scale(1)';
-    circle.style.background = 'linear-gradient(125deg, #4eb5ff 1%, #4c00fc 100%)';
+    circle.style.background = 'linear-gradient(125deg, #458f8d 1%, #448d89 100%)';
     clearTimeout(silenceTimer);
   }
 
@@ -107,7 +105,7 @@
     clearTimeout(silenceTimer);
     silenceTimer = setTimeout(() => {
       stopListening();
-    }, 2000); // 2 seconds of silence
+    }, 4000); // 2 seconds of silence
   }
 
   // Wake word detection
@@ -133,7 +131,7 @@
         if (transcript.includes(wakeWord) && !isListening) {
           keywordRecognizer.stop(); // pause keyword detection while listening
           startRecognition();
-          setTimeout(() => keywordRecognizer.start(), 3000); // resume keyword detection after 3s
+          setTimeout(() => keywordRecognizer.start(), 1000); // resume keyword detection after 3s
         }
       }
     };
