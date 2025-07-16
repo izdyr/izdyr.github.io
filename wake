@@ -1,0 +1,149 @@
+<div id="circle"></div>
+<div class="shadow"></div>
+<div id="output" style="color: white; text-align: center; margin-top: 2rem; font-size: 1.5rem;"></div>
+
+<style>
+  body {
+    margin: 0;
+    display: grid;
+    place-content: center;
+    height: 100vh;
+    background: #111;
+    font-family: sans-serif;
+  }
+
+  #circle {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: radial-gradient(18% 28% at 24% 50%, #ceffff 7%, #073aff00 100%),
+                linear-gradient(125deg, #4eb5ff 1%, #4c00fc 100%);
+    animation: rotate 10s infinite linear;
+    box-shadow: 0 0px 20px 20px rgba(255, 255, 255, 0.6) inset, 0 0 20px 2px black;
+    transition: filter 0.3s, transform 0.3s, background 0.3s;
+  }
+
+  .shadow {
+    width: 11rem;
+    height: 11rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    z-index: -1;
+    border: none;
+    opacity: 0.7;
+    filter: blur(30px);
+  }
+
+  @keyframes rotate {
+    to {
+      transform: rotatez(360deg);
+    }
+  }
+</style>
+
+<script>
+  const circle = document.getElementById('circle');
+  const output = document.getElementById('output');
+
+  let isListening = false;
+  let silenceTimer;
+  let recognition;
+
+  // Speech Recognition setup
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  function startRecognition() {
+    if (!SpeechRecognition) {
+      alert("Your browser doesn't support Speech Recognition.");
+      return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = (event) => {
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        transcript += event.results[i][0].transcript;
+      }
+
+      output.innerText = transcript;
+      resetSilenceTimer();
+    };
+
+    recognition.onend = () => {
+      stopListening();
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      stopListening();
+    };
+
+    recognition.start();
+    isListening = true;
+    circle.style.filter = 'brightness(1.7)';
+    circle.style.transform = 'scale(1.2)';
+    circle.style.background = 'linear-gradient(125deg, #00ff88, #0044ff)';
+    resetSilenceTimer();
+  }
+
+  function stopListening() {
+    if (recognition) recognition.stop();
+    isListening = false;
+    output.innerText = '';
+    circle.style.filter = 'brightness(1)';
+    circle.style.transform = 'scale(1)';
+    circle.style.background = 'linear-gradient(125deg, #4eb5ff 1%, #4c00fc 100%)';
+    clearTimeout(silenceTimer);
+  }
+
+  function resetSilenceTimer() {
+    clearTimeout(silenceTimer);
+    silenceTimer = setTimeout(() => {
+      stopListening();
+    }, 2000); // 2 seconds of silence
+  }
+
+  // Wake word detection
+  async function setupWakeWord() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const context = new AudioContext();
+    const source = context.createMediaStreamSource(stream);
+    const analyser = context.createAnalyser();
+    analyser.fftSize = 2048;
+    const dataArray = new Float32Array(analyser.fftSize);
+    source.connect(analyser);
+
+    const wakeWord = "hello";
+
+    const keywordRecognizer = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    keywordRecognizer.continuous = true;
+    keywordRecognizer.interimResults = true;
+    keywordRecognizer.lang = 'en-US';
+
+    keywordRecognizer.onresult = (event) => {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript.toLowerCase().trim();
+        if (transcript.includes(wakeWord) && !isListening) {
+          keywordRecognizer.stop(); // pause keyword detection while listening
+          startRecognition();
+          setTimeout(() => keywordRecognizer.start(), 3000); // resume keyword detection after 3s
+        }
+      }
+    };
+
+    keywordRecognizer.onerror = (e) => {
+      console.warn('Wake-word recognizer error:', e.error);
+    };
+
+    keywordRecognizer.start();
+  }
+
+  setupWakeWord();
+</script>
