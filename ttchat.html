@@ -31,20 +31,12 @@
         </div>
 
         <div class="input-container">
-            <div class="input-wrapper">
-                <input type="text" id="user-input" placeholder="Let's assist.">
-                <button id="send-button" title="Send">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="icon">
-                        <path d="M8.99992 16V6.41407L5.70696 9.70704C5.31643 10.0976 4.68342 10.0976 4.29289 9.70704C3.90237 9.31652 3.90237 8.6835 4.29289 8.29298L9.29289 3.29298L9.36907 3.22462C9.76184 2.90427 10.3408 2.92686 10.707 3.29298L15.707 8.29298L15.7753 8.36915C16.0957 8.76192 16.0731 9.34092 15.707 9.70704C15.3408 10.0732 14.7618 10.0958 14.3691 9.7754L14.2929 9.70704L10.9999 6.41407V16C10.9999 16.5523 10.5522 17 9.99992 17C9.44764 17 8.99992 16.5523 8.99992 16Z"></path>
-                    </svg>
-                </button>
-            </div>
-        
-            <div id="circle" title="Click to start voice recognition"></div>
-            <div class="shadow"></div>
-            <div id="output" style="color: white; text-align: center; margin-top: 2rem; font-size: 1.5rem;"></div>
+            <input type="text" id="user-input" placeholder="Let's assist."></input>
+            <button id="send-button">
+                <i class="fa-solid fa-paper-plane" id="button-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="icon"><path d="M8.99992 16V6.41407L5.70696 9.70704C5.31643 10.0976 4.68342 10.0976 4.29289 9.70704C3.90237 9.31652 3.90237 8.6835 4.29289 8.29298L9.29289 3.29298L9.36907 3.22462C9.76184 2.90427 10.3408 2.92686 10.707 3.29298L15.707 8.29298L15.7753 8.36915C16.0957 8.76192 16.0731 9.34092 15.707 9.70704C15.3408 10.0732 14.7618 10.0958 14.3691 9.7754L14.2929 9.70704L10.9999 6.41407V16C10.9999 16.5523 10.5522 17 9.99992 17C9.44764 17 8.99992 16.5523 8.99992 16Z"></path></svg></i>
+            </button>
+
         </div>
-        
 
     </div>
 
@@ -229,7 +221,7 @@ body{
     position: sticky;
     bottom: 0;
 
-    background: rgba(52, 53, 65, 0.34);
+    background: rgba(255, 255, 255, 0.34);
 border-radius: 16px;
 
 backdrop-filter: blur(3.8px);
@@ -237,8 +229,12 @@ backdrop-filter: blur(3.8px);
 }
 
 #user-input{
-    background-color: #40414f;
-    color: #fff;
+    background: #e5e5ea7c;
+border-radius: 16px;
+
+backdrop-filter: blur(3.8px);
+-webkit-backdrop-filter: blur(3.8px);
+    color: rgb(0, 0, 0);
     border: none;
     outline: none;
     padding: 8px;
@@ -254,8 +250,12 @@ backdrop-filter: blur(3.8px);
   word-wrap: break-word;
 }
 
+#user-input:hover{
+    background-color: #d8d8dd7c;
+}
+
 #user-input::placeholder{
-    color: #8e8e8e;
+    color: #333333;
     font-weight: 400;
 }
 
@@ -335,91 +335,6 @@ backdrop-filter: blur(3.8px);
 
 #bot-icon i{
     order: 0;
-}
-.chat-box .icon {
-    display: flex;
-    align-items: center;
-}
-#circle {
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    background: radial-gradient(18% 28% at 24% 50%, #4ebdbd 7%, #008079 100%),
-                linear-gradient(125deg, #458f8d 1%, #448d89 100%);
-    animation: rotate 10s infinite linear;
-    box-shadow: 0 0px 20px 20px rgba(255, 255, 255, 0.6) inset;
-    transition: filter 0.3s, transform 0.3s, background 0.3s;
-    cursor: pointer;
-  }
-
-  .shadow {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    translate: -50% -50%;
-    z-index: -1;
-    border: none;
-    opacity: 0.7;
-    filter: blur(30px);
-  }
-
-  @keyframes rotate {
-    to {
-      transform: rotatez(360deg);
-    }
-  }
-
-
-  .input-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-#user-input {
-    width: 100%;
-    background-color: #40414f;
-    color: #fff;
-    border: none;
-    outline: none;
-    padding: 0.5rem .875rem;
-    padding-right: 3rem; /* Make space for button */
-    font-size: 14px;
-    font-weight: 400;
-    border-radius: 1.15rem;
-    line-height: 1.25;
-    box-sizing: border-box;
-}
-
-#user-input::placeholder {
-    color: #8e8e8e;
-    font-weight: 400;
-}
-
-#send-button {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    transition: color 0.3s ease;
-}
-
-#send-button:hover {
-    color: #69afae;
-}
-
-#send-button svg {
-    width: 20px;
-    height: 20px;
 }
 
 </style>
