@@ -1,0 +1,674 @@
+<!-- You can see this app in izadyarjalalipour.com/chat -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="chat.jpg">
+    <title>ChatGPT</title>
+</head>
+
+<body>
+
+    <div class="container">
+        
+        <div class="header">
+            <h3>Izadyar Jalalipour</h3>
+        </div>
+
+        <div class="info">
+            <a target="_blank">
+                Let's use ChatGPT
+            </a>
+        </div>
+
+        <div class="chat-container">
+            <div id="chat-log"></div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Let's assist.">
+            <button id="send-button">
+                <i class="fa-solid fa-paper-plane" id="button-icon"></i>
+            </button>
+            <button onclick="toggleModal()" id="cartButton">
+        Cart
+        <span class="badge" id="cartBadge">0</span>
+    </button>
+
+
+        
+
+    </div>
+    
+        </div>
+    <div class="modal-background" onclick="toggleModal()"></div>
+
+    <div class="modal">
+        <h2>Your Cart</h2>
+        <div class="cart-items" id="cartItems"></div>
+
+        <div class="footer">
+            <div class="total">
+                Total: $<span id="cartTotal">0.00</span>
+            </div>
+            <button onclick="checkout()">Checkout</button>
+        </div>
+    </div>
+
+</body>
+    <script>
+      // In this code i put my java script code. so its can put in java script file.
+        const chatLog = document.getElementById('chat-log'),
+            userInput = document.getElementById('user-input'),
+            sendButton = document.getElementById('send-button'),
+            buttonIcon = document.getElementById('button-icon'),
+            info = document.querySelector('.info');
+        
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        function sendMessage() {
+            const message = userInput.value.trim();
+            // if message = empty do nothing
+            if (message === '') {
+                return;
+            }
+            // if message = developer - show our message
+            else if (message === 'developer') {
+                // clear input value
+                userInput.value = '';
+                // append message as user - we will code it's function
+                appendMessage('user', message);
+                // sets a fake timeout that showing loading on send button
+                setTimeout(() => {
+                    // send our message as bot(sender : bot)
+                    appendMessage('bot', 'Someone called Izadyar made me');
+                    // change button icon to default
+                    buttonIcon.classList.add('fa-solid', 'fa-paper-plane');
+                    buttonIcon.classList.remove('fas', 'fa-spinner', 'fa-pulse');
+                }, 2000);
+                return;
+            }
+        
+            // else if none of above
+            // appends users message to screen
+            appendMessage('user', message);
+            userInput.value = '';
+        
+            const url = 'https://chatgpt53.p.rapidapi.com/';
+const options = {
+	method: 'POST',
+	headers: {
+		'content-type': 'application/json',
+		'X-RapidAPI-Key': 'd2feda93abmsh4a520f0daf16bb0p1d3da7jsnbf0c38f6c722',
+		'X-RapidAPI-Host': 'chatgpt53.p.rapidapi.com'
+	},
+                body: `{"messages":[{"role":"user","content":"${message}"}]}`
+                // if you want use official api you need have this body
+                // `{"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"${message}"}]}`
+            };
+            // official api : 'https://openai80.p.rapidapi.com/chat/completions';
+            fetch('https://chatgpt53.p.rapidapi.com/', options).then((response) => response.json()).then((response) => {
+                appendMessage('bot', response.choices[0].message.content);
+        
+                buttonIcon.classList.add('fa-solid', 'fa-paper-plane');
+                buttonIcon.classList.remove('fas', 'fa-spinner', 'fa-pulse');
+            }).catch((err) => {
+                if (err.name === 'TypeError') {
+                    appendMessage('bot', 'Izadyar says unfortunately, your region/country doesnt let me help you.');
+                    buttonIcon.classList.add('fa-solid', 'fa-paper-plane');
+                    buttonIcon.classList.remove('fas', 'fa-spinner', 'fa-pulse');
+                }
+            });
+        }
+        
+        function appendMessage(sender, message) {
+            info.style.display = "none";
+            // change send button icon to loading using fontawesome
+            buttonIcon.classList.remove('fa-solid', 'fa-paper-plane');
+            buttonIcon.classList.add('fas', 'fa-spinner', 'fa-pulse');
+        
+            const messageElement = document.createElement('div');
+            const iconElement = document.createElement('div');
+            const chatElement = document.createElement('div');
+            const icon = document.createElement('i');
+        
+            chatElement.classList.add("chat-box", sender === 'user' ? 'user-message' : 'bot-message');
+            iconElement.classList.add("icon");
+            messageElement.classList.add(sender);
+            messageElement.innerText = message;
+        
+            // add icons depending on who send message bot or user
+            if (sender === 'user') {
+                icon.classList.add('fa-regular', 'fa-user');
+                iconElement.setAttribute('id', 'user-icon');
+            } else {
+                icon.classList.add('fa-solid', 'fa-robot');
+                iconElement.setAttribute('id', 'bot-icon');
+            }
+        
+            iconElement.appendChild(icon);
+            chatElement.appendChild(iconElement);
+            chatElement.appendChild(messageElement);
+            chatLog.appendChild(chatElement);
+            chatLog.scrollTo = chatLog.scrollHeight;
+        
+        }
+        let cart = []; 
+
+        async function loadCartFromAPI() {
+            // Simulate fetch
+            cart = await new Promise(res => setTimeout(() => res([
+                { name: "Med A", qty: 1, price: 5 },
+                { name: "Med B", qty: 2, price: 7 },
+                { name: "Med C", qty: 1, price: 10 },
+                { name: "Med D", qty: 1, price: 10 },
+                { name: "Med E", qty: 1, price: 10 },
+                { name: "Med F", qty: 1, price: 10 }
+            ]), 500));
+            updateCartDisplay();
+        }
+
+        const toggleModal = () => {
+            document.body.classList.toggle("open");
+            if(document.body.classList.contains("open")) updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const cartItemsDiv = document.getElementById("cartItems");
+            cartItemsDiv.innerHTML = "";
+            let total = 0;
+            cart.forEach((item, index) => {
+                const itemTotal = item.qty * item.price;
+                total += itemTotal;
+                const div = document.createElement("div");
+                div.className = "cart-item";
+                div.innerHTML = `
+                    <div class="top">
+                        <div>${item.name}</div>
+                        <div>$${itemTotal}</div>
+                    </div>
+                    <div class="bottom">
+                        <div class="quantity">
+                            <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                            <div>${item.qty}</div>
+                            <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                        </div>
+                        <div class="remove" onclick="removeItem(${index})">
+                            <div class="trash-icon">
+                                <svg class="unfilled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <path d="M 28 7 C 25.243 7 23 9.243 23 12 L 23 15 L 13 15 C 11.896 15 11 15.896 11 17 C 11 18.104 11.896 19 13 19 L 15.109375 19 L 16.792969 49.332031 C 16.970969 52.510031 19.600203 55 22.783203 55 L 41.216797 55 C 44.398797 55 47.029031 52.510031 47.207031 49.332031 L 48.890625 19 L 51 19 C 52.104 19 53 18.104 53 17 C 53 15.896 52.104 15 51 15 L 41 15 L 41 12 C 41 9.243 38.757 7 36 7 L 28 7 z M 28 11 L 36 11 C 36.552 11 37 11.449 37 12 L 37 15 L 27 15 L 27 12 C 27 11.449 27.448 11 28 11 z M 19.113281 19 L 44.886719 19 L 43.212891 49.109375 C 43.153891 50.169375 42.277797 51 41.216797 51 L 22.783203 51 C 21.723203 51 20.846109 50.170328 20.787109 49.111328 L 19.113281 19 z M 32 23.25 C 31.033 23.25 30.25 24.034 30.25 25 L 30.25 45 C 30.25 45.966 31.033 46.75 32 46.75 C 32.967 46.75 33.75 45.966 33.75 45 L 33.75 25 C 33.75 24.034 32.967 23.25 32 23.25 z M 24.642578 23.251953 C 23.677578 23.285953 22.922078 24.094547 22.955078 25.060547 L 23.652344 45.146484 C 23.685344 46.091484 24.462391 46.835938 25.400391 46.835938 C 25.421391 46.835938 25.441891 46.835938 25.462891 46.835938 C 26.427891 46.801938 27.183391 45.991391 27.150391 45.025391 L 26.453125 24.939453 C 26.419125 23.974453 25.606578 23.228953 24.642578 23.251953 z M 39.355469 23.251953 C 38.388469 23.224953 37.580875 23.974453 37.546875 24.939453 L 36.849609 45.025391 C 36.815609 45.991391 37.571109 46.801938 38.537109 46.835938 C 38.558109 46.836938 38.578609 46.835938 38.599609 46.835938 C 39.537609 46.835938 40.314656 46.091484 40.347656 45.146484 L 41.044922 25.060547 C 41.078922 24.094547 40.321469 23.285953 39.355469 23.251953 z"></path>
+                                </svg>
+                                <svg class="filled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                    <path d="M 28 7 C 25.243 7 23 9.243 23 12 L 23 15 L 13 15 C 11.896 15 11 15.896 11 17 C 11 18.104 11.896 19 13 19 L 15.109375 19 L 16.792969 49.332031 C 16.970969 52.510031 19.600203 55 22.783203 55 L 41.216797 55 C 44.398797 55 47.029031 52.510031 47.207031 49.332031 L 48.890625 19 L 51 19 C 52.104 19 53 18.104 53 17 C 53 15.896 52.104 15 51 15 L 41 15 L 41 12 C 41 9.243 38.757 7 36 7 L 28 7 z M 28 11 L 36 11 C 36.552 11 37 11.449 37 12 L 37 15 L 27 15 L 27 12 C 27 11.449 27.448 11 28 11 z M 32 23.25 C 32.967 23.25 33.75 24.034 33.75 25 L 33.75 45 C 33.75 45.966 32.967 46.75 32 46.75 C 31.033 46.75 30.25 45.966 30.25 45 L 30.25 25 C 30.25 24.034 31.033 23.25 32 23.25 z M 40.007812 23.25 C 40.972813 23.284 41.728313 24.094547 41.695312 25.060547 L 40.998047 45.146484 C 40.965047 46.092484 40.190953 46.836937 39.251953 46.835938 C 39.230953 46.835938 39.210453 46.833984 39.189453 46.833984 C 38.224453 46.799984 37.468953 45.989438 37.501953 45.023438 L 38.197266 24.9375 C 38.231266 23.9725 39.039813 23.223 40.007812 23.25 z M 23.990234 23.251953 C 24.954234 23.228953 25.766781 23.973453 25.800781 24.939453 L 26.498047 45.025391 C 26.532047 45.991391 25.776547 46.801938 24.810547 46.835938 C 24.790547 46.835937 24.769047 46.835938 24.748047 46.835938 C 23.810047 46.835938 23.033 46.091484 23 45.146484 L 22.302734 25.060547 C 22.268734 24.094547 23.024234 23.285953 23.990234 23.251953 z"></path>
+                                </svg>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+                cartItemsDiv.appendChild(div);
+            });
+            document.getElementById("cartTotal").innerText = total.toFixed(2);
+            updateCartButtonCount();
+            updateCheckoutButtonState();
+        }
+
+        function updateCartButtonCount() {
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    const badge = document.getElementById("cartBadge");
+    badge.innerText = totalQty;
+    if (totalQty > 0) {
+        badge.classList.add("show");
+    } else {
+        badge.classList.remove("show");
+    }
+}
+
+
+        function changeQty(index, delta) {
+            if (cart[index].qty + delta > 0) {
+                cart[index].qty += delta;
+            } else {
+                cart.splice(index, 1);
+            }
+            updateCartDisplay();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCartDisplay();
+        }
+
+        function checkout() {
+            alert("Proceeding to checkout with total $" + document.getElementById("cartTotal").innerText);
+        }
+        function updateCheckoutButtonState() {
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    const checkoutBtn = document.querySelector(".footer button");
+    if (!checkoutBtn) return;
+    checkoutBtn.disabled = totalQty === 0;
+}
+
+        // initialize from API
+        loadCartFromAPI();
+    </script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: 'Ubuntu', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8f8f8;
+}
+
+.container {
+    width: 1000px;
+
+    height: 80vh;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.header {
+    padding: 16px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+    color: #000;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.chat-container::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
+.chat-box {
+    background: rgba(255, 255, 255, 0);
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 12px;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    transition: transform 0.2s;
+}
+.chat-box:hover {
+-moz-transform: translate(0px, -1px);
+-webkit-transform: translate(0px, -1px);
+-o-transform: translate(0px, -1px);
+-ms-transform: translate(0px, -1px);
+transform: translate(0px, -1px);
+}
+
+.chat-box i {
+    flex-shrink: 0;
+    font-size: 18px;
+    color: #002fff;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    padding: 8px;
+}
+
+.user {
+    margin-left: auto;
+    background: linear-gradient(135deg, #559aa2, #3c7471);
+    color: #ffffff;
+    border-radius: 1rem 1rem 0.2rem 1rem;
+    padding: 12px 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: right;
+    transition: all 0.2s ease;
+}
+
+.bot {
+    margin-right: auto;
+    background: linear-gradient(135deg, #f0f0f5, #dcdce0);
+    color: #1e1e1e;
+    border-radius: 1rem 1rem 1rem 0.2rem;
+    padding: 12px 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+
+.input-container {
+    display: flex;
+    gap: 10px;
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(18px);
+}
+
+#user-input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    outline: none;
+    font-size: 14px;
+    background: rgba(255,255,255,0.8);
+    color: #000;
+}
+#user-input::placeholder {
+    color: #555;
+}
+
+#send-button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #458f8d;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+#send-button:hover {
+    background: #69afae;
+}
+#send-button:active {
+    background: #559aa2;
+}
+
+.info {
+    text-align: center;
+    padding: 20px;
+    color: #000;
+    font-size: 18px;
+}
+button {
+    cursor: pointer;
+    background: #458f8d;
+    color: #f9f9f9;
+    border: 0;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 16px;
+    position: relative;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+button:hover {
+    background: #69afae;
+}
+button:active {
+    background: #559aa2;
+}
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: rgba(255,255,255,0.3);
+    color: #345e63;
+    border-radius: 50%;
+    padding: 4px;
+    font-size: 12px;
+    min-width: 24px;
+    min-height: 10px;
+    text-align: center;
+    font-weight: bolder;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.badge.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* modal backdrop */
+.modal-background {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+body.open .modal-background {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* modal container */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.2);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #333;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80%;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+body.open .modal {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal h2 {
+    margin: 20px;
+    font-weight: 500;
+    font-size: 22px;
+    color: #000;
+}
+
+/* cart items container with soft scroll */
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px;
+}
+.cart-items::-webkit-scrollbar {
+    width: 6px;
+}
+.cart-items::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
+/* individual cart item with glass card style */
+.cart-item {
+    background: rgba(255,255,255,0.35);
+    border-radius: 16px;
+    padding: 14px;
+    margin: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255,255,255,0.4);
+    transition: transform 0.2s;
+}
+.cart-item:hover {
+    transform: scale(1.015);
+}
+.cart-item .top {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: 16px;
+    color: #000;
+}
+.cart-item .bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.quantity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.qty-btn {
+    background: rgba(255,255,255,0.8);
+    color: #000;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    border: 1px solid rgba(0,0,0,0.1);
+    line-height: 30px;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.qty-btn:hover {
+    background: rgba(255,255,255,1);
+}
+.remove {
+    cursor: pointer;
+    font-size: 22px;
+    color: #000;
+    transition: color 0.2s;
+}
+.remove:hover {
+    color: red;
+}
+
+/* footer with total + checkout */
+.footer {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+.footer button {
+    background: rgba(0,47,255,0.9);
+    color: #fff;
+    border-radius: 12px;
+    padding: 8px 18px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+
+}
+.footer button:hover {
+    background: rgba(0, 47, 255, 1);
+}
+.footer button:active{
+    background: rgb(64, 99, 255);
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+.badge.pulse {
+    animation: pulse 0.4s ease;
+}
+.trash-icon {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+.trash-icon svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.3s ease;
+}
+.trash-icon .filled {
+    opacity: 0;
+}
+.trash-icon .unfilled {
+    opacity: 1;
+}
+
+/* on hover crossfade */
+.trash-icon:hover .filled {
+    opacity: 1;
+}
+.trash-icon:hover .unfilled {
+    opacity: 0;
+}
+
+/* on click shrink effect */
+.trash-icon:active {
+    transform: scale(0.9);
+}
+
+.chat-box.user-message {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.chat-box.bot-message {
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.user-message .user {
+    background: #00e1ff;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.bot-message .bot {
+    background: #eeeeee;
+    align-self: flex-start;
+    text-align: left;
+}
+
+</style>
+</html>
