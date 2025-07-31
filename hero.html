@@ -352,15 +352,6 @@ body.open .modal {
     transform: scale(0.9);
 }
 
-
-#cameraModal,
-#cameraBackdrop {
-  z-index: 1001;
-}
-.modal-background#cameraBackdrop {
-  z-index: 1000;
-}
-
   </style>
 </head>
 <body>
@@ -374,10 +365,7 @@ body.open .modal {
 
     <div class="input-container">
       <input type="text" id="inputBox" placeholder="Type your message..." />
-      <button onclick="toggleCameraModal()" id="cameraButton">
-        <i class="fa-solid fa-camera"></i>Photo
-      </button>
-      
+      <button id="captureBtn"><i class="fa-solid fa-camera"></i>Photo</button>
       
       <button onclick="toggleModal()" id="cartButton">
         Shopping Cart
@@ -385,7 +373,9 @@ body.open .modal {
     </button>
     </div>
 
-
+    <div class="camera-container">
+      <video id="video" autoplay></video>
+    </div>
   </div>
 
 
@@ -404,32 +394,14 @@ body.open .modal {
     </div>
 </div>
 
-<!-- Camera Modal -->
-<div class="modal-background" onclick="toggleCameraModal()" id="cameraBackdrop"></div>
-
-<div class="modal" id="cameraModal">
-  <h2>Take a Photo</h2>
-  <div class="cart-items">
-    <div class="camera-container">
-      <video id="video" autoplay playsinline style="width: 100%; border-radius: 16px; border: 2px solid #333; background: black;"></video>
-    </div>
-  </div>
-  <div class="footer">
-    <div>Ready to capture?</div>
-    <button onclick="capturePhoto()">Capture</button>
-  </div>
-</div>
-
-<canvas id="canvas" style="display:none;"></canvas>
-
-
 
   <canvas id="canvas"></canvas>
 
   <script>
     const chatbox = document.getElementById('chatbox');
     const inputBox = document.getElementById('inputBox');
-
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
     const captureBtn = document.getElementById('captureBtn');
     const cartBadge = document.getElementById("cartBadge");
 
@@ -615,66 +587,6 @@ function updateCheckoutButtonState() {
 }
 
 loadCartFromAPI();
-
-
-
-const canvas = document.getElementById('canvas');
-const video = document.getElementById('video');
-let cameraStream = null;
-
-function toggleCameraModal() {
-  const modal = document.getElementById("cameraModal");
-  const backdrop = document.getElementById("cameraBackdrop");
-  const isOpen = modal.classList.contains("open");
-
-  if (isOpen) {
-    modal.classList.remove("open");
-    backdrop.classList.remove("open");
-    if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
-  } else {
-    modal.classList.add("open");
-    backdrop.classList.add("open");
-    setupCamera();
-  }
-}
-
-async function setupCamera() {
-  try {
-    cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
-    video.srcObject = cameraStream;
-  } catch {
-    alert("❌ Cannot access camera.");
-  }
-}
-
-function capturePhoto() {
-  const context = canvas.getContext("2d");
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  context.drawImage(video, 0, 0, canvas.width, canvas.height);
-  canvas.toBlob(blob => {
-    if (blob) {
-      appendMessage(URL.createObjectURL(blob), 'user', true);
-      uploadPhoto(blob);
-    }
-  }, 'image/jpeg');
-  toggleCameraModal();
-}
-
-async function uploadPhoto(blob) {
-  const formData = new FormData();
-  formData.append('file', blob, 'photo.jpg');
-  try {
-    const response = await fetch('http://127.0.0.1:8000/upload-photo', {
-      method: 'POST',
-      body: formData,
-    });
-    await response.json();
-    appendMessage("✅ Photo received", 'bot');
-  } catch {
-    appendMessage("❌ Upload failed", 'bot');
-  }
-}
 
   </script>
 </body>
