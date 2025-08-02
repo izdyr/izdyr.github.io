@@ -1,0 +1,325 @@
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>SmartLink - Your Meds</title>
+
+    </head>
+    <body>
+<!-- کانتینر کلی -->
+<div class="container">
+  <div class="header">
+    <h3>Izadyar Jalalipour</h3>
+  </div>
+
+  <div class="info">
+    <a target="_blank">
+      Let's use ChatGPT
+    </a>
+  </div>
+
+  <div class="chat-container">
+    <div id="chat-log"></div>
+  </div>
+
+  <div class="input-container">
+    <input type="text" id="user-input" placeholder="Let's assist." />
+    <button id="send-button">
+      <i class="fa-solid fa-paper-plane" id="button-icon"></i>
+    </button>
+  </div>
+</div>
+
+
+<!-- پایین‌تر از .container این بخش را جایگزین کن -->
+<div class="sections-container">
+  <div class="section">
+    <div class="header">
+      <h3>My Med</h3>
+    </div>
+    <pre>{purchase_data}</pre>
+  </div>
+
+  <div class="section">
+    <div class="header">
+      <h3>Reminder</h3>
+    </div>
+    <pre>{reminder_data}</pre>
+  </div>
+</div>
+
+    </body>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+
+* {
+  box-sizing: border-box;
+  font-family: 'Ubuntu', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8f8f8;
+}
+
+.container {
+  width: 500px;
+  height: 500px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  padding: 16px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+  color: #000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.chat-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.chat-box {
+  background: rgba(255, 255, 255, 0);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: transform 0.2s;
+}
+
+.chat-box:hover {
+  transform: translate(0px, -1px);
+}
+
+.chat-box i {
+  flex-shrink: 0;
+  font-size: 18px;
+  color: #002fff;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.user {
+  margin-left: auto;
+  background: linear-gradient(135deg, #559aa2, #3c7471);
+  color: #ffffff;
+  border-radius: 1rem 1rem 0.2rem 1rem;
+  padding: 12px 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: right;
+  transition: all 0.2s ease;
+}
+
+.bot {
+  margin-right: auto;
+  background: linear-gradient(135deg, #f0f0f5, #dcdce0);
+  color: #1e1e1e;
+  border-radius: 1rem 1rem 1rem 0.2rem;
+  padding: 12px 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.input-container {
+  display: flex;
+  gap: 10px;
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(18px);
+}
+
+#user-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid rgba(0, 0,   0, 0.1);
+  border-radius: 12px;
+  outline: none;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #000;
+}
+
+#user-input::placeholder {
+  color: #555;
+}
+
+#send-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #458f8d;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#send-button:hover {
+  background: #69afae;
+}
+
+#send-button:active {
+  background: #559aa2;
+}
+
+.info {
+  text-align: center;
+  padding: 20px;
+  color: #000;
+  font-size: 18px;
+}
+.section {
+  width: 50%;
+  height: 50%;
+  bottom: 12%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(18px);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.sections-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+  width: 100%;
+}
+
+.section {
+  width: 90%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(18px);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 16px;
+}
+
+
+    </style>
+    <script>
+          const chatLog = document.getElementById('chat-log'),
+      userInput = document.getElementById('user-input'),
+      sendButton = document.getElementById('send-button'),
+      buttonIcon = document.getElementById('button-icon'),
+      info = document.querySelector('.info');
+
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    });
+
+    function sendMessage() {
+  const message = userInput.value.trim();
+  if (message === '') return;
+
+  appendMessage('user', message);
+  userInput.value = '';
+
+  const url = 'http://127.0.0.1:8000/chat';  // آدرس بک‌اندت
+  const options = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message }),
+  };
+
+  buttonIcon.classList.remove('fa-paper-plane');
+  buttonIcon.classList.add('fa-spinner', 'fa-pulse');
+
+  fetch(url, options)
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data.reply)) {
+        data.reply.forEach(item => {
+          appendMessage('bot', item.content || item);  // برای سازگاری
+        });
+      } else {
+        appendMessage('bot', data.reply || 'Empty response.');
+      }
+
+      buttonIcon.classList.remove('fa-spinner', 'fa-pulse');
+      buttonIcon.classList.add('fa-paper-plane');
+    })
+    .catch(() => {
+      appendMessage('bot', '❌ Server error');
+      buttonIcon.classList.remove('fa-spinner', 'fa-pulse');
+      buttonIcon.classList.add('fa-paper-plane');
+    });
+}
+
+
+    function appendMessage(sender, message) {
+      info.style.display = "none";
+      // تغییر آیکون به حالت لودینگ
+      buttonIcon.classList.remove('fa-solid', 'fa-paper-plane');
+      buttonIcon.classList.add('fas', 'fa-spinner', 'fa-pulse');
+
+      const messageElement = document.createElement('div');
+      const iconElement = document.createElement('div');
+      const chatElement = document.createElement('div');
+      const icon = document.createElement('i');
+
+      chatElement.classList.add("chat-box", sender === 'user' ? 'user-message' : 'bot-message');
+      iconElement.classList.add("icon");
+      messageElement.classList.add(sender);
+      messageElement.innerText = message;
+
+      if (sender === 'user') {
+        icon.classList.add('fa-regular', 'fa-user');
+        iconElement.setAttribute('id', 'user-icon');
+      } else {
+        icon.classList.add('fa-solid', 'fa-robot');
+        iconElement.setAttribute('id', 'bot-icon');
+      }
+
+      iconElement.appendChild(icon);
+      chatElement.appendChild(iconElement);
+      chatElement.appendChild(messageElement);
+      chatLog.appendChild(chatElement);
+      chatLog.scrollTo(0, chatLog.scrollHeight);
+    }
+    </script>
+    </html>
