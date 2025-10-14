@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Valeh School - Advisor Panel (Mock Sync)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { box-sizing: border-box; }
+        .gradient-bg { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .sidebar-active { background: linear-gradient(135deg,#3b82f6,#1d4ed8); color:white; }
+        .student-card { transition: all .3s ease; }
+        .student-card:hover{ transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,.15); }
+        .progress-bar { transition: width .5s ease; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <header class="gradient-bg text-white p-6 shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                    <span class="text-blue-600 font-bold text-lg">V</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold">Valeh School</h1>
+                    <p class="text-blue-100 text-sm">Advisor Management (Mock)</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-sm text-blue-100">Dr. Advisor</p>
+                <p class="font-semibold">Academic Advisor</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex max-w-7xl mx-auto">
+        <div class="w-64 bg-white shadow-lg min-h-screen">
+            <nav class="p-6">
+                <ul class="space-y-2">
+                    <li><button onclick="showSection('dashboard')" class="sidebar-btn w-full p-3 rounded-lg sidebar-active" data-section="dashboard">📊 Dashboard</button></li>
+                    <li><button onclick="showSection('students')" class="sidebar-btn w-full p-3 rounded-lg text-gray-700 hover:bg-gray-100" data-section="students">👥 Students</button></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="flex-1 p-6">
+            <div id="dashboard-section" class="section">
+                <h2 class="text-2xl font-bold mb-6">Dashboard Overview</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-xl p-6 card-shadow"><p class="text-sm text-gray-500">Total Students</p><p class="text-2xl font-bold text-blue-600" id="totalStudents">0</p></div>
+                    <div class="bg-white rounded-xl p-6 card-shadow"><p class="text-sm text-gray-500">Avg Study Hours</p><p class="text-2xl font-bold text-green-600" id="avgHours">0h</p></div>
+                    <div class="bg-white rounded-xl p-6 card-shadow"><p class="text-sm text-gray-500">Overall Progress</p><p class="text-2xl font-bold text-purple-600" id="overallProgress">0%</p></div>
+                    <div class="bg-white rounded-xl p-6 card-shadow"><p class="text-sm text-gray-500">Active Tasks</p><p class="text-2xl font-bold text-orange-600" id="activeTasks">0</p></div>
+                </div>
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-lg font-bold mb-4">Students</h3>
+                    <div id="studentGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+            </div>
+
+            <div id="students-section" class="section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold">Student Management</h2>
+                    <input id="studentSearch" class="px-4 py-2 border rounded" placeholder="Search students..." />
+                </div>
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-lg font-bold mb-4">Student List</h3>
+                    <div id="studentListTable" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <div id="student-detail-section" class="section hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <button onclick="showSection('students')" class="text-blue-600">← Back</button>
+                        <h2 id="studentDetailName" class="text-2xl font-bold">Student Details</h2>
+                    </div>
+                    <div>
+                        <button onclick="saveNotes()" class="bg-blue-600 text-white px-4 py-2 rounded">Save Notes</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-white rounded-xl p-6 card-shadow">
+                            <h3 class="text-lg font-bold mb-4">📅 Weekly Study Plan</h3>
+                            <div id="studentWeeklyPlan" class="grid grid-cols-7 gap-2"></div>
+                            <div class="mt-4 flex gap-3">
+                                <button onclick="openAdvisorPlanModal()" class="bg-blue-600 text-white px-4 py-2 rounded">+ Add Plan</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 card-shadow">
+                            <h3 class="text-lg font-bold mb-4">📝 Study Log</h3>
+                            <div id="studentTasksContainer" class="space-y-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-xl p-6 card-shadow text-center">
+                            <div id="studentAvatar" class="w-20 h-20 bg-blue-500 rounded-full mx-auto text-white text-2xl font-bold">A</div>
+                            <h4 id="studentName" class="text-lg font-bold mt-3">Name</h4>
+                            <p id="studentProgress" class="text-green-600 font-bold">0%</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-6 card-shadow">
+                            <h4 class="text-lg font-bold mb-3">Notes</h4>
+                            <textarea id="advisorNotes" class="w-full h-32 p-3 border rounded"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Plan Modal (advisor) -->
+    <div id="advisorPlanModal" class="fixed inset-0 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4">Add Plan for Student</h3>
+            <form id="advisorPlanForm">
+                <label class="block mb-2">Subject</label>
+                <input id="advisorPlanSubject" class="w-full p-3 border rounded mb-3" />
+                <label class="block mb-2">Day</label>
+                <select id="advisorPlanDay" class="w-full p-3 border rounded mb-3">
+                    <option value="0">Monday</option><option value="1">Tuesday</option><option value="2">Wednesday</option>
+                    <option value="3">Thursday</option><option value="4">Friday</option><option value="5">Saturday</option><option value="6">Sunday</option>
+                </select>
+                <label class="block mb-2">Time</label>
+                <input id="advisorPlanTime" type="time" class="w-full p-3 border rounded mb-3" />
+                <label class="block mb-2">Duration (hours)</label>
+                <input id="advisorPlanDuration" type="number" step="0.5" min="0.5" max="8" class="w-full p-3 border rounded mb-3" />
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeAdvisorPlanModal()" class="flex-1 bg-gray-300 py-2 rounded">Cancel</button>
+                    <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    /* SharedStore same as student file */
+    const STORE_KEY = 'valeh:mockdb:v1';
+    const CHANNEL_NAME = 'valeh-sync';
+    const bc = new BroadcastChannel(CHANNEL_NAME);
+
+    const defaultDb = {
+        students: [
+            {
+                id: 1, firstName:'Ali', lastName:'Rezaei', nationalId:'1001',
+                studyPlan: [{ day:0, time:'14:00', duration:2, subject:'Mathematics' }],
+                studySessions: [{ date:'2024-01-12', subject:'Mathematics', duration:2, amount:'Chapter 3' }],
+                progress:78, hoursThisWeek:4.0, updatedAt: Date.now(), advisorNotes:''
+            },
+            { id:2, firstName:'Sara', lastName:'Mohammadi', nationalId:'1002', studyPlan:[], studySessions:[], progress:52, hoursThisWeek:1.5, updatedAt:Date.now(), advisorNotes:'' },
+            { id:3, firstName:'Omid', lastName:'Karimi', nationalId:'1003', studyPlan:[], studySessions:[], progress:65, hoursThisWeek:3.0, updatedAt:Date.now(), advisorNotes:'' }
+        ]
+    };
+
+    const SharedStore = {
+        load(){ const raw = localStorage.getItem(STORE_KEY); if(!raw){ localStorage.setItem(STORE_KEY, JSON.stringify(defaultDb)); return JSON.parse(JSON.stringify(defaultDb)); } try{return JSON.parse(raw);}catch(e){ localStorage.setItem(STORE_KEY, JSON.stringify(defaultDb)); return JSON.parse(JSON.stringify(defaultDb)); } },
+        save(db){ localStorage.setItem(STORE_KEY, JSON.stringify(db)); bc.postMessage({type:'db:update', ts:Date.now()}); },
+        getAllStudents(){ return this.load().students; },
+        getStudentById(id){ return this.load().students.find(s=>s.id===id)||null; },
+        updateStudent(id, patchFn){ const db=this.load(); const idx=db.students.findIndex(s=>s.id===id); if(idx===-1) return null; patchFn(db.students[idx]); db.students[idx].updatedAt = Date.now(); this.save(db); return db.students[idx]; },
+        addPlanToStudent(id, plan){ return this.updateStudent(id, s=>{ s.studyPlan = s.studyPlan || []; s.studyPlan.push(plan); }); },
+        addSessionToStudent(id, session){ return this.updateStudent(id, s=>{ s.studySessions = s.studySessions || []; s.studySessions.unshift(session); s.hoursThisWeek = (s.studySessions||[]).slice(0,50).reduce((t,x)=>t+(x.duration||0),0); s.progress = Math.min(100, Math.round((s.hoursThisWeek/16)*100)); }); },
+        setAdvisorNotes(id, notes){ return this.updateStudent(id, s=>{ s.advisorNotes = notes; }); }
+    };
+
+    /* UI for advisor */
+    let selectedStudentId = null;
+    let subjectChart = null;
+
+    function init() {
+        renderDashboard();
+        renderStudentGrid();
+        document.getElementById('studentSearch').addEventListener('input', onSearch);
+        document.getElementById('advisorPlanForm').addEventListener('submit', onAdvisorPlanSubmit);
+    }
+
+    function showSection(name){
+        document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
+        document.getElementById(name+'-section').classList.remove('hidden');
+        document.querySelectorAll('.sidebar-btn').forEach(btn=>btn.classList.remove('sidebar-active'));
+        const btn = document.querySelector(`[data-section="${name}"]`);
+        if (btn) btn.classList.add('sidebar-active');
+    }
+
+    function renderDashboard(){
+        const students = SharedStore.getAllStudents();
+        document.getElementById('totalStudents').textContent = students.length;
+        const avgHours = (students.reduce((s,a)=>s + (a.hoursThisWeek||0),0)/Math.max(1,students.length)).toFixed(1);
+        document.getElementById('avgHours').textContent = avgHours + 'h';
+        const overall = Math.round(students.reduce((s,a)=>s + (a.progress||0),0)/Math.max(1,students.length));
+        document.getElementById('overallProgress').textContent = overall + '%';
+        document.getElementById('activeTasks').textContent = 0;
+    }
+
+    function renderStudentGrid(){
+        const grid = document.getElementById('studentGrid');
+        grid.innerHTML = '';
+        const students = SharedStore.getAllStudents();
+        students.forEach(s=>{
+            const card = document.createElement('div');
+            card.className = 'student-card bg-white rounded-xl p-6 card-shadow cursor-pointer';
+            card.onclick = ()=> openStudentDetail(s.id);
+            card.innerHTML = `
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">${(s.firstName||'')[0]||'S'}</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">${s.firstName} ${s.lastName}</h3>
+                        <p class="text-sm text-gray-600">${(s.hoursThisWeek||0).toFixed(1)}h this week</p>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>Progress</span><span class="font-medium">${s.progress||0}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-500 h-2 rounded-full progress-bar" style="width:${s.progress||0}%"></div>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function onSearch(e){
+        const term = e.target.value.toLowerCase();
+        const list = SharedStore.getAllStudents().filter(s=> (s.firstName + ' ' + s.lastName).toLowerCase().includes(term) || s.nationalId.includes(term));
+        const container = document.getElementById('studentListTable');
+        container.innerHTML = '';
+        list.forEach(s=>{
+            const row = document.createElement('div');
+            row.className = 'p-3 bg-gray-50 rounded flex items-center justify-between';
+            row.innerHTML = `
+                <div><strong>${s.firstName} ${s.lastName}</strong><div class="text-xs text-gray-500">${s.nationalId}</div></div>
+                <div class="flex gap-2">
+                    <button onclick="openStudentDetail(${s.id})" class="text-blue-600">Open</button>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function openStudentDetail(id){
+        selectedStudentId = id;
+        const s = SharedStore.getStudentById(id);
+        if (!s) return alert('Student not found');
+        showSection('student-detail');
+        document.getElementById('studentDetailName').textContent = `${s.firstName} ${s.lastName} - Details`;
+        document.getElementById('studentName').textContent = `${s.firstName} ${s.lastName}`;
+        document.getElementById('studentAvatar').textContent = (s.firstName||'')[0]||'S';
+        document.getElementById('studentProgress').textContent = (s.progress||0) + '%';
+        document.getElementById('advisorNotes').value = s.advisorNotes || '';
+        renderStudentWeeklyPlan(s);
+        renderStudentSessions(s);
+    }
+
+    function renderStudentWeeklyPlan(s){
+        const container = document.getElementById('studentWeeklyPlan');
+        container.innerHTML = '';
+        for (let i=0;i<7;i++){
+            const dayPlans = (s.studyPlan||[]).filter(p=>p.day===i);
+            const div = document.createElement('div');
+            div.className = 'bg-gray-50 rounded-lg p-3 min-h-24';
+            if (dayPlans.length>0){
+                div.innerHTML = dayPlans.map((p,idx)=>`
+                    <div class="bg-blue-100 text-blue-800 text-xs p-2 rounded mb-1 flex justify-between">
+                        <div>
+                            <div class="font-medium">${p.subject}</div>
+                            <div class="text-[11px]">${p.time} (${p.duration}h)</div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <button onclick="removePlan(${s.id},${i},${idx})" class="text-red-600 text-xs">×</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                div.innerHTML = '<div class="text-gray-400 text-xs text-center mt-2">No plans</div>';
+            }
+            container.appendChild(div);
+        }
+    }
+
+    function renderStudentSessions(s){
+        const c = document.getElementById('studentTasksContainer');
+        c.innerHTML = '';
+        (s.studySessions||[]).slice(0,20).forEach(sess=>{
+            const el = document.createElement('div');
+            el.className = 'p-3 bg-gray-50 rounded flex justify-between items-center';
+            el.innerHTML = `<div><div class="font-medium">${sess.subject}</div><div class="text-xs text-gray-500">${sess.date}</div></div><div class="text-sm font-medium">${sess.duration}h</div>`;
+            c.appendChild(el);
+        });
+    }
+
+    function removePlan(studentId, dayIdx, planIdx){
+        // remove the plan at planIdx within that day
+        SharedStore.updateStudent(studentId, s=>{
+            const arr = s.studyPlan || [];
+            // find the plan in arr that is the nth plan for that day
+            let count = -1, removeIdx = -1;
+            for (let i=0;i<arr.length;i++){
+                if (arr[i].day === dayIdx) {
+                    count++;
+                    if (count === planIdx) { removeIdx = i; break; }
+                }
+            }
+            if (removeIdx !== -1) arr.splice(removeIdx,1);
+        });
+        // refresh
+        openStudentDetail(studentId);
+    }
+
+    function openAdvisorPlanModal(){
+        document.getElementById('advisorPlanModal').classList.remove('hidden');
+        document.getElementById('advisorPlanModal').classList.add('flex');
+    }
+    function closeAdvisorPlanModal(){
+        document.getElementById('advisorPlanModal').classList.add('hidden');
+        document.getElementById('advisorPlanModal').classList.remove('flex');
+    }
+
+    function onAdvisorPlanSubmit(e){
+        e.preventDefault();
+        if (!selectedStudentId) return alert('No student selected');
+        const subject = document.getElementById('advisorPlanSubject').value || 'Unknown';
+        const day = parseInt(document.getElementById('advisorPlanDay').value);
+        const time = document.getElementById('advisorPlanTime').value || '12:00';
+        const duration = parseFloat(document.getElementById('advisorPlanDuration').value) || 1;
+        SharedStore.addPlanToStudent(selectedStudentId, { day, time, duration, subject });
+        closeAdvisorPlanModal();
+        openStudentDetail(selectedStudentId);
+    }
+
+    function saveNotes(){
+        if (!selectedStudentId) return;
+        const notes = document.getElementById('advisorNotes').value || '';
+        SharedStore.setAdvisorNotes(selectedStudentId, notes);
+        alert('Notes saved');
+    }
+
+    // respond to other tab updates
+    bc.onmessage = (ev) => {
+        // update visible lists / pages
+        renderDashboard();
+        renderStudentGrid();
+        if (selectedStudentId) {
+            const s = SharedStore.getStudentById(selectedStudentId);
+            if (s) openStudentDetail(selectedStudentId);
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
