@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Valeh School - Student Panel (Mock Sync)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { box-sizing: border-box; }
+        .gradient-bg { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .progress-ring { transform: rotate(-90deg); }
+        .study-session { transition: all .3s ease; }
+        .study-session:hover{ transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,.15); }
+        /* login modal rtl */
+        .login-backdrop{ background: rgba(2,6,23,.6); }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="gradient-bg text-white p-6 shadow-lg">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                    <span class="text-blue-600 font-bold text-lg">V</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold">Valeh School</h1>
+                    <p class="text-blue-100 text-sm">Student Study Tracker (Mock)</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p id="greeting" class="text-sm text-blue-100">لطفاً وارد شوید</p>
+                <p id="roleLabel" class="font-semibold">Student Dashboard</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto p-6">
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">این هفته</p>
+                        <p class="text-2xl font-bold text-blue-600" id="weeklyHours">0h</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">📚</div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">تعداد درس‌ها</p>
+                        <p class="text-2xl font-bold text-green-600" id="subjectCount">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">📖</div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">پیشرفت</p>
+                        <p class="text-2xl font-bold text-purple-600" id="progressPercent">0%</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">🎯</div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">استریک</p>
+                        <p class="text-2xl font-bold text-orange-600" id="streak">0 days</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">🔥</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl p-6 card-shadow mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">📅 برنامه هفتگی مطالعه</h2>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="openPlanModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ Add Plan</button>
+                            <button onclick="refreshFromStore()" class="bg-gray-200 px-3 py-2 rounded-lg">Refresh</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2 mb-4">
+                        <div class="text-center text-sm font-medium text-gray-500 p-2">Mon</div>
+                        <div class="text-center text-sm font-medium text-gray-500 p-2">Tue</div>
+                        <div class="text-center text-sm font-medium text-gray-500 p-2">Wed</div>
+                        <div class="text-center text-sm font-medium text-gray-500 p-2">Thu</div>
+                        <div class="text-center text-sm font-medium text-gray-500 p-2">Fri</div>
+                        <div class="text-center text-sm font-medium text-gray-500 p-2">Sat</div>
+                        <div class="text-center text-sm font-medium text-gray-500 p-2">Sun</div>
+                    </div>
+                    <div id="weeklyCalendar" class="grid grid-cols-7 gap-2"></div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">📝 لاگ مطالعه</h2>
+                        <button onclick="openLogModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg">+ Log Session</button>
+                    </div>
+                    <div id="studyLog" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-xl p-6 card-shadow text-center">
+                    <h3 class="text-lg font-bold mb-3">Weekly Goal Progress</h3>
+                    <div class="relative w-32 h-32 mx-auto mb-4">
+                        <svg class="w-32 h-32 progress-ring">
+                            <circle cx="64" cy="64" r="56" stroke="#e5e7eb" stroke-width="8" fill="none"/>
+                            <circle id="progressRing" cx="64" cy="64" r="56" stroke="#3b82f6" stroke-width="8" fill="none"
+                                    stroke-dasharray="351.86" stroke-dashoffset="351.86" stroke-linecap="round"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span id="progressInner" class="text-2xl font-bold text-blue-600">0%</span>
+                        </div>
+                    </div>
+                    <p id="goalText" class="text-gray-600">0h / 16h weekly goal</p>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-lg font-bold mb-3">🏆 Achievements</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-green-100 rounded-lg p-3 text-center">🔥 7-Day Streak</div>
+                        <div class="bg-blue-100 rounded-lg p-3 text-center">📚 Study Master</div>
+                        <div class="bg-purple-100 rounded-lg p-3 text-center">⭐ Goal Crusher</div>
+                        <div class="bg-orange-100 rounded-lg p-3 text-center">🎯 Consistent</div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-lg font-bold mb-3">📊 Study Hours by Subject</h3>
+                    <canvas id="subjectChart" width="300" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals: Plan & Log -->
+    <div id="planModal" class="fixed inset-0 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4">Add Weekly Plan</h3>
+            <form id="planForm">
+                <label class="block mb-2">Subject</label>
+                <input id="planSubject" class="w-full p-3 border rounded mb-3" placeholder="Mathematics" />
+                <label class="block mb-2">Day</label>
+                <select id="planDay" class="w-full p-3 border rounded mb-3">
+                    <option value="0">Monday</option><option value="1">Tuesday</option><option value="2">Wednesday</option>
+                    <option value="3">Thursday</option><option value="4">Friday</option><option value="5">Saturday</option><option value="6">Sunday</option>
+                </select>
+                <label class="block mb-2">Time</label>
+                <input id="planTime" type="time" class="w-full p-3 border rounded mb-3" />
+                <label class="block mb-2">Duration (hours)</label>
+                <input id="planDuration" type="number" step="0.5" min="0.5" max="8" class="w-full p-3 border rounded mb-3" />
+                <div class="flex gap-3">
+                    <button type="button" onclick="closePlanModal()" class="flex-1 bg-gray-300 py-2 rounded">Cancel</button>
+                    <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="logModal" class="fixed inset-0 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4">Log Study Session</h3>
+            <form id="logForm">
+                <label class="block mb-2">Date</label>
+                <input id="logDate" type="date" class="w-full p-3 border rounded mb-3" />
+                <label class="block mb-2">Subject</label>
+                <input id="logSubject" class="w-full p-3 border rounded mb-3" />
+                <label class="block mb-2">Duration (hours)</label>
+                <input id="logDuration" type="number" step="0.5" min="0.5" max="8" class="w-full p-3 border rounded mb-3" />
+                <label class="block mb-2">Amount / Topic</label>
+                <input id="logAmount" class="w-full p-3 border rounded mb-3" />
+                <div class="flex gap-3">
+                    <button type="button" onclick="closeLogModal()" class="flex-1 bg-gray-300 py-2 rounded">Cancel</button>
+                    <button type="submit" class="flex-1 bg-green-600 text-white py-2 rounded">Log</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login overlay for student -->
+    <div id="loginOverlay" class="fixed inset-0 flex items-center justify-center login-backdrop z-60">
+        <div class="bg-white rounded-xl p-6 w-full max-w-sm mx-4 text-right">
+            <h3 class="text-xl font-bold mb-3">ورود دانش‌آموز</h3>
+            <p class="text-sm text-gray-600 mb-4">نام کاربری و رمز عبور = کد ملی (برای demo از 1001,1002,1003 استفاده کنید)</p>
+            <label class="block mb-2">کد ملی</label>
+            <input id="loginNationalId" class="w-full p-3 border rounded mb-3" placeholder="مثلاً 1001" />
+            <div class="flex gap-3">
+                <button onclick="mockLogin()" class="flex-1 bg-blue-600 text-white py-2 rounded">ورود</button>
+                <button onclick="closeLogin()" class="flex-1 bg-gray-300 py-2 rounded">انصراف</button>
+            </div>
+            <p class="text-xs text-gray-500 mt-3">برای تست، همچنین می‌توانید از پنل مشاور استفاده کنید.</p>
+        </div>
+    </div>
+
+    <script>
+    /* ---------------------------
+       SharedStore (mock backend)
+       - persist to localStorage
+       - sync across tabs with BroadcastChannel
+       --------------------------- */
+    const STORE_KEY = 'valeh:mockdb:v1';
+    const CHANNEL_NAME = 'valeh-sync';
+
+    const defaultDb = {
+        students: [
+            {
+                id: 1,
+                firstName: 'Ali',
+                lastName: 'Rezaei',
+                nationalId: '1001',
+                studyPlan: [
+                    { day:0, time:'14:00', duration:2, subject:'Mathematics' },
+                    { day:2, time:'15:00', duration:2, subject:'Chemistry' }
+                ],
+                studySessions: [
+                    { date:'2024-01-12', subject:'Mathematics', duration:2, amount:'Chapter 3' }
+                ],
+                progress: 78,
+                hoursThisWeek: 4.0,
+                updatedAt: Date.now()
+            },
+            {
+                id: 2,
+                firstName: 'Sara',
+                lastName: 'Mohammadi',
+                nationalId: '1002',
+                studyPlan: [],
+                studySessions: [],
+                progress: 52,
+                hoursThisWeek: 1.5,
+                updatedAt: Date.now()
+            },
+            {
+                id: 3,
+                firstName: 'Omid',
+                lastName: 'Karimi',
+                nationalId: '1003',
+                studyPlan: [],
+                studySessions: [],
+                progress: 65,
+                hoursThisWeek: 3.0,
+                updatedAt: Date.now()
+            }
+        ]
+    };
+
+    const bc = new BroadcastChannel(CHANNEL_NAME);
+
+    const SharedStore = {
+        load() {
+            const raw = localStorage.getItem(STORE_KEY);
+            if (!raw) {
+                localStorage.setItem(STORE_KEY, JSON.stringify(defaultDb));
+                return JSON.parse(JSON.stringify(defaultDb));
+            }
+            try {
+                return JSON.parse(raw);
+            } catch(e) {
+                localStorage.setItem(STORE_KEY, JSON.stringify(defaultDb));
+                return JSON.parse(JSON.stringify(defaultDb));
+            }
+        },
+        save(db) {
+            localStorage.setItem(STORE_KEY, JSON.stringify(db));
+            // broadcast change
+            bc.postMessage({ type: 'db:update', payload: { ts: Date.now() } });
+        },
+        getStudentByNationalId(nationalId) {
+            const db = this.load();
+            return db.students.find(s => s.nationalId === nationalId) || null;
+        },
+        getStudentById(id) {
+            const db = this.load();
+            return db.students.find(s => s.id === id) || null;
+        },
+        updateStudent(id, patchFn) {
+            const db = this.load();
+            const idx = db.students.findIndex(s=>s.id===id);
+            if (idx === -1) return null;
+            patchFn(db.students[idx]);
+            db.students[idx].updatedAt = Date.now();
+            this.save(db);
+            return db.students[idx];
+        },
+        addPlanToStudent(id, plan) {
+            return this.updateStudent(id, student => {
+                student.studyPlan = student.studyPlan || [];
+                student.studyPlan.push(plan);
+            });
+        },
+        addSessionToStudent(id, session) {
+            return this.updateStudent(id, student => {
+                student.studySessions = student.studySessions || [];
+                student.studySessions.unshift(session);
+                // recompute hoursThisWeek roughly
+                student.hoursThisWeek = (student.studySessions || []).slice(0,50).reduce((sum,s)=>sum + (s.duration||0),0);
+                student.progress = Math.min(100, Math.round((student.hoursThisWeek/16)*100));
+            });
+        },
+        getAllStudents() {
+            return this.load().students;
+        }
+    };
+
+    /* ---------------------------
+       UI Logic (student page)
+       --------------------------- */
+    let currentStudent = null;
+    let subjectChart = null;
+
+    function renderAllForCurrent() {
+        if (!currentStudent) return;
+        document.getElementById('greeting').textContent = `Welcome, ${currentStudent.firstName} ${currentStudent.lastName}`;
+        // stats
+        document.getElementById('weeklyHours').textContent = (currentStudent.hoursThisWeek||0).toFixed(1) + 'h';
+        document.getElementById('subjectCount').textContent = new Set((currentStudent.studySessions||[]).map(s=>s.subject)).size;
+        document.getElementById('progressPercent').textContent = (currentStudent.progress||0) + '%';
+        document.getElementById('progressInner').textContent = (currentStudent.progress||0) + '%';
+        const perc = Math.min(100, currentStudent.progress||0);
+        const offset = 351.86 - (351.86 * perc / 100);
+        document.getElementById('progressRing').setAttribute('stroke-dashoffset', offset);
+        document.getElementById('goalText').textContent = `${(currentStudent.hoursThisWeek||0).toFixed(1)}h / 16h weekly goal`;
+
+        // weekly calendar
+        const cal = document.getElementById('weeklyCalendar');
+        cal.innerHTML = '';
+        for (let i=0;i<7;i++){
+            const dayPlans = (currentStudent.studyPlan||[]).filter(p=>p.day===i);
+            const div = document.createElement('div');
+            div.className = 'bg-gray-50 rounded-lg p-3 min-h-24';
+            if (dayPlans.length>0){
+                div.innerHTML = dayPlans.map(p=>`
+                    <div class="bg-blue-100 text-blue-800 text-xs p-2 rounded mb-1">
+                        <div class="font-medium">${p.subject}</div>
+                        <div>${p.time} (${p.duration}h)</div>
+                    </div>
+                `).join('');
+            } else {
+                div.innerHTML = '<div class="text-gray-400 text-xs text-center mt-2">No plans</div>';
+            }
+            cal.appendChild(div);
+        }
+
+        // study log
+        const log = document.getElementById('studyLog');
+        log.innerHTML = '';
+        (currentStudent.studySessions || []).slice(0,10).forEach(session=>{
+            const sessionDiv = document.createElement('div');
+            sessionDiv.className = 'study-session bg-gray-50 rounded-lg p-4 border-l-4 border-green-500';
+            sessionDiv.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-medium text-gray-800">${session.subject}</h4>
+                        <p class="text-sm text-gray-600">${session.amount||''}</p>
+                        <p class="text-xs text-gray-500 mt-1">${session.date}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="bg-green-100 text-green-800 text-sm px-2 py-1 rounded-full font-medium">${session.duration}h</span>
+                    </div>
+                </div>
+            `;
+            log.appendChild(sessionDiv);
+        });
+
+        // chart
+        renderSubjectChart();
+    }
+
+    function renderSubjectChart(){
+        const ctx = document.getElementById('subjectChart').getContext('2d');
+        const map = {};
+        (currentStudent.studySessions||[]).forEach(s=>{
+            map[s.subject] = (map[s.subject]||0) + (s.duration||0);
+        });
+        const labels = Object.keys(map);
+        const data = Object.values(map);
+        if (subjectChart) subjectChart.destroy();
+        subjectChart = new Chart(ctx, {
+            type: 'bar',
+            data: { labels, datasets:[{ data, borderRadius:8, borderSkipped:false }]},
+            options: { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,grid:{display:false}},x:{grid:{display:false}}}}
+        });
+    }
+
+    /* ---------------------------
+       Login & events
+       --------------------------- */
+    function mockLogin(){
+        const n = document.getElementById('loginNationalId').value.trim();
+        const student = SharedStore.getStudentByNationalId(n);
+        if (!student) {
+            alert('Student not found. Try 1001, 1002 or 1003 for demo.');
+            return;
+        }
+        currentStudent = student;
+        document.getElementById('loginOverlay').style.display = 'none';
+        renderAllForCurrent();
+    }
+    function closeLogin(){
+        document.getElementById('loginOverlay').style.display = 'none';
+    }
+
+    // modal controls
+    function openPlanModal(){ document.getElementById('planModal').classList.remove('hidden'); document.getElementById('planModal').classList.add('flex'); }
+    function closePlanModal(){ document.getElementById('planModal').classList.add('hidden'); document.getElementById('planModal').classList.remove('flex'); }
+    function openLogModal(){ document.getElementById('logModal').classList.remove('hidden'); document.getElementById('logModal').classList.add('flex'); }
+    function closeLogModal(){ document.getElementById('logModal').classList.add('hidden'); document.getElementById('logModal').classList.remove('flex'); }
+
+    document.getElementById('planForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        if (!currentStudent) return alert('ابتدا وارد شوید');
+        const subject = document.getElementById('planSubject').value || 'Unknown';
+        const day = parseInt(document.getElementById('planDay').value);
+        const time = document.getElementById('planTime').value || '12:00';
+        const duration = parseFloat(document.getElementById('planDuration').value) || 1;
+        SharedStore.addPlanToStudent(currentStudent.id, { day, time, duration, subject });
+        // refresh local copy
+        currentStudent = SharedStore.getStudentById(currentStudent.id);
+        renderAllForCurrent();
+        closePlanModal();
+    });
+
+    document.getElementById('logForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        if (!currentStudent) return alert('ابتدا وارد شوید');
+        const date = document.getElementById('logDate').value || new Date().toISOString().split('T')[0];
+        const subject = document.getElementById('logSubject').value || 'Unknown';
+        const duration = parseFloat(document.getElementById('logDuration').value) || 1;
+        const amount = document.getElementById('logAmount').value || '';
+        SharedStore.addSessionToStudent(currentStudent.id, { date, subject, duration, amount });
+        currentStudent = SharedStore.getStudentById(currentStudent.id);
+        renderAllForCurrent();
+        closeLogModal();
+    });
+
+    // listen for store updates (other tabs)
+    bc.onmessage = (ev) => {
+        if (!currentStudent) return; // nothing to refresh yet
+        // on any db:update we reload our student copy
+        currentStudent = SharedStore.getStudentById(currentStudent.id);
+        renderAllForCurrent();
+    };
+
+    function refreshFromStore(){
+        if (!currentStudent) return;
+        currentStudent = SharedStore.getStudentById(currentStudent.id);
+        renderAllForCurrent();
+    }
+
+    // initial setup: set today's date
+    document.addEventListener('DOMContentLoaded', function(){
+        document.getElementById('logDate').value = new Date().toISOString().split('T')[0];
+        // if a student exists in localStorage we could auto-login; for demo keep login overlay shown
+    });
+    </script>
+</body>
+</html>
