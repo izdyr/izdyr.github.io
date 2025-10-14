@@ -1,0 +1,234 @@
+ <!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Valeh School — Student Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { box-sizing: border-box; background:#f3f4f6; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+    .gradient { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); }
+    .login-bg { background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95)); }
+    .rtl { direction: rtl; text-align: right; }
+  </style>
+</head>
+<body class="rtl">
+
+  <!-- Header -->
+  <header class="gradient text-white p-6 gradient">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+          <span class="text-blue-600 font-bold text-lg">V</span>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold">Valeh School</h1>
+          <p class="text-blue-100 text-sm">پلتفرم مدیریت مطالعات</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-sm text-blue-100">خوش آمدید</p>
+        <p class="font-semibold">پنل دانش‌آموز</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main container -->
+  <main class="max-w-4xl mx-auto mt-10 p-6">
+    <div id="app">
+
+      <!-- Login card -->
+      <div id="loginCard" class="bg-white rounded-xl p-6 card-shadow max-w-xl mx-auto">
+        <h2 class="text-xl font-bold mb-4">ورود دانش‌آموز</h2>
+        <p class="text-sm text-gray-600 mb-4">نام کاربری و رمز عبور = کد ملی (برای تست: 1001, 1002, 1003)</p>
+
+        <form id="loginForm" class="space-y-3">
+          <div>
+            <label class="text-sm font-medium block mb-1">کد ملی (نام کاربری)</label>
+            <input id="username" class="w-full p-3 border rounded" placeholder="مثلاً 1001" inputmode="numeric" />
+          </div>
+          <div>
+            <label class="text-sm font-medium block mb-1">رمز عبور</label>
+            <input id="password" type="password" class="w-full p-3 border rounded" placeholder="رمز عبور (کد ملی)" inputmode="numeric" />
+          </div>
+          <div class="flex gap-3">
+            <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded">ورود</button>
+            <button type="button" id="demoBtn" class="flex-1 bg-gray-100 py-2 rounded">ورود دموی سریع</button>
+          </div>
+        </form>
+
+        <p id="loginError" class="text-red-600 text-sm mt-3 hidden"></p>
+      </div>
+
+      <!-- Dashboard placeholder (hidden until login) -->
+      <div id="dashboardWrapper" class="hidden">
+        <!-- Simple top bar -->
+        <div class="bg-white rounded-xl p-4 mt-6 card-shadow flex items-center justify-between">
+          <div>
+            <h3 id="dashName" class="text-lg font-bold">نام دانش‌آموز</h3>
+            <p id="dashNationalId" class="text-sm text-gray-500">کد ملی: -</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button id="logoutBtn" class="bg-red-100 text-red-700 px-3 py-2 rounded">خروج</button>
+            <button id="openDashboardBtn" class="bg-blue-600 text-white px-3 py-2 rounded">رفتن به داشبورد</button>
+          </div>
+        </div>
+
+        <!-- small summary cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+          <div class="bg-white p-4 rounded-xl card-shadow">
+            <p class="text-sm text-gray-500">این هفته</p>
+            <p id="statHours" class="text-2xl font-bold text-blue-600">0h</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl card-shadow">
+            <p class="text-sm text-gray-500">تعداد درس‌ها</p>
+            <p id="statSubjects" class="text-2xl font-bold text-green-600">0</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl card-shadow">
+            <p class="text-sm text-gray-500">پیشرفت</p>
+            <p id="statProgress" class="text-2xl font-bold text-purple-600">0%</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl card-shadow">
+            <p class="text-sm text-gray-500">استریک</p>
+            <p id="statStreak" class="text-2xl font-bold text-orange-600">0 روز</p>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <p class="text-sm text-gray-600">برای دیدن داشبورد کامل روی «رفتن به داشبورد» کلیک کن. (یا فایل اصلی داشبورد student.html را باز کن.)</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+  /********************************************************
+   * Mock DB & SharedStore (localStorage) — همان ساختار قبلی
+   ********************************************************/
+  const STORE_KEY = 'valeh:mockdb:v1';
+
+  const defaultDb = {
+    students: [
+      { id:1, firstName:'Ali', lastName:'Rezaei', nationalId:'1001', studyPlan:[{day:0,time:'14:00',duration:2,subject:'Mathematics'}], studySessions:[{date:'2024-01-12',subject:'Mathematics',duration:2,amount:'Chapter 3'}], progress:78, hoursThisWeek:4.0, updatedAt: Date.now(), advisorNotes:'' },
+      { id:2, firstName:'Sara', lastName:'Mohammadi', nationalId:'1002', studyPlan:[], studySessions:[], progress:52, hoursThisWeek:1.5, updatedAt: Date.now(), advisorNotes:'' },
+      { id:3, firstName:'Omid', lastName:'Karimi', nationalId:'1003', studyPlan:[], studySessions:[], progress:65, hoursThisWeek:3.0, updatedAt: Date.now(), advisorNotes:'' }
+    ]
+  };
+
+  const SharedStore = {
+    load() {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) {
+        localStorage.setItem(STORE_KEY, JSON.stringify(defaultDb));
+        return JSON.parse(JSON.stringify(defaultDb));
+      }
+      try { return JSON.parse(raw); } catch(e) { localStorage.setItem(STORE_KEY, JSON.stringify(defaultDb)); return JSON.parse(JSON.stringify(defaultDb)); }
+    },
+    save(db) { localStorage.setItem(STORE_KEY, JSON.stringify(db)); },
+    getStudentByNationalId(nationalId) { const db = this.load(); return db.students.find(s=>s.nationalId===nationalId) || null; },
+    getStudentById(id) { const db = this.load(); return db.students.find(s=>s.id===id) || null; }
+  };
+
+  /********************************************************
+   * Login flow
+   ********************************************************/
+  const loginForm = document.getElementById('loginForm');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const loginError = document.getElementById('loginError');
+  const demoBtn = document.getElementById('demoBtn');
+
+  const loginCard = document.getElementById('loginCard');
+  const dashboardWrapper = document.getElementById('dashboardWrapper');
+
+  // helper to show dashboard area after login
+  function showDashboardFor(student) {
+    // persist session
+    sessionStorage.setItem('valeh:currentStudentNationalId', student.nationalId);
+    // populate small summary
+    document.getElementById('dashName').textContent = `${student.firstName} ${student.lastName}`;
+    document.getElementById('dashNationalId').textContent = 'کد ملی: ' + student.nationalId;
+    document.getElementById('statHours').textContent = (student.hoursThisWeek||0).toFixed(1) + 'h';
+    document.getElementById('statSubjects').textContent = new Set((student.studySessions||[]).map(s=>s.subject)).size;
+    document.getElementById('statProgress').textContent = (student.progress||0) + '%';
+    document.getElementById('statStreak').textContent = (student.streakDays||0) + ' روز';
+    // toggle UI
+    loginCard.style.display = 'none';
+    dashboardWrapper.classList.remove('hidden');
+    dashboardWrapper.classList.add('block');
+  }
+
+  // check if already logged in (sessionStorage)
+  document.addEventListener('DOMContentLoaded', function(){
+    const saved = sessionStorage.getItem('valeh:currentStudentNationalId');
+    if (saved) {
+      const s = SharedStore.getStudentByNationalId(saved);
+      if (s) {
+        showDashboardFor(s);
+        return;
+      } else {
+        sessionStorage.removeItem('valeh:currentStudentNationalId');
+      }
+    }
+    // otherwise show login (already visible)
+  });
+
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    loginError.classList.add('hidden');
+    const u = usernameInput.value.trim();
+    const p = passwordInput.value.trim();
+    if (!u || !p) {
+      loginError.textContent = 'هر دو فیلد را پر کنید';
+      loginError.classList.remove('hidden');
+      return;
+    }
+    // For demo: username===password===nationalId
+    if (u !== p) {
+      loginError.textContent = 'نام کاربری و رمز عبور باید یکسان باشند (کد ملی)';
+      loginError.classList.remove('hidden');
+      return;
+    }
+    const student = SharedStore.getStudentByNationalId(u);
+    if (!student) {
+      loginError.textContent = 'دانش‌آموزی با این کد ملی پیدا نشد. از 1001/1002/1003 استفاده کنید.';
+      loginError.classList.remove('hidden');
+      return;
+    }
+    // success
+    showDashboardFor(student);
+  });
+
+  // demo quick login: choose first student
+  demoBtn.addEventListener('click', function(){
+    const db = SharedStore.load();
+    const s = db.students && db.students[0];
+    if (!s) { alert('DB empty'); return; }
+    usernameInput.value = s.nationalId;
+    passwordInput.value = s.nationalId;
+    loginForm.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}));
+  });
+
+  // logout
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    sessionStorage.removeItem('valeh:currentStudentNationalId');
+    // return to login UI
+    loginCard.style.display = 'block';
+    dashboardWrapper.classList.add('hidden');
+    dashboardWrapper.classList.remove('block');
+    usernameInput.value = '';
+    passwordInput.value = '';
+  });
+
+  // button to open the full dashboard page (if you have the full student.html)
+  document.getElementById('openDashboardBtn').addEventListener('click', function(){
+    const saved = sessionStorage.getItem('valeh:currentStudentNationalId');
+    if (!saved) return alert('ابتدا وارد شوید');
+    // open the full dashboard page in a new tab (assumes student.html exists)
+    window.open('student.html', '_blank');
+  });
+  </script>
+</body>
+</html>
