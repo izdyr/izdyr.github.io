@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Valeh School - Student Panel (Weekly Log View)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { box-sizing: border-box;   direction: rtl; font-family: "Vazirmatn", sans-serif;}
+    .gradient-bg { background: radial-gradient(circle,rgba(74, 152, 255, 1) 0%, rgba(37, 99, 235, 1) 100%); }
+    .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .progress-ring { transform: rotate(-90deg); }
+    .study-session { transition: all .3s ease; }
+    .study-session:hover{ transform:translateY(-2px); box-shadow:0 8px 25px rgba(0,0,0,.15); }
+    .login-backdrop{    background: rgba(0,0,0,0.2); backdrop-filter: blur(4px);}
+    .modal-backdrop {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+  transition: 0.3s ;
+  
+}
+
+button {
+  transition: all 0.25s ease;
+}
+
+button:hover {
+
+  opacity: 0.9;
+  filter: brightness(1.1);
+}
+
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Header -->
+    <header class="gradient-bg text-white p-6 shadow-lg">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                            <img src="izdyr2.png" alt="Header Image" class="w-20 h-20 object-cover ">
+                <div>
+                    <h1 class="text-2xl font-bold">دبیرستان واله(چیتگر)</h1>
+                    <p class="text-blue-100 text-sm">برنامه مطالعاتی دانش‌آموزی</p>
+                </div>
+            </div>
+
+            <div class="text-right">
+                <p id="greeting" class="text-sm text-blue-100">لطفاً وارد شوید</p>
+                <p id="roleLabel" class="font-semibold">داشبورد دانش‌آموز</p>
+
+            </div>
+        </div>
+    </header>
+
+  <div class="max-w-6xl mx-auto p-6">
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">این هفته</p>
+            <p class="text-2xl font-bold text-blue-600" id="weeklyHours">0 ساعت</p>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">📚</div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">تعداد درس‌ها</p>
+            <p class="text-2xl font-bold text-green-600" id="subjectCount">0</p>
+          </div>
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">📖</div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">پیشرفت</p>
+            <p class="text-2xl font-bold text-purple-600" id="progressPercent">0%</p>
+          </div>
+          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">🎯</div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-500 text-sm">استریک</p>
+            <p class="text-2xl font-bold text-orange-600" id="streak">0 روز</p>
+          </div>
+          <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <!-- Weekly Plan -->
+        <div class="bg-white rounded-xl p-6 card-shadow mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-gray-800">📅 برنامه هفتگی مطالعه</h2>
+            <div class="flex items-center space-x-2">
+              <button onclick="openPlanModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ افزودن برنامه</button>
+              <button onclick="refreshFromStore()" class="bg-gray-200 px-3 py-2 rounded-lg">رفرش</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-7 gap-2 mb-4">
+<div class="text-center text-sm font-medium text-gray-500 p-2">شنبه</div>
+<div class="text-center text-sm font-medium text-gray-500 p-2">یک‌شنبه</div>
+<div class="text-center text-sm font-medium text-gray-500 p-2">دوشنبه</div>
+<div class="text-center text-sm font-medium text-gray-500 p-2">سه‌شنبه</div>
+<div class="text-center text-sm font-medium text-gray-500 p-2">چهارشنبه</div>
+<div class="text-center text-sm font-medium text-gray-500 p-2">پنج‌شنبه</div>
+<div class="text-center text-sm font-medium text-gray-500 p-2">جمعه</div>
+
+          </div>
+          <div id="weeklyCalendar" class="grid grid-cols-7 gap-2"></div>
+        </div>
+
+        <!-- Study Log (Weekly Layout) -->
+        <div class="bg-white rounded-xl p-6 card-shadow">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-gray-800">📝 ثبت مطالعه</h2>
+            <button onclick="openLogModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg">+ ثبت برنامه</button>
+          </div>
+
+          <div class="grid grid-cols-7 gap-2 mb-4">
+                        <div class="day-header">شنبه</div>
+            <div class="day-header">یک شبنه</div>
+            <div class="day-header">دوشنبه</div>
+            <div class="day-header">سه شنبه</div>
+            <div class="day-header">چهارشنبه</div>
+            <div class="day-header">پنج شنبه</div>
+            <div class="day-header">جمعه</div>
+
+          </div>
+          <div id="logCalendar" class="grid grid-cols-7 gap-2"></div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="bg-white rounded-xl p-6 card-shadow text-center">
+          <h3 class="text-lg font-bold mb-3">پیشرفت هدف هفتگی</h3>
+          <div class="relative w-32 h-32 mx-auto mb-4">
+            <svg class="w-32 h-32 progress-ring">
+              <circle cx="64" cy="64" r="56" stroke="#e5e7eb" stroke-width="8" fill="none"/>
+              <circle id="progressRing" cx="64" cy="64" r="56" stroke="#3b82f6" stroke-width="8" fill="none"
+                      stroke-dasharray="351.86" stroke-dashoffset="351.86" stroke-linecap="round"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span id="progressInner" class="text-2xl font-bold text-blue-600">0%</span>
+            </div>
+          </div>
+          <p id="goalText" class="text-gray-600">0h / 16h هدف هفتگی</p>
+        </div>
+
+
+
+        <div class="bg-white rounded-xl p-6 card-shadow">
+          <h3 class="text-lg font-bold mb-3">📊 ساعات مطالعه بر اساس موضوع</h3>
+          <canvas id="subjectChart" width="300" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div id="planModal" class="fixed inset-0 hidden items-center justify-center z-50 modal-backdrop">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+      <h3 class="text-xl font-bold mb-4">افزودن برنامه هفتگی</h3>
+      <form id="planForm">
+        <label class="block mb-2">موضوع</label>
+        <select id="planSubject" class="w-full p-3 border rounded mb-3">
+            <option>ریاضی</option><option>فیزیک</option><option>شیمی</option>
+            <option>هندسه</option><option>زیست</option><option>دینی</option><option>فارسی</option>
+            <option>انگلیسی</option><option>جغرافی</option>
+          </select>
+        <label class="block mb-2">روز</label>
+        <select id="planDay" class="w-full p-3 border rounded mb-3">
+            <option value="0">دوشنبه</option><option value="1">سه شنبه</option><option value="2">چهارشنبه</option>
+            <option value="3">پنج شنبه</option><option value="4">جمعه</option><option value="5">شنبه</option><option value="6">یک شنبه</option>
+        </select>
+        <label class="block mb-2">زمان</label>
+        <input id="planTime" type="time" class="w-full p-3 border rounded mb-3" />
+        <label class="block mb-2">مدت زمان (ساعت)</label>
+        <input id="planDuration" type="number" step="0.5" min="0.5" max="8" class="w-full p-3 border rounded mb-3" />
+        <div class="flex gap-3">
+          <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded">افزودن</button>
+          <button type="button" onclick="closePlanModal()" class="flex-1 bg-gray-300 py-2 rounded">لغو</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="logModal" class="fixed inset-0 hidden items-center justify-center z-50 modal-backdrop">
+    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+      <h3 class="text-xl font-bold mb-4">ثبت برنامه مطالعاتی</h3>
+      <form id="logForm">
+        <label class="block mb-2">تاریخ</label>
+        <input id="logDate" type="date" class="w-full p-3 border rounded mb-3" readonly disabled/>
+        <label class="block mb-2">موضوع</label>
+        <select id="logSubject" class="w-full p-3 border rounded mb-3">
+            <option>ریاضی</option><option>فیزیک</option><option>شیمی</option>
+            <option>هندسه</option><option>زیست</option><option>دینی</option><option>فارسی</option>
+            <option>انگلیسی</option><option>جغرافی</option>
+          </select>
+        <label class="block mb-2">مدت زمان (ساعت)</label>
+        <input id="logDuration" type="number" step="0.5" min="0.5" max="8" class="w-full p-3 border rounded mb-3" />
+        <label class="block mb-2">روش مطالعه</label>
+        <input id="logAmount" class="w-full p-3 border rounded mb-3" />
+        <div class="flex gap-3">
+          <button type="submit" class="flex-1 bg-green-600 text-white py-2 rounded">ثبت</button>
+          <button type="button" onclick="closeLogModal()" class="flex-1 bg-gray-300 py-2 rounded">لغو</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Login -->
+  <div id="loginOverlay" class="fixed inset-0 flex items-center justify-center login-backdrop z-60">
+    <div class="bg-white rounded-xl p-6 w-full max-w-sm mx-4 text-right">
+      <h3 class="text-xl font-bold mb-3">ورود دانش‌آموز</h3>
+      <p class="text-sm text-gray-600 mb-4"></p>
+      <label class="block mb-2">کد ملی</label>
+      <input id="loginNationalId" class="w-full p-3 border rounded mb-3" placeholder="مثلاً 1001" />
+      <div class="flex gap-3">
+        <button onclick="mockLogin()" class="flex-1 bg-blue-600 text-white py-2 rounded">ورود</button>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORE_KEY='valeh:mockdb:v1';
+    const CHANNEL_NAME='valeh-sync';
+    const defaultDb={students:[{id:1,firstName:'Ali',lastName:'Rezaei',nationalId:'1001',studyPlan:[{day:0,time:'14:00',duration:2,subject:'Mathematics'},{day:2,time:'15:00',duration:2,subject:'Chemistry'}],studySessions:[{date:'2024-01-12',subject:'Mathematics',duration:2,amount:'Chapter 3'}],progress:78,hoursThisWeek:4.0,updatedAt:Date.now()},{id:2,firstName:'Sara',lastName:'Mohammadi',nationalId:'1002',studyPlan:[],studySessions:[],progress:52,hoursThisWeek:1.5,updatedAt:Date.now()},{id:3,firstName:'Omid',lastName:'Karimi',nationalId:'1003',studyPlan:[],studySessions:[],progress:65,hoursThisWeek:3.0,updatedAt:Date.now()}]};
+    const bc=new BroadcastChannel(CHANNEL_NAME);
+    const SharedStore={load(){const r=localStorage.getItem(STORE_KEY);if(!r){localStorage.setItem(STORE_KEY,JSON.stringify(defaultDb));return JSON.parse(JSON.stringify(defaultDb));}try{return JSON.parse(r);}catch(e){localStorage.setItem(STORE_KEY,JSON.stringify(defaultDb));return JSON.parse(JSON.stringify(defaultDb));}},save(db){localStorage.setItem(STORE_KEY,JSON.stringify(db));bc.postMessage({type:'db:update',payload:{ts:Date.now()}});},getStudentByNationalId(n){return this.load().students.find(s=>s.nationalId===n)||null;},getStudentById(id){return this.load().students.find(s=>s.id===id)||null;},updateStudent(id,fn){const db=this.load();const i=db.students.findIndex(s=>s.id===id);if(i===-1)return null;fn(db.students[i]);db.students[i].updatedAt=Date.now();this.save(db);return db.students[i];},addPlanToStudent(id,p){return this.updateStudent(id,s=>{s.studyPlan.push(p);});},addSessionToStudent(id,se){return this.updateStudent(id,s=>{s.studySessions.unshift(se);s.hoursThisWeek=s.studySessions.slice(0,50).reduce((a,x)=>a+(x.duration||0),0);s.progress=Math.min(100,Math.round((s.hoursThisWeek/16)*100));});}};
+
+    let currentStudent=null,subjectChart=null;
+
+    function renderAllForCurrent(){
+      if(!currentStudent)return;
+      document.getElementById('greeting').textContent=`خوش آمدید, ${currentStudent.firstName} ${currentStudent.lastName}`;
+      document.getElementById('weeklyHours').textContent=(currentStudent.hoursThisWeek||0).toFixed(1)+' ساعت';
+      document.getElementById('subjectCount').textContent=new Set((currentStudent.studySessions||[]).map(s=>s.subject)).size;
+      document.getElementById('progressPercent').textContent=currentStudent.progress+'%';
+      document.getElementById('progressInner').textContent=currentStudent.progress+'%';
+      const perc=Math.min(100,currentStudent.progress||0);
+      const offset=351.86-(351.86*perc/100);
+      document.getElementById('progressRing').setAttribute('stroke-dashoffset',offset);
+      document.getElementById('goalText').textContent=`${(currentStudent.hoursThisWeek||0).toFixed(1)}h / 16h هدف هفتگی`;
+
+      // Weekly plan
+// Weekly plan (با قابلیت حذف برنامه)
+const cal = document.getElementById("weeklyCalendar");
+cal.innerHTML = "";
+
+for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
+  const dayPlans = (currentStudent.studyPlan || []).filter((p) => p.day === dayIdx);
+  const div = document.createElement("div");
+  div.className = "bg-gray-50 rounded-lg p-3 min-h-24";
+
+  if (dayPlans.length > 0) {
+    let innerHTML = "";
+    dayPlans.forEach((p, planIdx) => {
+      innerHTML += `
+        <div class="bg-blue-100 text-blue-800 text-xs p-2 rounded mb-1 flex justify-between items-start">
+          <div>
+            <div class="font-medium">${p.subject}</div>
+            <div>${p.time} (${p.duration}h)</div>
+          </div>
+          <button onclick="removePlan(${dayIdx}, ${planIdx})" class="text-red-600 text-xs font-bold px-1">×</button>
+        </div>
+      `;
+    });
+    div.innerHTML = innerHTML;
+  } else {
+    div.innerHTML =
+      '<div class="text-gray-400 text-xs text-center mt-2">بدون برنامه</div>';
+  }
+
+  cal.appendChild(div);
+}
+
+
+      // Weekly log view
+      const logCal=document.getElementById('logCalendar');
+      logCal.innerHTML='';
+      for(let i=0;i<7;i++){
+        const ddiv=document.createElement('div');
+        ddiv.className='bg-gray-50 rounded-lg p-3 min-h-24';
+const sessions = (currentStudent.studySessions || []).filter(s => {
+  // تاریخ را بدون تغییر UTC بخوان (فقط روز محلی را در نظر بگیر)
+  const parts = s.date.split('-');
+  const localDate = new Date(parts[0], parts[1] - 1, parts[2]);
+  // advisor از Monday=0 تا Sunday=6 استفاده می‌کند → پس همان را اعمال می‌کنیم
+const jsDay = localDate.getDay(); // 0=Sunday, 6=Saturday
+const adjustedDay = (jsDay + 1) % 7; // شنبه=0، جمعه=6
+
+  return adjustedDay === i;
+});
+
+        ddiv.innerHTML=sessions.length?sessions.map(s=>`<div class="bg-green-100 text-green-800 text-xs p-2 rounded mb-1"><div class="font-medium">${s.subject}</div><div>${s.duration}h - ${s.amount||''}</div></div>`).join(''):'<div class="text-gray-400 text-xs text-center mt-2">ثبت نشده</div>';
+        logCal.appendChild(ddiv);
+      }
+
+      renderSubjectChart();
+    }
+
+    function renderSubjectChart(){
+      const ctx=document.getElementById('subjectChart').getContext('2d');
+      const map={};(currentStudent.studySessions||[]).forEach(s=>{map[s.subject]=(map[s.subject]||0)+(s.duration||0);});
+      const labels=Object.keys(map),data=Object.values(map);
+      if(subjectChart)subjectChart.destroy();
+      subjectChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data,borderRadius:8,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{display:false}},x:{grid:{display:false}}}}});
+    }
+
+    function mockLogin(){const n=document.getElementById('loginNationalId').value.trim();const st=SharedStore.getStudentByNationalId(n);if(!st){alert('دانش آموز یافت نشد');return;}currentStudent=st;document.getElementById('loginOverlay').style.display='none';renderAllForCurrent();}
+    function closeLogin(){document.getElementById('loginOverlay').style.display='none';}
+    function openPlanModal(){document.getElementById('planModal').classList.remove('hidden');document.getElementById('planModal').classList.add('flex');}
+    function closePlanModal(){document.getElementById('planModal').classList.add('hidden');document.getElementById('planModal').classList.remove('flex');}
+    function openLogModal(){document.getElementById('logModal').classList.remove('hidden');document.getElementById('logModal').classList.add('flex');}
+    function closeLogModal(){document.getElementById('logModal').classList.add('hidden');document.getElementById('logModal').classList.remove('flex');}
+    document.getElementById('planForm').addEventListener('submit',e=>{e.preventDefault();if(!currentStudent)return alert('ابتدا وارد شوید');const subject=document.getElementById('planSubject').value||'Unknown';const day=parseInt(document.getElementById('planDay').value);const time=document.getElementById('planTime').value||'12:00';const duration=parseFloat(document.getElementById('planDuration').value)||1;SharedStore.addPlanToStudent(currentStudent.id,{day,time,duration,subject});currentStudent=SharedStore.getStudentById(currentStudent.id);renderAllForCurrent();closePlanModal();});
+    document.getElementById('logForm').addEventListener('submit',e=>{e.preventDefault();if(!currentStudent)return alert('ابتدا وارد شوید');const date=document.getElementById('logDate').value||new Date().toISOString().split('T')[0];const subject=document.getElementById('logSubject').value||'Unknown';const duration=parseFloat(document.getElementById('logDuration').value)||1;const amount=document.getElementById('logAmount').value||'';SharedStore.addSessionToStudent(currentStudent.id,{date,subject,duration,amount});currentStudent=SharedStore.getStudentById(currentStudent.id);renderAllForCurrent();closeLogModal();});
+    bc.onmessage=()=>{if(!currentStudent)return;currentStudent=SharedStore.getStudentById(currentStudent.id);renderAllForCurrent();};
+    function refreshFromStore(){if(!currentStudent)return;currentStudent=SharedStore.getStudentById(currentStudent.id);renderAllForCurrent();}
+    document.addEventListener('DOMContentLoaded',()=>{document.getElementById('logDate').value=new Date().toISOString().split('T')[0];});
+
+    // reset the study-log for new week
+    
+    function onLoginSubmit(e) {
+      e.preventDefault();
+      const nid = document.getElementById('nationalId').value.trim();
+      const s = SharedStore.getStudentByNationalId(nid);
+      if (!s) {
+        alert('دانش‌آموزی با این کد ملی پیدا نشد');
+        return;
+      }
+      // بررسی هفته
+      resetLogsIfNewWeek(s);
+    
+      currentStudent = SharedStore.getStudentByNationalId(nid);
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('mainSection').classList.remove('hidden');
+      renderStudentDashboard();
+    }
+
+
+
+
+    function removePlan(dayIdx, planIdx) {
+  if (!currentStudent) return alert("ابتدا وارد شوید");
+
+  if (!confirm("آیا مطمئنی می‌خوای این برنامه حذف بشه؟")) return;
+
+  SharedStore.updateStudent(currentStudent.id, (s) => {
+    const arr = s.studyPlan || [];
+    let count = -1,
+      removeIdx = -1;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].day === dayIdx) {
+        count++;
+        if (count === planIdx) {
+          removeIdx = i;
+          break;
+        }
+      }
+    }
+    if (removeIdx !== -1) arr.splice(removeIdx, 1);
+  });
+
+  currentStudent = SharedStore.getStudentById(currentStudent.id);
+  renderAllForCurrent();
+}
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/jalali-moment/dist/jalali-moment.browser.js"></script>
+
+  
+</body>
+</html>
