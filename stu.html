@@ -50,8 +50,10 @@
     }
   
     button {
-      transition: all 0.25s ease;
-    }
+  transition: all 0.25s ease;
+  white-space: nowrap; /* 👈 مانع شکستن متن در چند خط */
+}
+
   
     button:hover {
       opacity: 0.9;
@@ -105,6 +107,21 @@
         grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
       }
     }
+
+    @media (max-width: 768px) {
+  #weeklyHeaderDesktop,
+  #weeklyCalendar,
+  #logHeaderDesktop,
+  #logCalendar {
+    display: none !important;
+  }
+
+  #weeklyMobile,
+  #logMobile {
+    display: block !important;
+  }
+}
+
   </style>
   
 </head>
@@ -172,49 +189,57 @@
 
     <!-- Main -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div class="lg:col-span-2">
-        <!-- Weekly Plan -->
-        <div class="bg-white rounded-xl p-6 card-shadow mb-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold text-gray-800">📅 برنامه هفتگی مطالعه</h2>
-            <div class="flex items-center space-x-2">
-              <button onclick="openPlanModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ افزودن برنامه</button>
-              <button onclick="refreshFromStore()" class="bg-gray-200 px-3 py-2 rounded-lg">رفرش</button>
+        <div class="lg:col-span-2">
+            <!-- Weekly Plan -->
+            <div class="bg-white rounded-xl p-6 card-shadow mb-6">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-gray-800">📅 برنامه هفتگی مطالعه</h2>
+                <div class="flex items-center space-x-2">
+                  <button onclick="openPlanModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ افزودن برنامه</button>
+                  <button onclick="refreshFromStore()" class="bg-gray-200 px-3 py-2 rounded-lg">رفرش</button>
+                </div>
+              </div>
+          
+              <!-- Desktop layout -->
+              <div id="weeklyHeaderDesktop" class="hidden md:grid grid-cols-7 gap-2 mb-2">
+                <div class="text-center text-sm font-medium text-gray-500">شنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">یک‌شنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">دوشنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">سه‌شنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">چهارشنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">پنج‌شنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">جمعه</div>
+              </div>
+              <div id="weeklyCalendar" class="hidden md:grid grid-cols-7 gap-2"></div>
+          
+              <!-- Mobile layout -->
+              <div id="weeklyMobile" class="block md:hidden space-y-3"></div>
+            </div>
+          
+            <!-- Study Log -->
+            <div class="bg-white rounded-xl p-6 card-shadow">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-gray-800">📝 ثبت مطالعه</h2>
+                <button onclick="openLogModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg">+ ثبت برنامه</button>
+              </div>
+          
+              <!-- Desktop layout -->
+              <div id="logHeaderDesktop" class="hidden md:grid grid-cols-7 gap-2 mb-2">
+                <div class="text-center text-sm font-medium text-gray-500">شنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">یک‌شنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">دوشنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">سه‌شنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">چهارشنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">پنج‌شنبه</div>
+                <div class="text-center text-sm font-medium text-gray-500">جمعه</div>
+              </div>
+              <div id="logCalendar" class="hidden md:grid grid-cols-7 gap-2"></div>
+          
+              <!-- Mobile layout -->
+              <div id="logMobile" class="block md:hidden space-y-3"></div>
             </div>
           </div>
-          <div class="grid grid-cols-7 gap-2 mb-4">
-<div class="text-center text-sm font-medium text-gray-500 p-2">شنبه</div>
-<div class="text-center text-sm font-medium text-gray-500 p-2">یک‌شنبه</div>
-<div class="text-center text-sm font-medium text-gray-500 p-2">دوشنبه</div>
-<div class="text-center text-sm font-medium text-gray-500 p-2">سه‌شنبه</div>
-<div class="text-center text-sm font-medium text-gray-500 p-2">چهارشنبه</div>
-<div class="text-center text-sm font-medium text-gray-500 p-2">پنج‌شنبه</div>
-<div class="text-center text-sm font-medium text-gray-500 p-2">جمعه</div>
-
-          </div>
-          <div id="weeklyCalendar" class="grid grid-cols-7 gap-2"></div>
-        </div>
-
-        <!-- Study Log (Weekly Layout) -->
-        <div class="bg-white rounded-xl p-6 card-shadow">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold text-gray-800">📝 ثبت مطالعه</h2>
-            <button onclick="openLogModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg">+ ثبت برنامه</button>
-          </div>
-
-          <div class="grid grid-cols-7 gap-2 mb-4">
-                        <div class="day-header">شنبه</div>
-            <div class="day-header">یک شبنه</div>
-            <div class="day-header">دوشنبه</div>
-            <div class="day-header">سه شنبه</div>
-            <div class="day-header">چهارشنبه</div>
-            <div class="day-header">پنج شنبه</div>
-            <div class="day-header">جمعه</div>
-
-          </div>
-          <div id="logCalendar" class="grid grid-cols-7 gap-2"></div>
-        </div>
-      </div>
+          
 
       <div class="space-y-6">
         <div class="bg-white rounded-xl p-6 card-shadow text-center">
@@ -384,6 +409,59 @@ const adjustedDay = (jsDay + 1) % 7; // شنبه=0، جمعه=6
       }
 
       renderSubjectChart();
+
+// --- نسخه موبایل ---
+const weekNames = ["شنبه","یک‌شنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنج‌شنبه","جمعه"];
+const weeklyMobile = document.getElementById("weeklyMobile");
+const logMobile = document.getElementById("logMobile");
+weeklyMobile.innerHTML = "";
+logMobile.innerHTML = "";
+
+for (let i = 0; i < 7; i++) {
+  // برنامه هفتگی
+  const dayPlans = (currentStudent.studyPlan || []).filter(p => p.day === i);
+  const planDiv = document.createElement("div");
+  planDiv.className = "bg-gray-50 rounded-lg p-3 border";
+  let planHTML = `<div class="font-bold text-gray-700 mb-2">📅 ${weekNames[i]}</div>`;
+  if (dayPlans.length) {
+    planHTML += dayPlans.map(p => `
+      <div class="bg-blue-100 text-blue-800 text-xs p-2 rounded mb-1 flex justify-between items-start">
+        <div><div class="font-medium">${p.subject}</div><div>${p.time} (${p.duration}h)</div></div>
+        <button onclick="removePlan(${i}, 0)" class="text-red-600 text-xs font-bold px-1">×</button>
+      </div>
+    `).join("");
+  } else {
+    planHTML += `<div class="text-gray-400 text-xs">بدون برنامه</div>`;
+  }
+  planDiv.innerHTML = planHTML;
+  weeklyMobile.appendChild(planDiv);
+
+  // ثبت مطالعه
+  const sessions = (currentStudent.studySessions || []).filter(s => {
+    const parts = s.date.split("-");
+    const localDate = new Date(parts[0], parts[1] - 1, parts[2]);
+    const jsDay = localDate.getDay();
+    const adjustedDay = (jsDay + 1) % 7;
+    return adjustedDay === i;
+  });
+
+  const logDiv = document.createElement("div");
+  logDiv.className = "bg-gray-50 rounded-lg p-3 border";
+  let logHTML = `<div class="font-bold text-gray-700 mb-2">🗓 ${weekNames[i]}</div>`;
+  if (sessions.length) {
+    logHTML += sessions.map(s => `
+      <div class="bg-green-100 text-green-800 text-xs p-2 rounded mb-1">
+        <div class="font-medium">${s.subject}</div>
+        <div>${s.duration}h - ${s.amount || ""}</div>
+      </div>
+    `).join("");
+  } else {
+    logHTML += `<div class="text-gray-400 text-xs">ثبت نشده</div>`;
+  }
+  logDiv.innerHTML = logHTML;
+  logMobile.appendChild(logDiv);
+}
+
     }
 
     function renderSubjectChart(){
