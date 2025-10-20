@@ -245,19 +245,56 @@ document.addEventListener("DOMContentLoaded", () => {
     const CHANNEL_NAME = 'valeh-sync';
     const bc = new BroadcastChannel(CHANNEL_NAME);
 
-    const defaultDb = {
-        students: [
-            {
-                id: 1, firstName:'Ali', lastName:'Rezaei', nationalId:'1001',
-                studyPlan: [{ day:0, time:'14:00', duration:2, subject:'Mathematics' }],
-                studySessions: [{ date:'2024-01-12', subject:'Mathematics', duration:2, amount:'Chapter 3' }],
-                progress:78, hoursThisWeek:4.0, updatedAt: Date.now(), advisorNotes:'', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0],
+const defaultDb = {
+  students: [
+    { id: 1, firstName: 'امیر علی', lastName: 'ابراهیم وندی', nationalId: '8402920', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 2, firstName: 'عرشیا', lastName: 'احمدی', nationalId: '8402921', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 3, firstName: 'امیرحسین', lastName: 'احمدی', nationalId: '8428153', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 4, firstName: 'علی', lastName: 'اصانلو', nationalId: '8402922', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 5, firstName: 'طاها', lastName: 'امیری', nationalId: '8402923', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 6, firstName: 'داریوش', lastName: 'امینی', nationalId: '8402924', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 7, firstName: 'آریا', lastName: 'ایران تاج', nationalId: '8402925', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 8, firstName: 'رودین', lastName: 'بختیاری', nationalId: '8402926', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 9, firstName: 'آمین', lastName: 'تیز رویان', nationalId: '8402927', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 10, firstName: 'ایزدیار', lastName: 'جلالی پور', nationalId: '8428143', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 11, firstName: 'سپهر', lastName: 'حاج صادقی', nationalId: '8428156', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 12, firstName: 'محمد حسین', lastName: 'حسینی یکتا', nationalId: '8402928', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 13, firstName: 'پرهام', lastName: 'خالقی', nationalId: '8428144', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 14, firstName: 'امیر', lastName: 'خداپرست', nationalId: '8402929', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 15, firstName: 'امیرعلی', lastName: 'خدامی', nationalId: '8402959', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 16, firstName: 'آبتین', lastName: 'داداشی', nationalId: '8402960', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 17, firstName: 'محمدپرهام', lastName: 'داداشی جوردهی', nationalId: '8402930', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 18, firstName: 'صدرا', lastName: 'دلارامی', nationalId: '8428145', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 19, firstName: 'کوروش', lastName: 'دهقان نیری', nationalId: '8402931', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 20, firstName: 'آرتین', lastName: 'رادمتین', nationalId: '8402961', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 21, firstName: 'صدرا', lastName: 'روستا آزاد', nationalId: '8402932', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 22, firstName: 'سپهر', lastName: 'سفیدی ثمرین', nationalId: '8402933', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 23, firstName: 'مهدی', lastName: 'سیدصادقی', nationalId: '8402934', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 24, firstName: 'محمد حسین', lastName: 'شکرزاده گروی', nationalId: '8402962', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 25, firstName: 'آراس', lastName: 'شهباز دشتی', nationalId: '8402935', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 26, firstName: 'امیر حسین', lastName: 'عسگری', nationalId: '8402963', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 27, firstName: 'محمد طاها', lastName: 'علی بابایی', nationalId: '8402964', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 28, firstName: 'محمد امین', lastName: 'فتحعلی پور', nationalId: '8402936', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 29, firstName: 'امیرعلی', lastName: 'فضلعلی پور', nationalId: '8402965', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 30, firstName: 'مهیار', lastName: 'فیاض', nationalId: '8402937', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 31, firstName: 'آرمان', lastName: 'قادری', nationalId: '8402938', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 32, firstName: 'امیرحسین', lastName: 'قادری', nationalId: '8428158', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 33, firstName: 'ایلیا', lastName: 'کشاورز', nationalId: '8402943', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 34, firstName: 'کیارش', lastName: 'کیهان', nationalId: '8402944', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 35, firstName: 'علی', lastName: 'محدث', nationalId: '8402966', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 36, firstName: 'رهام', lastName: 'محمد', nationalId: '8402931', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 37, firstName: 'رادمان', lastName: 'محمدی', nationalId: '8402929', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 38, firstName: 'طاها', lastName: 'مرادی', nationalId: '8402939', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 39, firstName: 'امیر مهدی', lastName: 'معتمدی', nationalId: '8402920', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 40, firstName: 'علی', lastName: 'مهدی وشاره', nationalId: '8402940', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 41, firstName: 'ایلیا', lastName: 'مهدی وشاره', nationalId: '8402941', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 42, firstName: 'عرفان', lastName: 'نهاوندی فرد', nationalId: '8402967', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 43, firstName: 'مانی', lastName: 'نیازی', nationalId: '8402942', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 44, firstName: 'محمد طاها', lastName: 'یاوری', nationalId: '8402945', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] },
+    { id: 45, firstName: 'پرهام', lastName: 'یعقوبی', nationalId: '8402946', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now(), advisorNotes: '', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0] }
+  ]
+};
 
-            },
-            { id:2, firstName:'Sara', lastName:'Mohammadi', nationalId:'1002', studyPlan:[], studySessions:[], progress:52, hoursThisWeek:1.5, updatedAt:Date.now(), advisorNotes:'', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0],},
-            { id:3, firstName:'Omid', lastName:'Karimi', nationalId:'1003', studyPlan:[], studySessions:[], progress:65, hoursThisWeek:3.0, updatedAt:Date.now(), advisorNotes:'', lastWeekStart: startOfWeek(new Date()).toISOString().split('T')[0],}
-        ]
-    };
 
     const SharedStore = {
         load(){ const raw = localStorage.getItem(STORE_KEY); if(!raw){ localStorage.setItem(STORE_KEY, JSON.stringify(defaultDb)); return JSON.parse(JSON.stringify(defaultDb)); } try{return JSON.parse(raw);}catch(e){ localStorage.setItem(STORE_KEY, JSON.stringify(defaultDb)); return JSON.parse(JSON.stringify(defaultDb)); } },
