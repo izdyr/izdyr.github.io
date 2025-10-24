@@ -474,17 +474,40 @@ async function loadAndRender() {
 function renderAllForCurrent() {
     if (!currentStudent) return;
     
+    // هدر
     document.getElementById('greeting').textContent = `خوش آمدید, ${currentStudent.firstName} ${currentStudent.lastName}`;
     
-    document.getElementById('weeklyHours').textContent = (currentStudent.hoursThisWeek || 0).toFixed(1) + ' ساعت';
-    document.getElementById('subjectCount').textContent = new Set((currentStudent.studySessions || []).map(s => s.subject)).size;
-    document.getElementById('progressPercent').textContent = currentStudent.progress + '%';
-    document.getElementById('progressInner').textContent = currentStudent.progress + '%';
+    // 🆕 محاسبه مجموع ساعت‌های برنامه هفتگی
+    const totalPlannedHours = (currentStudent.studyPlan || []).reduce((sum, plan) => {
+        return sum + (parseFloat(plan.duration) || 0);
+    }, 0);
     
-    const perc = Math.min(100, currentStudent.progress || 0);
-    const offset = 351.86 - (351.86 * perc / 100);
+    // 🆕 محاسبه مجموع ساعت‌های ثبت شده
+    const totalStudiedHours = currentStudent.hoursThisWeek || 0;
+    
+    // 🆕 محاسبه درصد پیشرفت
+    let progressPercent = 0;
+    if (totalPlannedHours > 0) {
+        progressPercent = Math.min(100, Math.round((totalStudiedHours / totalPlannedHours) * 100));
+    }
+    
+    // آمار
+    document.getElementById('weeklyHours').textContent = totalStudiedHours.toFixed(1) + ' ساعت';
+    document.getElementById('subjectCount').textContent = new Set((currentStudent.studySessions || []).map(s => s.subject)).size;
+    document.getElementById('progressPercent').textContent = progressPercent + '%';
+    document.getElementById('progressInner').textContent = progressPercent + '%';
+    
+    // رینگ پیشرفت
+    const offset = 351.86 - (351.86 * progressPercent / 100);
     document.getElementById('progressRing').setAttribute('stroke-dashoffset', offset);
-    document.getElementById('goalText').textContent = `${(currentStudent.hoursThisWeek || 0).toFixed(1)}h / 16h هدف هفتگی`;
+    
+    // 🆕 نمایش هدف واقعی
+    const goalText = totalPlannedHours > 0 
+        ? `${totalStudiedHours.toFixed(1)}h / ${totalPlannedHours.toFixed(1)}h هدف هفتگی`
+        : `${totalStudiedHours.toFixed(1)}h - برنامه‌ای تعریف نشده`;
+    document.getElementById('goalText').textContent = goalText;
+    
+    // ادامه کد... (بقیه بدون تغییر)
     
     const cal = document.getElementById("weeklyCalendar");
     cal.innerHTML = "";
