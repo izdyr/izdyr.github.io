@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Mode - Valeh Time</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700;900&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes scale-in {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes countdown-pulse {
+      0% { transform: scale(1.25); opacity: 0; }
+      50% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.8); opacity: 0; }
+    }
+
+    @keyframes breathing {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0);
+        opacity: 0.6;
+      }
+      100% {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+
+    @keyframes button-glow {
+      0%, 100% {
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
+      }
+    }
+
+    @keyframes fade-in-up {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fade-out-down {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .scale-in {
+      animation: scale-in 0.5s ease-out forwards;
+    }
+
+    .countdown-number {
+      animation: countdown-pulse 1s ease-in-out;
+    }
+
+    .breathing {
+      animation: breathing 4s ease-in-out infinite;
+    }
+
+    .timer-ring {
+      transition: stroke 0.8s ease-in-out, stroke-dashoffset 1s linear;
+    }
+
+    .focus-gradient {
+      background: radial-gradient(circle at center, #3b82f6 0%, #1e3a8a 100%);
+    }
+
+    .btn-ripple {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-ripple::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+    }
+
+    .btn-ripple.active::after {
+      animation: ripple 0.6s ease-out;
+    }
+
+    .btn-press {
+      transition: transform 0.1s ease;
+    }
+
+    .btn-press:active {
+      transform: scale(0.95);
+    }
+
+    .motivational-message {
+      animation: fade-in-up 0.5s ease-out forwards;
+    }
+
+    .motivational-message.fade-out {
+      animation: fade-out-down 0.5s ease-out forwards;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full min-h-full bg-gradient-to-br from-blue-50 to-blue-100"><!-- Main Container -->
+  <div id="app" class="h-full min-h-full relative"><!-- Dashboard View (Initial State) -->
+   <div id="dashboard-view" class="h-full min-h-full flex items-center justify-center p-6">
+    <div class="text-center">
+     <div class="mb-8">
+      <h1 class="text-5xl font-bold text-blue-900 mb-2">⏱️ Valeh Time</h1>
+      <p class="text-blue-600 text-lg">سامانه مدیریت زمان مطالعه</p>
+     </div><button id="start-focus-btn" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-2xl text-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"> 🎯 شروع جلسه تمرکز </button> <!-- Recent Sessions -->
+     <div class="mt-12 max-w-2xl mx-auto">
+      <h2 class="text-2xl font-bold text-blue-900 mb-4">📊 جلسات اخیر</h2>
+      <div id="sessions-list" class="space-y-3"><!-- Sessions will be rendered here -->
+      </div>
+     </div>
+    </div>
+   </div><!-- Setup Overlay -->
+   <div id="setup-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-md hidden items-center justify-center z-50 transition-all duration-700">
+    <div class="bg-white/10 backdrop-blur-lg rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl scale-in border border-white/20">
+     <h2 id="setup-title" class="text-3xl font-bold text-white mb-6 text-center">🎯 Focus Mode Setup</h2>
+     <form id="setup-form" class="space-y-5"><!-- Subject -->
+      <div><label for="subject-select" class="block text-white/90 font-semibold mb-2">📚 موضوع درس</label> <select id="subject-select" class="w-full bg-white/20 backdrop-blur-sm text-white rounded-xl px-4 py-3 border border-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"> <option value="ریاضی">ریاضی</option> <option value="فیزیک">فیزیک</option> <option value="شیمی">شیمی</option> <option value="زبان">زبان انگلیسی</option> <option value="ادبیات">ادبیات فارسی</option> <option value="دیگر">سایر</option> </select>
+      </div><!-- Duration -->
+      <div><label for="duration-input" class="block text-white/90 font-semibold mb-2">⏱️ مدت زمان (دقیقه)</label> <input type="number" id="duration-input" min="1" max="180" value="25" class="w-full bg-white/20 backdrop-blur-sm text-white rounded-xl px-4 py-3 border border-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all">
+      </div><!-- Mode Type -->
+      <div><label class="block text-white/90 font-semibold mb-3">🎯 نوع جلسه</label>
+       <div class="flex gap-3"><label class="flex-1 cursor-pointer"> <input type="radio" name="mode" value="pomodoro" checked class="peer hidden">
+         <div class="bg-white/10 peer-checked:bg-cyan-500/30 peer-checked:border-cyan-400 border-2 border-white/20 rounded-xl p-3 text-center text-white transition-all hover:bg-white/20">
+          <div class="text-2xl mb-1">
+           🕐
+          </div>
+          <div class="text-sm font-semibold">
+           Pomodoro
+          </div>
+          <div class="text-xs opacity-75">
+           25 دقیقه
+          </div>
+         </div></label> <label class="flex-1 cursor-pointer"> <input type="radio" name="mode" value="deep" class="peer hidden">
+         <div class="bg-white/10 peer-checked:bg-cyan-500/30 peer-checked:border-cyan-400 border-2 border-white/20 rounded-xl p-3 text-center text-white transition-all hover:bg-white/20">
+          <div class="text-2xl mb-1">
+           💡
+          </div>
+          <div class="text-sm font-semibold">
+           Deep Focus
+          </div>
+          <div class="text-xs opacity-75">
+           60 دقیقه
+          </div>
+         </div></label> <label class="flex-1 cursor-pointer"> <input type="radio" name="mode" value="custom" class="peer hidden">
+         <div class="bg-white/10 peer-checked:bg-cyan-500/30 peer-checked:border-cyan-400 border-2 border-white/20 rounded-xl p-3 text-center text-white transition-all hover:bg-white/20">
+          <div class="text-2xl mb-1">
+           ⚡
+          </div>
+          <div class="text-sm font-semibold">
+           Custom
+          </div>
+          <div class="text-xs opacity-75">
+           دلخواه
+          </div>
+         </div></label>
+       </div>
+      </div><!-- Goal Notes -->
+      <div><label for="goal-input" class="block text-white/90 font-semibold mb-2">📝 هدف جلسه (اختیاری)</label> <textarea id="goal-input" rows="2" placeholder="مثلاً مرور فصل ۳" class="w-full bg-white/20 backdrop-blur-sm text-white placeholder-white/50 rounded-xl px-4 py-3 border border-white/30 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all resize-none"></textarea>
+      </div><!-- Mute Toggle --> <label class="flex items-center gap-3 cursor-pointer"> <input type="checkbox" id="mute-toggle" class="w-5 h-5 rounded accent-cyan-400"> <span class="text-white/90">🔕 بی‌صدا کردن اعلان‌ها</span> </label> <!-- Start Button --> <button type="submit" class="w-full bg-gradient-to-r from-lime-500 to-green-600 hover:from-lime-600 hover:to-green-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 mt-6"> ▶️ شروع تمرکز </button>
+     </form><button id="cancel-setup-btn" class="w-full mt-3 text-white/70 hover:text-white py-2 transition-all"> انصراف </button>
+    </div>
+   </div><!-- Countdown Overlay -->
+   <div id="countdown-overlay" class="fixed inset-0 focus-gradient hidden items-center justify-center z-50">
+    <div class="text-center">
+     <div id="countdown-number" class="text-[8rem] font-extrabold text-white drop-shadow-2xl countdown-number">
+      3
+     </div>
+     <p id="countdown-text" class="text-2xl text-cyan-300 pulse-glow mt-4">Get ready to focus</p>
+    </div>
+   </div><!-- Active Timer Overlay -->
+   <div id="timer-overlay" class="fixed inset-0 focus-gradient hidden items-center justify-center z-50"><!-- Top Controls -->
+    <div class="absolute top-6 left-6 right-6 flex justify-between items-center"><button id="end-session-btn" class="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white p-3 rounded-full transition-all border border-white/20">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg></button>
+     <div id="mode-indicator" class="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm border border-white/20">
+      🕐 Pomodoro
+     </div>
+    </div><!-- Timer Circle -->
+    <div class="relative breathing">
+     <svg class="transform -rotate-90" width="320" height="320" viewbox="0 0 320 320"><!-- Background Circle --> <circle cx="160" cy="160" r="140" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="12" /> <!-- Progress Circle --> <circle id="timer-progress" cx="160" cy="160" r="140" fill="none" stroke="url(#gradient)" stroke-width="12" stroke-linecap="round" class="timer-ring pulse-glow" style="stroke-dasharray: 879.6; stroke-dashoffset: 0;" /> <defs>
+       <lineargradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+        <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+       </lineargradient>
+      </defs>
+     </svg><!-- Timer Text -->
+     <div class="absolute inset-0 flex flex-col items-center justify-center">
+      <div id="timer-display" class="text-7xl font-extrabold text-white drop-shadow-lg">
+       25:00
+      </div>
+      <div id="timer-subject" class="text-xl text-cyan-300 mt-2">
+       ریاضی
+      </div>
+      <div id="timer-progress-text" class="text-sm text-white/70 mt-1">
+       0m / 25m
+      </div>
+      <div id="motivational-message" class="text-lg text-white/90 mt-4 font-semibold opacity-0"></div>
+     </div>
+    </div><!-- Bottom Controls -->
+    <div class="absolute bottom-12 left-0 right-0 flex justify-center gap-4"><button id="pause-btn" class="btn-ripple btn-press bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-6 py-3 rounded-full font-semibold transition-all border border-white/30 shadow-lg"> ⏸ توقف </button> <button id="distraction-btn" class="btn-ripple btn-press bg-red-500/30 hover:bg-red-500/50 backdrop-blur-sm text-white px-6 py-3 rounded-full font-semibold transition-all border border-red-400/50 shadow-lg"> 🚫 حواس‌پرتی </button> <button id="complete-btn" class="btn-ripple btn-press bg-lime-500/30 hover:bg-lime-500/50 backdrop-blur-sm text-white px-6 py-3 rounded-full font-semibold transition-all border border-lime-400/50 shadow-lg"> ✅ پایان </button>
+    </div>
+   </div><!-- Summary Overlay -->
+   <div id="summary-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-md hidden items-center justify-center z-50">
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl scale-in">
+     <div class="text-center mb-6">
+      <div class="text-6xl mb-3">
+       🎉
+      </div>
+      <h2 id="complete-title" class="text-3xl font-bold text-blue-900">Session Complete</h2>
+     </div>
+     <div class="space-y-4 mb-6">
+      <div class="flex justify-between items-center p-4 bg-blue-50 rounded-xl"><span class="text-blue-700 font-semibold">⏱️ زمان برنامه‌ریزی شده</span> <span id="summary-planned" class="text-blue-900 font-bold">25 دقیقه</span>
+      </div>
+      <div class="flex justify-between items-center p-4 bg-green-50 rounded-xl"><span class="text-green-700 font-semibold">✅ زمان تمرکز واقعی</span> <span id="summary-actual" class="text-green-900 font-bold">22 دقیقه</span>
+      </div>
+      <div class="flex justify-between items-center p-4 bg-orange-50 rounded-xl"><span class="text-orange-700 font-semibold">⏸ تعداد توقف‌ها</span> <span id="summary-pauses" class="text-orange-900 font-bold">1</span>
+      </div>
+      <div class="flex justify-between items-center p-4 bg-red-50 rounded-xl"><span class="text-red-700 font-semibold">🚫 حواس‌پرتی‌ها</span> <span id="summary-distractions" class="text-red-900 font-bold">2</span>
+      </div><!-- Focus Ratio Bar -->
+      <div class="mt-4">
+       <div class="flex justify-between text-sm text-gray-600 mb-2"><span>نسبت تمرکز</span> <span id="focus-ratio">88%</span>
+       </div>
+       <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div id="focus-bar" class="bg-gradient-to-r from-green-500 to-lime-500 h-full rounded-full transition-all duration-1000" style="width: 88%"></div>
+       </div>
+      </div>
+     </div><!-- Add Note -->
+     <div class="mb-6"><label for="summary-note" class="block text-gray-700 font-semibold mb-2">📝 یادداشت (اختیاری)</label> <textarea id="summary-note" rows="3" placeholder="نکات مهم یا بازخورد خود را بنویسید..." class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-400 transition-all resize-none"></textarea>
+     </div><button id="save-session-btn" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"> 💾 ذخیره و بستن </button>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      app_title: "Focus Mode",
+      setup_title: "🎯 Focus Mode Setup",
+      countdown_text: "Get ready to focus",
+      complete_title: "Session Complete",
+      background_color: "#1e3a8a",
+      surface_color: "#ffffff",
+      text_color: "#1e293b",
+      primary_action_color: "#3b82f6",
+      secondary_action_color: "#84cc16"
+    };
+
+    let currentSession = {
+      subject: "",
+      planned_duration: 0,
+      actual_duration: 0,
+      mode: "",
+      pauses: 0,
+      distractions: 0,
+      notes: "",
+      start_time: 0,
+      pause_start: 0,
+      total_pause_time: 0
+    };
+
+    let timerInterval = null;
+    let remainingSeconds = 0;
+    let isPaused = false;
+    let sessions = [];
+
+    const dataHandler = {
+      onDataChanged(data) {
+        sessions = data;
+        renderSessions();
+      }
+    };
+
+    async function onConfigChange(config) {
+      document.getElementById('setup-title').textContent = config.setup_title || defaultConfig.setup_title;
+      document.getElementById('countdown-text').textContent = config.countdown_text || defaultConfig.countdown_text;
+      document.getElementById('complete-title').textContent = config.complete_title || defaultConfig.complete_title;
+      
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      
+      document.getElementById('timer-overlay').style.background = `radial-gradient(circle at center, ${primaryColor} 0%, ${bgColor} 100%)`;
+      document.getElementById('countdown-overlay').style.background = `radial-gradient(circle at center, ${primaryColor} 0%, ${bgColor} 100%)`;
+      
+      const summaryOverlay = document.getElementById('summary-overlay');
+      if (summaryOverlay) {
+        const summaryCard = summaryOverlay.querySelector('.bg-white');
+        if (summaryCard) {
+          summaryCard.style.backgroundColor = surfaceColor;
+          summaryCard.style.color = textColor;
+        }
+      }
+      
+      const startBtn = document.getElementById('start-focus-btn');
+      if (startBtn) {
+        startBtn.style.background = `linear-gradient(to right, ${primaryColor}, ${bgColor})`;
+      }
+      
+      const saveBtn = document.getElementById('save-session-btn');
+      if (saveBtn) {
+        saveBtn.style.background = `linear-gradient(to right, ${primaryColor}, ${bgColor})`;
+      }
+    }
+
+    function renderSessions() {
+      const container = document.getElementById('sessions-list');
+      if (sessions.length === 0) {
+        container.innerHTML = '<p class="text-blue-600 text-center py-8">هنوز جلسه‌ای ثبت نشده است</p>';
+        return;
+      }
+
+      container.innerHTML = sessions.slice(-5).reverse().map(session => {
+        const focusRatio = Math.round((session.actual_duration / session.planned_duration) * 100);
+        return `
+          <div class="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all">
+            <div class="flex justify-between items-center mb-2">
+              <span class="font-bold text-blue-900">${session.subject}</span>
+              <span class="text-sm text-gray-500">${new Date(session.completed_at).toLocaleDateString('fa-IR')}</span>
+            </div>
+            <div class="flex gap-4 text-sm text-gray-600">
+              <span>⏱️ ${session.actual_duration}/${session.planned_duration} دقیقه</span>
+              <span>⏸ ${session.pauses}</span>
+              <span>🚫 ${session.distractions}</span>
+              <span class="font-semibold ${focusRatio >= 80 ? 'text-green-600' : 'text-orange-600'}">${focusRatio}%</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('start-focus-btn').addEventListener('click', () => {
+      document.getElementById('setup-overlay').classList.remove('hidden');
+      document.getElementById('setup-overlay').classList.add('flex');
+    });
+
+    document.getElementById('cancel-setup-btn').addEventListener('click', () => {
+      document.getElementById('setup-overlay').classList.add('hidden');
+      document.getElementById('setup-overlay').classList.remove('flex');
+    });
+
+    document.getElementById('setup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const subject = document.getElementById('subject-select').value;
+      const duration = parseInt(document.getElementById('duration-input').value);
+      const mode = document.querySelector('input[name="mode"]:checked').value;
+      const goal = document.getElementById('goal-input').value;
+      
+      if (mode === 'pomodoro') {
+        document.getElementById('duration-input').value = 25;
+      } else if (mode === 'deep') {
+        document.getElementById('duration-input').value = 60;
+      }
+      
+      currentSession = {
+        subject: subject,
+        planned_duration: duration,
+        actual_duration: 0,
+        mode: mode,
+        pauses: 0,
+        distractions: 0,
+        notes: goal,
+        start_time: Date.now(),
+        pause_start: 0,
+        total_pause_time: 0
+      };
+      
+      document.getElementById('setup-overlay').classList.add('hidden');
+      document.getElementById('setup-overlay').classList.remove('flex');
+      
+      startCountdown();
+    });
+
+    function startCountdown() {
+      document.getElementById('countdown-overlay').classList.remove('hidden');
+      document.getElementById('countdown-overlay').classList.add('flex');
+      
+      let count = 3;
+      const countdownEl = document.getElementById('countdown-number');
+      
+      const countdownInterval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownEl.textContent = count;
+          countdownEl.classList.remove('countdown-number');
+          void countdownEl.offsetWidth;
+          countdownEl.classList.add('countdown-number');
+        } else {
+          clearInterval(countdownInterval);
+          document.getElementById('countdown-overlay').classList.add('hidden');
+          document.getElementById('countdown-overlay').classList.remove('flex');
+          startTimer();
+        }
+      }, 1000);
+    }
+
+    let motivationalInterval = null;
+    const motivationalMessages = [
+      '💪 Stay sharp!',
+      '🎯 You\'re doing great!',
+      '⚡ Keep going!',
+      '🔥 Almost there!',
+      '✨ Focus is power!',
+      '🚀 You got this!',
+      '🌟 Stay in the zone!',
+      '💎 Excellence in progress!'
+    ];
+
+    function showMotivationalMessage() {
+      const messageEl = document.getElementById('motivational-message');
+      const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+      
+      messageEl.textContent = randomMessage;
+      messageEl.classList.remove('fade-out');
+      messageEl.classList.add('motivational-message');
+      messageEl.style.opacity = '1';
+      
+      setTimeout(() => {
+        messageEl.classList.add('fade-out');
+        setTimeout(() => {
+          messageEl.style.opacity = '0';
+          messageEl.classList.remove('motivational-message', 'fade-out');
+        }, 500);
+      }, 3000);
+    }
+
+    function startTimer() {
+      document.getElementById('timer-overlay').classList.remove('hidden');
+      document.getElementById('timer-overlay').classList.add('flex');
+      
+      document.getElementById('timer-subject').textContent = currentSession.subject;
+      
+      const modeLabels = {
+        'pomodoro': '🕐 Pomodoro',
+        'deep': '💡 Deep Focus',
+        'custom': '⚡ Custom'
+      };
+      document.getElementById('mode-indicator').textContent = modeLabels[currentSession.mode];
+      
+      remainingSeconds = currentSession.planned_duration * 60;
+      isPaused = false;
+      
+      updateTimerDisplay();
+      
+      // Show first motivational message after 2 minutes
+      setTimeout(() => {
+        if (!isPaused && remainingSeconds > 0) {
+          showMotivationalMessage();
+        }
+      }, 120000);
+      
+      // Show motivational messages every 3 minutes
+      motivationalInterval = setInterval(() => {
+        if (!isPaused && remainingSeconds > 0) {
+          showMotivationalMessage();
+        }
+      }, 180000);
+      
+      timerInterval = setInterval(() => {
+        if (!isPaused && remainingSeconds > 0) {
+          remainingSeconds--;
+          updateTimerDisplay();
+          
+          if (remainingSeconds === 0) {
+            completeSession();
+          }
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(remainingSeconds / 60);
+      const seconds = remainingSeconds % 60;
+      document.getElementById('timer-display').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      const elapsed = currentSession.planned_duration * 60 - remainingSeconds;
+      const elapsedMinutes = Math.floor(elapsed / 60);
+      document.getElementById('timer-progress-text').textContent = 
+        `${elapsedMinutes}m / ${currentSession.planned_duration}m`;
+      
+      const circumference = 2 * Math.PI * 140;
+      const progress = (remainingSeconds / (currentSession.planned_duration * 60));
+      const offset = circumference * (1 - progress);
+      document.getElementById('timer-progress').style.strokeDashoffset = offset;
+      
+      // Dynamic color based on remaining time ratio
+      const timerRing = document.getElementById('timer-progress');
+      if (progress > 0.5) {
+        // Blue zone (100% - 50%)
+        timerRing.style.stroke = '#3b82f6';
+      } else if (progress > 0.2) {
+        // Yellow zone (50% - 20%)
+        timerRing.style.stroke = '#facc15';
+      } else {
+        // Red zone (20% - 0%)
+        timerRing.style.stroke = '#ef4444';
+      }
+    }
+
+    function addRippleEffect(button) {
+      button.classList.add('active');
+      setTimeout(() => button.classList.remove('active'), 600);
+    }
+
+    document.getElementById('pause-btn').addEventListener('click', (e) => {
+      addRippleEffect(e.currentTarget);
+      isPaused = !isPaused;
+      const btn = document.getElementById('pause-btn');
+      
+      if (isPaused) {
+        btn.textContent = '▶ ادامه';
+        currentSession.pause_start = Date.now();
+        currentSession.pauses++;
+        document.getElementById('timer-overlay').style.filter = 'saturate(0.7)';
+      } else {
+        btn.textContent = '⏸ توقف';
+        currentSession.total_pause_time += Date.now() - currentSession.pause_start;
+        document.getElementById('timer-overlay').style.filter = 'saturate(1)';
+      }
+    });
+
+    document.getElementById('distraction-btn').addEventListener('click', (e) => {
+      addRippleEffect(e.currentTarget);
+      currentSession.distractions++;
+      const btn = document.getElementById('distraction-btn');
+      btn.classList.add('scale-110');
+      setTimeout(() => btn.classList.remove('scale-110'), 200);
+    });
+
+    document.getElementById('complete-btn').addEventListener('click', (e) => {
+      addRippleEffect(e.currentTarget);
+      completeSession();
+    });
+
+    document.getElementById('end-session-btn').addEventListener('click', () => {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+      document.getElementById('timer-overlay').classList.add('hidden');
+      document.getElementById('timer-overlay').classList.remove('flex');
+    });
+
+    function completeSession() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+      if (motivationalInterval) {
+        clearInterval(motivationalInterval);
+      }
+      
+      const totalTime = Date.now() - currentSession.start_time;
+      const activeTime = totalTime - currentSession.total_pause_time;
+      currentSession.actual_duration = Math.round(activeTime / 60000);
+      
+      document.getElementById('timer-overlay').classList.add('hidden');
+      document.getElementById('timer-overlay').classList.remove('flex');
+      
+      showSummary();
+    }
+
+    function showSummary() {
+      document.getElementById('summary-overlay').classList.remove('hidden');
+      document.getElementById('summary-overlay').classList.add('flex');
+      
+      document.getElementById('summary-planned').textContent = `${currentSession.planned_duration} دقیقه`;
+      document.getElementById('summary-actual').textContent = `${currentSession.actual_duration} دقیقه`;
+      document.getElementById('summary-pauses').textContent = currentSession.pauses;
+      document.getElementById('summary-distractions').textContent = currentSession.distractions;
+      
+      const focusRatio = Math.round((currentSession.actual_duration / currentSession.planned_duration) * 100);
+      document.getElementById('focus-ratio').textContent = `${focusRatio}%`;
+      document.getElementById('focus-bar').style.width = `${focusRatio}%`;
+      
+      document.getElementById('summary-note').value = currentSession.notes;
+    }
+
+    document.getElementById('save-session-btn').addEventListener('click', async () => {
+      const additionalNotes = document.getElementById('summary-note').value;
+      
+      if (sessions.length >= 999) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+        messageDiv.textContent = 'حداکثر تعداد جلسات (999) ثبت شده است. لطفاً برخی جلسات قدیمی را حذف کنید.';
+        document.body.appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 5000);
+        return;
+      }
+      
+      const saveBtn = document.getElementById('save-session-btn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = '⏳ در حال ذخیره...';
+      
+      const result = await window.dataSdk.create({
+        id: Date.now().toString(),
+        subject: currentSession.subject,
+        planned_duration: currentSession.planned_duration,
+        actual_duration: currentSession.actual_duration,
+        mode: currentSession.mode,
+        pauses: currentSession.pauses,
+        distractions: currentSession.distractions,
+        notes: additionalNotes,
+        completed_at: new Date().toISOString()
+      });
+      
+      if (result.isOk) {
+        document.getElementById('summary-overlay').classList.add('hidden');
+        document.getElementById('summary-overlay').classList.remove('flex');
+      } else {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+        errorDiv.textContent = 'خطا در ذخیره جلسه. لطفاً دوباره تلاش کنید.';
+        document.body.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 3000);
+      }
+      
+      saveBtn.disabled = false;
+      saveBtn.textContent = '💾 ذخیره و بستن';
+    });
+
+    async function init() {
+      const initResult = await window.dataSdk.init(dataHandler);
+      if (!initResult.isOk) {
+        console.error("Failed to initialize data SDK");
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities: (config) => ({
+            recolorables: [
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (value) => {
+                  config.background_color = value;
+                  window.elementSdk.setConfig({ background_color: value });
+                }
+              },
+              {
+                get: () => config.surface_color || defaultConfig.surface_color,
+                set: (value) => {
+                  config.surface_color = value;
+                  window.elementSdk.setConfig({ surface_color: value });
+                }
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => {
+                  config.text_color = value;
+                  window.elementSdk.setConfig({ text_color: value });
+                }
+              },
+              {
+                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                set: (value) => {
+                  config.primary_action_color = value;
+                  window.elementSdk.setConfig({ primary_action_color: value });
+                }
+              },
+              {
+                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                set: (value) => {
+                  config.secondary_action_color = value;
+                  window.elementSdk.setConfig({ secondary_action_color: value });
+                }
+              }
+            ],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ["app_title", config.app_title || defaultConfig.app_title],
+            ["setup_title", config.setup_title || defaultConfig.setup_title],
+            ["countdown_text", config.countdown_text || defaultConfig.countdown_text],
+            ["complete_title", config.complete_title || defaultConfig.complete_title]
+          ])
+        });
+      }
+    }
+
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99b74a7eb6bc6247',t:'MTc2MjYyODE5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
