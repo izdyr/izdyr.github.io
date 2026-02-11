@@ -1,594 +1,1025 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Valeh School - Student Panel </title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      box-sizing: border-box;
-      direction: rtl;
-      font-family: "Vazirmatn", sans-serif;
-      overflow-x: hidden;
-    }
-  
-    .gradient-bg {
-      background: radial-gradient(circle, rgba(74, 152, 255, 1) 0%, rgba(37, 99, 235, 1) 100%);
-    }
-  
-    .card-shadow {
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-  
-    .progress-ring {
-      transform: rotate(-90deg);
-    }
-  
-    .study-session {
-      transition: all 0.3s ease;
-      word-break: break-word;
-    }
-  
-    .study-session:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-  
-    .login-backdrop {
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(4px);
-    }
-  
-    .modal-backdrop {
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(6px);
-      transition: 0.3s;
-    }
-  
-    button {
-  transition: all 0.25s ease;
-  white-space: nowrap; /* 👈 مانع شکستن متن در چند خط */
-}
-
-  
-    button:hover {
-      opacity: 0.9;
-      filter: brightness(1.1);
-    }
-  
-    /* ✅ جلوگیری از بیرون زدن متن */
-    .truncate-text {
-      overflow-wrap: break-word;
-      word-break: break-word;
-      white-space: normal;
-    }
-  
-    /* ✅ برای جدول‌ها در موبایل */
-    @media (max-width: 768px) {
-      #weeklyCalendar, #logCalendar {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-      }
-  
-      #weeklyCalendar > div, #logCalendar > div {
-        min-height: auto !important;
-        font-size: 0.85rem;
-        padding: 0.5rem !important;
-      }
-  
-      header img {
-        width: 60px !important;
-        height: 60px !important;
-      }
-  
-      header h1 {
-        font-size: 1.1rem !important;
-      }
-  
-      header p {
-        font-size: 0.8rem !important;
-      }
-  
-      .grid-cols-7 {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-      }
-  
-      .day-header {
-        font-size: 0.8rem;
-        padding: 0.4rem;
-      }
-    }
-  
-    @media (max-width: 480px) {
-      #weeklyCalendar, #logCalendar {
-        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-      }
-    }
-
-    @media (max-width: 768px) {
-  #weeklyHeaderDesktop,
-  #weeklyCalendar,
-  #logHeaderDesktop,
-  #logCalendar {
-    display: none !important;
-  }
-
-  #weeklyMobile,
-  #logMobile {
-    display: block !important;
-  }
-}
-
-  </style>
-  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmonic Field</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; overflow: hidden; font-family: 'Cormorant Garamond', serif; color: white; }
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+        #webcam { position: fixed; bottom: 16px; right: 16px; width: 140px; height: 105px; border-radius: 8px; opacity: 0; z-index: 100; transform: scaleX(-1); object-fit: cover; border: 1px solid rgba(255,255,255,0.08); transition: opacity 1s ease; }
+        #webcam.visible { opacity: 0.2; } #webcam:hover { opacity: 0.7; }
+        #hand-canvas { position: fixed; bottom: 16px; right: 16px; width: 140px; height: 105px; border-radius: 8px; z-index: 101; pointer-events: none; transform: scaleX(-1); }
+        .intro { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 2s ease; }
+        .intro.hidden { opacity: 0; pointer-events: none; }
+        .intro h1 { font-size: clamp(1.8rem, 5vw, 3.5rem); font-weight: 300; letter-spacing: 0.6em; margin-bottom: 0.8rem; opacity: 0; animation: fadeIn 2s ease 0.3s forwards; }
+        .intro p { font-size: 0.75rem; letter-spacing: 0.4em; color: rgba(255,255,255,0.35); opacity: 0; animation: fadeIn 2s ease 0.8s forwards; text-align: center; max-width: 400px; line-height: 2; }
+        .intro button { margin-top: 2.5rem; padding: 0.9rem 2.2rem; font-family: inherit; font-size: 0.8rem; letter-spacing: 0.35em; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.4s ease; opacity: 0; animation: fadeIn 2s ease 1.3s forwards; }
+        .intro button:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); color: white; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        .hud { position: fixed; top: 16px; left: 16px; z-index: 100; opacity: 0; transition: opacity 1s ease; } .hud.visible { opacity: 1; }
+        .status { font-size: 0.55rem; letter-spacing: 0.25em; color: rgba(255,255,255,0.25); display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: all 0.3s; }
+        .dot.active { background: #ffc080; box-shadow: 0 0 8px #ffc080; }
+        .gesture-hint { font-size: 0.5rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.15); transition: color 0.3s; } .gesture-hint.active { color: rgba(255,200,128,0.5); }
+        .chords { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: clamp(1.3rem, 3.5vw, 2.2rem); font-weight: 300; letter-spacing: 0.4em; color: rgba(255,255,255,0.05); z-index: 50; pointer-events: none; transition: all 0.4s ease; text-align: center; }
+        .chords.active { color: rgba(255,255,255,0.2); text-shadow: 0 0 30px rgba(255,180,100,0.25); }
+        .fingers-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 35px; z-index: 100; opacity: 0; transition: opacity 1s ease; } .fingers-container.visible { opacity: 1; }
+        .hand-group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .hand-label { font-size: 0.4rem; letter-spacing: 0.3em; color: rgba(255,255,255,0.15); }
+        .finger-row { display: flex; gap: 3px; }
+        .finger { width: 24px; height: 30px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px 12px 6px 6px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px; font-size: 0.32rem; color: rgba(255,255,255,0.15); transition: all 0.12s ease; }
+        .finger.active { background: rgba(255,180,100,0.25); border-color: rgba(255,180,100,0.5); color: rgba(255,255,255,0.8); box-shadow: 0 0 12px rgba(255,180,100,0.2); }
+        .meter { position: fixed; left: 18px; top: 50%; transform: translateY(-50%); z-index: 100; opacity: 0; transition: opacity 1s ease; display: flex; flex-direction: column; align-items: center; gap: 6px; } .meter.visible { opacity: 1; }
+        .meter-bar { width: 2px; height: 80px; background: rgba(255,255,255,0.03); border-radius: 1px; position: relative; overflow: hidden; }
+        .meter-fill { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, #ffc080, #ffe0a0); transition: height 0.08s ease-out; border-radius: 1px; }
+        .meter-label { font-size: 0.35rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.12); writing-mode: vertical-rl; transform: rotate(180deg); }
+    </style>
 </head>
-<body class="bg-gray-50">
-
-  <!-- Header -->
-  <header class="relative gradient-bg text-white p-6 shadow-lg">
-    <!-- سایر عناصر هدر -->
-    <div class="max-w-6xl mx-auto flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-bold">دبیرستان واله(چیتگر)</h1>
-        <p class="text-blue-100 text-sm">برنامه مطالعاتی دانش‌آموزی</p>
-      </div>
-      <div class="text-right">
-        <p id="greeting" class="text-sm text-blue-100">لطفاً وارد شوید</p>
-        <p id="roleLabel" class="font-semibold">داشبورد دانش‌آموز</p>
-      </div>
+<body>
+    <div class="intro" id="intro">
+        <h1>Harmonic Field</h1>
+        <p>Izadyar Jalalipour<br><br>EXTEND FINGERS TO PLAY CHORDS<br>SPREAD HANDS FOR VOLUME<br>RAISE HANDS FOR BRIGHTNESS</p>
+        <button id="start">BEGIN</button>
     </div>
-  
-    <!-- تصویر چسبیده به لبه پایین -->
-    <img
-      src="https://izdyr.github.io/F43E8EA3-3B0B-422F-89DC-A4E72E51E19E.png"
-      alt="Header Image"
-      class="absolute left-1/2 bottom-0 -translate-x-1/2 w-20 h-20 object-cover"
-    />
-  </header>
-  
-  
-
-  <div class="max-w-6xl mx-auto p-6">
-    <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      <div class="bg-white rounded-xl p-6 card-shadow">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">این هفته</p>
-            <p class="text-2xl font-bold text-blue-600" id="weeklyHours">0 ساعت</p>
-          </div>
-          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">📚</div>
-        </div>
-      </div>
-      <div class="bg-white rounded-xl p-6 card-shadow">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">تعداد درس‌ها</p>
-            <p class="text-2xl font-bold text-green-600" id="subjectCount">0</p>
-          </div>
-          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">📖</div>
-        </div>
-      </div>
-      <div class="bg-white rounded-xl p-6 card-shadow">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">پیشرفت</p>
-            <p class="text-2xl font-bold text-purple-600" id="progressPercent">0%</p>
-          </div>
-          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">🎯</div>
-        </div>
-      </div>
-      <div class="bg-white rounded-xl p-6 card-shadow">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-500 text-sm">استریک</p>
-            <p class="text-2xl font-bold text-orange-600" id="streak">0 روز</p>
-          </div>
-          <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">🔥</div>
-        </div>
-      </div>
+    <div id="canvas-container"></div>
+    <video id="webcam" autoplay playsinline></video>
+    <canvas id="hand-canvas"></canvas>
+    <div class="hud" id="hud"><div class="status"><div class="dot" id="dot"></div><span id="status">WAITING</span></div><div class="gesture-hint" id="gesture-hint">—</div></div>
+    <div class="chords" id="chords">—</div>
+    <div class="fingers-container" id="fingers-container">
+        <div class="hand-group"><span class="hand-label">LEFT</span><div class="finger-row" id="left-fingers"><div class="finger">Em</div><div class="finger">D</div><div class="finger">Am</div><div class="finger">B7</div><div class="finger">Em7</div></div></div>
+        <div class="hand-group"><span class="hand-label">RIGHT</span><div class="finger-row" id="right-fingers"><div class="finger">Em</div><div class="finger">D/F#</div><div class="finger">Am7</div><div class="finger">B7</div><div class="finger">G</div></div></div>
     </div>
+    <div class="meter" id="meter"><div class="meter-bar"><div class="meter-fill" id="meter-fill"></div></div><div class="meter-label">VOL</div></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script>
+    // ══════════════════════════════════════════════════════════════════════════════
+    // HARMONIC FIELD V3 — Conscious Harmonic Organism
+    // ══════════════════════════════════════════════════════════════════════════════
+    //
+    // PARTICLE PHILOSOPHY:
+    //   Every particle is a "musician" with:
+    //     • harmonicRole  (0=root, 1=third, 2=fifth, 3=seventh) — determines response curve
+    //     • softness      (0..1) — elasticity of motion, how "heavy" the particle feels
+    //     • inertia       (per-particle temporal smoothing factor)
+    //     • seed          (unique hash for deterministic-but-varied motion)
+    //   These are baked into per-vertex attributes at init time.
+    //   ALL musical intelligence runs in the vertex shader.
+    //   CPU sends ~20 float uniforms per frame. Zero per-particle CPU work.
+    //
+    // CHORD INTELLIGENCE:
+    //   Chord type is encoded as a float:
+    //     0.0 = silent  |  1.0 = major  |  2.0 = minor  |  3.0 = dominant
+    //   The shader reads this and produces *structurally different motion*:
+    //     major  → outward expansion, clockwise circulation, bright energy
+    //     minor  → inward pull, slower oscillation, emotional weight
+    //     dominant → tension, asymmetric displacement, urgency
+    //   Repeated chords → coherence pulse (brief symmetry alignment)
+    //
+    // LAYERS:
+    //   Core    (2500)  — dense plasma soul, slow breath
+    //   Surface (14000) — main harmonic skin, full musical intelligence
+    //   Aura    (3500)  — atmospheric field, inverse breath
+    //   Burst   (5000)  — chord-triggered ejection pool
+    //   Total: 25000 — within original ballpark, perceptually tripled
+    //
+    // PERFORMANCE:
+    //   antialias: false (additive blending makes it irrelevant)
+    //   All displacement in vertex shaders via curl noise
+    //   Single render-to-texture pass for post-processing
+    //   Shared uniform object (no duplication)
+    // ══════════════════════════════════════════════════════════════════════════════
 
-    <!-- Main -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2">
-            <!-- Weekly Plan -->
-            <div class="bg-white rounded-xl p-6 card-shadow mb-6">
-              <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-gray-800">📅 برنامه هفتگی مطالعه</h2>
-                <div class="flex items-center space-x-2">
-                  <button onclick="openPlanModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ افزودن برنامه</button>
-                  <button onclick="refreshFromStore()" class="bg-gray-200 px-3 py-2 rounded-lg">رفرش</button>
-                </div>
-              </div>
-          
-              <!-- Desktop layout -->
-              <div id="weeklyHeaderDesktop" class="hidden md:grid grid-cols-7 gap-2 mb-2">
-                <div class="text-center text-sm font-medium text-gray-500">شنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">یک‌شنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">دوشنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">سه‌شنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">چهارشنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">پنج‌شنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">جمعه</div>
-              </div>
-              <div id="weeklyCalendar" class="hidden md:grid grid-cols-7 gap-2"></div>
-          
-              <!-- Mobile layout -->
-              <div id="weeklyMobile" class="block md:hidden space-y-3"></div>
-            </div>
-          
-            <!-- Study Log -->
-            <div class="bg-white rounded-xl p-6 card-shadow">
-              <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-gray-800">📝 ثبت مطالعه</h2>
-                <button onclick="openLogModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg">+ ثبت برنامه</button>
-              </div>
-          
-              <!-- Desktop layout -->
-              <div id="logHeaderDesktop" class="hidden md:grid grid-cols-7 gap-2 mb-2">
-                <div class="text-center text-sm font-medium text-gray-500">شنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">یک‌شنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">دوشنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">سه‌شنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">چهارشنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">پنج‌شنبه</div>
-                <div class="text-center text-sm font-medium text-gray-500">جمعه</div>
-              </div>
-              <div id="logCalendar" class="hidden md:grid grid-cols-7 gap-2"></div>
-          
-              <!-- Mobile layout -->
-              <div id="logMobile" class="block md:hidden space-y-3"></div>
-            </div>
-          </div>
-          
+    // ─── GLSL LIBRARY: noise + curl + HSL ──────────────────────────────────────
+    const GLSL_LIB = `
+    vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
+    vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
+    vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
+    vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
 
-      <div class="space-y-6">
-        <div class="bg-white rounded-xl p-6 card-shadow text-center">
-          <h3 class="text-lg font-bold mb-3">پیشرفت هدف هفتگی</h3>
-          <div class="relative w-32 h-32 mx-auto mb-4">
-            <svg class="w-32 h-32 progress-ring">
-              <circle cx="64" cy="64" r="56" stroke="#e5e7eb" stroke-width="8" fill="none"/>
-              <circle id="progressRing" cx="64" cy="64" r="56" stroke="#3b82f6" stroke-width="8" fill="none"
-                      stroke-dasharray="351.86" stroke-dashoffset="351.86" stroke-linecap="round"/>
-            </svg>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <span id="progressInner" class="text-2xl font-bold text-blue-600">0%</span>
-            </div>
-          </div>
-          <p id="goalText" class="text-gray-600">0h / 16h هدف هفتگی</p>
-        </div>
-
-
-
-        <div class="bg-white rounded-xl p-6 card-shadow">
-          <h3 class="text-lg font-bold mb-3">📊 ساعات مطالعه بر اساس موضوع</h3>
-          <canvas id="subjectChart" width="300" height="200"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modals -->
-  <div id="planModal" class="fixed inset-0 hidden items-center justify-center z-50 modal-backdrop">
-    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-      <h3 class="text-xl font-bold mb-4">افزودن برنامه هفتگی</h3>
-      <form id="planForm">
-        <label class="block mb-2">موضوع</label>
-        <select id="planSubject" class="w-full p-3 border rounded mb-3">
-            <option>ریاضی</option><option>فیزیک</option><option>شیمی</option>
-            <option>هندسه</option><option>زیست</option><option>دینی</option><option>فارسی</option>
-            <option>انگلیسی</option><option>جغرافی</option>
-          </select>
-        <label class="block mb-2">روز</label>
-        <select id="planDay" class="w-full p-3 border rounded mb-3">
-            <option value="0">دوشنبه</option><option value="1">سه شنبه</option><option value="2">چهارشنبه</option>
-            <option value="3">پنج شنبه</option><option value="4">جمعه</option><option value="5">شنبه</option><option value="6">یک شنبه</option>
-        </select>
-        <label class="block mb-2">زمان</label>
-        <input id="planTime" type="time" class="w-full p-3 border rounded mb-3" />
-        <label class="block mb-2">مدت زمان (ساعت)</label>
-        <input id="planDuration" type="number" step="0.5" min="0.5" max="8" class="w-full p-3 border rounded mb-3" />
-        <div class="flex gap-3">
-          <button type="submit" class="flex-1 bg-blue-600 text-white py-2 rounded">افزودن</button>
-          <button type="button" onclick="closePlanModal()" class="flex-1 bg-gray-300 py-2 rounded">لغو</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="logModal" class="fixed inset-0 hidden items-center justify-center z-50 modal-backdrop">
-    <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-      <h3 class="text-xl font-bold mb-4">ثبت برنامه مطالعاتی</h3>
-      <form id="logForm">
-        <label class="block mb-2">تاریخ</label>
-        <input id="logDate" type="date" class="w-full p-3 border rounded mb-3" readonly disabled/>
-        <label class="block mb-2">موضوع</label>
-        <select id="logSubject" class="w-full p-3 border rounded mb-3">
-            <option>ریاضی</option><option>فیزیک</option><option>شیمی</option>
-            <option>هندسه</option><option>زیست</option><option>دینی</option><option>فارسی</option>
-            <option>انگلیسی</option><option>جغرافی</option>
-          </select>
-        <label class="block mb-2">مدت زمان (ساعت)</label>
-        <input id="logDuration" type="number" step="0.5" min="0.5" max="8" class="w-full p-3 border rounded mb-3" />
-        <label class="block mb-2">روش مطالعه</label>
-        <input id="logAmount" class="w-full p-3 border rounded mb-3" />
-        <div class="flex gap-3">
-          <button type="submit" class="flex-1 bg-green-600 text-white py-2 rounded">ثبت</button>
-          <button type="button" onclick="closeLogModal()" class="flex-1 bg-gray-300 py-2 rounded">لغو</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Login -->
-  <div id="loginOverlay" class="fixed inset-0 flex items-center justify-center login-backdrop z-60">
-    <div class="bg-white rounded-xl p-6 w-full max-w-sm mx-4 text-right">
-      <h3 class="text-xl font-bold mb-3">ورود دانش‌آموز</h3>
-      <p class="text-sm text-gray-600 mb-4"></p>
-      <label class="block mb-2">کد ملی</label>
-      <input id="loginNationalId" class="w-full p-3 border rounded mb-3" placeholder="مثلاً 1001" />
-      <div class="flex gap-3">
-        <button onclick="mockLogin()" class="flex-1 bg-blue-600 text-white py-2 rounded">ورود</button>
-
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const STORE_KEY='valeh:mockdb:v4';
-    const CHANNEL_NAME='valeh-sync';
-const defaultDb = {
-  students: [
-    { id: 1, firstName: 'امیر علی', lastName: 'ابراهیم وندی', nationalId: '11404100101', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 2, firstName: 'عرشیا', lastName: 'احمدی', nationalId: '11404100102', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 3, firstName: 'امیرحسین', lastName: 'احمدی', nationalId: '11404100103', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 4, firstName: 'علی', lastName: 'اصانلو', nationalId: '11404100104', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 5, firstName: 'طاها', lastName: 'امیری', nationalId: '11404100105', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 6, firstName: 'داریوش', lastName: 'امینی', nationalId: '11404100106', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 7, firstName: 'آریا', lastName: 'ایران تاج', nationalId: '11404100107', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 8, firstName: 'رودین', lastName: 'بختیاری', nationalId: '11404100108', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 9, firstName: 'آمین', lastName: 'تیز رویان', nationalId: '11404100109', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 10, firstName: 'ایزدیار', lastName: 'جلالی پور', nationalId: '11404100110', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 11, firstName: 'سپهر', lastName: 'حاج صادقی', nationalId: '11404100111', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 12, firstName: 'محمد حسین', lastName: 'حسینی یکتا', nationalId: '11404100112', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 13, firstName: 'پرهام', lastName: 'خالقی', nationalId: '11404100113', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 14, firstName: 'امیر', lastName: 'خداپرست', nationalId: '11404100114', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 15, firstName: 'امیرعلی', lastName: 'خدامی', nationalId: '11404100115', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 16, firstName: 'آبتین', lastName: 'داداشی', nationalId: '11404100116', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 17, firstName: 'محمدپرهام', lastName: 'داداشی جوردهی', nationalId: '11404100117', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 18, firstName: 'صدرا', lastName: 'دلارامی', nationalId: '11404100118', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 19, firstName: 'کوروش', lastName: 'دهقان نیری', nationalId: '11404100119', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 20, firstName: 'آرتین', lastName: 'رادمتین', nationalId: '11404100120', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 21, firstName: 'صدرا', lastName: 'روستا آزاد', nationalId: '11404100121', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 22, firstName: 'سپهر', lastName: 'سفیدی ثمرین', nationalId: '11404100122', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 23, firstName: 'مهدی', lastName: 'سیدصادقی', nationalId: '11404100123', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 24, firstName: 'محمد حسین', lastName: 'شکرزاده گروی', nationalId: '11404100124', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 25, firstName: 'آراس', lastName: 'شهباز دشتی', nationalId: '11404100125', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 26, firstName: 'امیر حسین', lastName: 'عسگری', nationalId: '11404100126', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 27, firstName: 'محمد طاها', lastName: 'علی بابایی', nationalId: '11404100127', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 28, firstName: 'محمد امین', lastName: 'فتحعلی پور', nationalId: '11404100128', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 29, firstName: 'امیرعلی', lastName: 'فضلعلی پور', nationalId: '11404100129', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 30, firstName: 'مهیار', lastName: 'فیاض', nationalId: '11404100130', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 31, firstName: 'آرمان', lastName: 'قادری', nationalId: '11404100131', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 32, firstName: 'امیرحسین', lastName: 'قادری', nationalId: '11404100132', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 33, firstName: 'ایلیا', lastName: 'کشاورز', nationalId: '11404100133', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 34, firstName: 'کیارش', lastName: 'کیهان', nationalId: '11404100134', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 35, firstName: 'علی', lastName: 'محدث', nationalId: '11404100135', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 36, firstName: 'رهام', lastName: 'محمد', nationalId: '11404100136', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 37, firstName: 'رادمان', lastName: 'محمدی', nationalId: '11404100137', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 38, firstName: 'طاها', lastName: 'مرادی', nationalId: '11404100138', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 39, firstName: 'امیر مهدی', lastName: 'معتمدی', nationalId: '11404100139', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 40, firstName: 'علی', lastName: 'مهدی وشاره', nationalId: '11404100140', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 41, firstName: 'ایلیا', lastName: 'مهدی وشاره', nationalId: '11404100141', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 42, firstName: 'عرفان', lastName: 'نهاوندی فرد', nationalId: '11404100142', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 43, firstName: 'مانی', lastName: 'نیازی', nationalId: '11404100143', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 44, firstName: 'محمد طاها', lastName: 'یاوری', nationalId: '11404100144', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() },
-    { id: 45, firstName: 'پرهام', lastName: 'یعقوبی', nationalId: '11404100145', studyPlan: [], studySessions: [], progress: 0, hoursThisWeek: 0.0, updatedAt: Date.now() }
-  ]
-};
-
-
-    const bc=new BroadcastChannel(CHANNEL_NAME);
-    const SharedStore={load(){const r=localStorage.getItem(STORE_KEY);if(!r){localStorage.setItem(STORE_KEY,JSON.stringify(defaultDb));return JSON.parse(JSON.stringify(defaultDb));}try{return JSON.parse(r);}catch(e){localStorage.setItem(STORE_KEY,JSON.stringify(defaultDb));return JSON.parse(JSON.stringify(defaultDb));}},save(db){localStorage.setItem(STORE_KEY,JSON.stringify(db));bc.postMessage({type:'db:update',payload:{ts:Date.now()}});},getStudentByNationalId(n){return this.load().students.find(s=>s.nationalId===n)||null;},getStudentById(id){return this.load().students.find(s=>s.id===id)||null;},updateStudent(id,fn){const db=this.load();const i=db.students.findIndex(s=>s.id===id);if(i===-1)return null;fn(db.students[i]);db.students[i].updatedAt=Date.now();this.save(db);return db.students[i];},addPlanToStudent(id,p){return this.updateStudent(id,s=>{s.studyPlan.push(p);});},addSessionToStudent(id,se){return this.updateStudent(id,s=>{s.studySessions.unshift(se);s.hoursThisWeek=s.studySessions.slice(0,50).reduce((a,x)=>a+(x.duration||0),0);s.progress=Math.min(100,Math.round((s.hoursThisWeek/16)*100));});}};
-
-    let currentStudent=null,subjectChart=null;
-
-    function renderAllForCurrent(){
-      if(!currentStudent)return;
-      document.getElementById('greeting').textContent=`خوش آمدید, ${currentStudent.firstName} ${currentStudent.lastName}`;
-      document.getElementById('weeklyHours').textContent=(currentStudent.hoursThisWeek||0).toFixed(1)+' ساعت';
-      document.getElementById('subjectCount').textContent=new Set((currentStudent.studySessions||[]).map(s=>s.subject)).size;
-      document.getElementById('progressPercent').textContent=currentStudent.progress+'%';
-      document.getElementById('progressInner').textContent=currentStudent.progress+'%';
-      const perc=Math.min(100,currentStudent.progress||0);
-      const offset=351.86-(351.86*perc/100);
-      document.getElementById('progressRing').setAttribute('stroke-dashoffset',offset);
-      document.getElementById('goalText').textContent=`${(currentStudent.hoursThisWeek||0).toFixed(1)}h / 16h هدف هفتگی`;
-
-      // Weekly plan
-// Weekly plan (با قابلیت حذف برنامه)
-const cal = document.getElementById("weeklyCalendar");
-cal.innerHTML = "";
-
-for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
-  const dayPlans = (currentStudent.studyPlan || []).filter((p) => p.day === dayIdx);
-  const div = document.createElement("div");
-  div.className = "bg-gray-50 rounded-lg p-3 min-h-24";
-
-  if (dayPlans.length > 0) {
-    let innerHTML = "";
-    dayPlans.forEach((p, planIdx) => {
-      innerHTML += `
-        <div class="bg-blue-100 text-blue-800 text-xs p-2 rounded mb-1 flex justify-between items-start">
-          <div>
-            <div class="font-medium">${p.subject}</div>
-            <div>${p.time} (${p.duration}h)</div>
-          </div>
-          <button onclick="removePlan(${dayIdx}, ${planIdx})" class="text-red-600 text-xs font-bold px-1">×</button>
-        </div>
-      `;
-    });
-    div.innerHTML = innerHTML;
-  } else {
-    div.innerHTML =
-      '<div class="text-gray-400 text-xs text-center mt-2">بدون برنامه</div>';
-  }
-
-  cal.appendChild(div);
-}
-
-
-      // Weekly log view
-      const logCal=document.getElementById('logCalendar');
-      logCal.innerHTML='';
-      for(let i=0;i<7;i++){
-        const ddiv=document.createElement('div');
-        ddiv.className='bg-gray-50 rounded-lg p-3 min-h-24';
-const sessions = (currentStudent.studySessions || []).filter(s => {
-  // تاریخ را بدون تغییر UTC بخوان (فقط روز محلی را در نظر بگیر)
-  const parts = s.date.split('-');
-  const localDate = new Date(parts[0], parts[1] - 1, parts[2]);
-  // advisor از Monday=0 تا Sunday=6 استفاده می‌کند → پس همان را اعمال می‌کنیم
-const jsDay = localDate.getDay(); // 0=Sunday, 6=Saturday
-const adjustedDay = (jsDay + 1) % 7; // شنبه=0، جمعه=6
-
-  return adjustedDay === i;
-});
-
-        ddiv.innerHTML=sessions.length?sessions.map(s=>`<div class="bg-green-100 text-green-800 text-xs p-2 rounded mb-1"><div class="font-medium">${s.subject}</div><div>${s.duration}h - ${s.amount||''}</div></div>`).join(''):'<div class="text-gray-400 text-xs text-center mt-2">ثبت نشده</div>';
-        logCal.appendChild(ddiv);
-      }
-
-      renderSubjectChart();
-
-// --- نسخه موبایل ---
-const weekNames = ["شنبه","یک‌شنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنج‌شنبه","جمعه"];
-const weeklyMobile = document.getElementById("weeklyMobile");
-const logMobile = document.getElementById("logMobile");
-weeklyMobile.innerHTML = "";
-logMobile.innerHTML = "";
-
-for (let i = 0; i < 7; i++) {
-  // برنامه هفتگی
-  const dayPlans = (currentStudent.studyPlan || []).filter(p => p.day === i);
-  const planDiv = document.createElement("div");
-  planDiv.className = "bg-gray-50 rounded-lg p-3 border";
-  let planHTML = `<div class="font-bold text-gray-700 mb-2">📅 ${weekNames[i]}</div>`;
-  if (dayPlans.length) {
-    planHTML += dayPlans.map(p => `
-      <div class="bg-blue-100 text-blue-800 text-xs p-2 rounded mb-1 flex justify-between items-start">
-        <div><div class="font-medium">${p.subject}</div><div>${p.time} (${p.duration}h)</div></div>
-        <button onclick="removePlan(${i}, 0)" class="text-red-600 text-xs font-bold px-1">×</button>
-      </div>
-    `).join("");
-  } else {
-    planHTML += `<div class="text-gray-400 text-xs">بدون برنامه</div>`;
-  }
-  planDiv.innerHTML = planHTML;
-  weeklyMobile.appendChild(planDiv);
-
-  // ثبت مطالعه
-  const sessions = (currentStudent.studySessions || []).filter(s => {
-    const parts = s.date.split("-");
-    const localDate = new Date(parts[0], parts[1] - 1, parts[2]);
-    const jsDay = localDate.getDay();
-    const adjustedDay = (jsDay + 1) % 7;
-    return adjustedDay === i;
-  });
-
-  const logDiv = document.createElement("div");
-  logDiv.className = "bg-gray-50 rounded-lg p-3 border";
-  let logHTML = `<div class="font-bold text-gray-700 mb-2">🗓 ${weekNames[i]}</div>`;
-  if (sessions.length) {
-    logHTML += sessions.map(s => `
-      <div class="bg-green-100 text-green-800 text-xs p-2 rounded mb-1">
-        <div class="font-medium">${s.subject}</div>
-        <div>${s.duration}h - ${s.amount || ""}</div>
-      </div>
-    `).join("");
-  } else {
-    logHTML += `<div class="text-gray-400 text-xs">ثبت نشده</div>`;
-  }
-  logDiv.innerHTML = logHTML;
-  logMobile.appendChild(logDiv);
-}
-
+    float snoise(vec3 v){
+        const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);
+        vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
+        vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;
+        vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
+        vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
+        i=mod289(i);
+        vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+        float n_=0.142857142857;vec3 ns=n_*D.wyz-D.xzx;
+        vec4 j=p-49.0*floor(p*ns.z*ns.z);
+        vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);
+        vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);
+        vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
+        vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));
+        vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+        vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+        vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+        p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+        vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;
+        return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
     }
 
-    function renderSubjectChart(){
-      const ctx=document.getElementById('subjectChart').getContext('2d');
-      const map={};(currentStudent.studySessions||[]).forEach(s=>{map[s.subject]=(map[s.subject]||0)+(s.duration||0);});
-      const labels=Object.keys(map),data=Object.values(map);
-      if(subjectChart)subjectChart.destroy();
-      subjectChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data,borderRadius:8,borderSkipped:false}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{display:false}},x:{grid:{display:false}}}}});
+    // Curl noise — divergence-free flow field
+    // WHY: curl of scalar field = solenoidal vector field. Particles conserve
+    // energy, never pile up or scatter. Produces magnetic-field-like circulation.
+    vec3 curlNoise(vec3 p){
+        const float e=0.1;
+        float n_y_pz=snoise(p+vec3(0,0,e)), n_y_mz=snoise(p-vec3(0,0,e));
+        float n_z_py=snoise(p+vec3(0,e,0)), n_z_my=snoise(p-vec3(0,e,0));
+        // Second field (offset to decorrelate)
+        float n_x_pz=snoise(p+vec3(0,0,e)+3.7), n_x_mz=snoise(p-vec3(0,0,e)+3.7);
+        float n_z_px=snoise(p+vec3(e,0,0)+3.7), n_z_mx=snoise(p-vec3(e,0,0)+3.7);
+        // Third field
+        float n_x_py=snoise(p+vec3(0,e,0)+7.3), n_x_my=snoise(p-vec3(0,e,0)+7.3);
+        float n_y_px=snoise(p+vec3(e,0,0)+7.3), n_y_mx=snoise(p-vec3(e,0,0)+7.3);
+        return vec3(
+            (n_z_py-n_z_my)-(n_y_pz-n_y_mz),
+            (n_x_pz-n_x_mz)-(n_z_px-n_z_mx),
+            (n_y_px-n_y_mx)-(n_x_py-n_x_my)
+        ) / (2.0*e);
     }
 
-    function mockLogin(){const n=document.getElementById('loginNationalId').value.trim();const st=SharedStore.getStudentByNationalId(n);if(!st){alert('دانش آموز یافت نشد');return;}currentStudent=st;document.getElementById('loginOverlay').style.display='none';renderAllForCurrent();}
-    function closeLogin(){document.getElementById('loginOverlay').style.display='none';}
-    function openPlanModal(){document.getElementById('planModal').classList.remove('hidden');document.getElementById('planModal').classList.add('flex');}
-    function closePlanModal(){document.getElementById('planModal').classList.add('hidden');document.getElementById('planModal').classList.remove('flex');}
-    function openLogModal(){document.getElementById('logModal').classList.remove('hidden');document.getElementById('logModal').classList.add('flex');}
-    function closeLogModal(){document.getElementById('logModal').classList.add('hidden');document.getElementById('logModal').classList.remove('flex');}
-    document.getElementById('planForm').addEventListener('submit',e=>{e.preventDefault();if(!currentStudent)return alert('ابتدا وارد شوید');const subject=document.getElementById('planSubject').value||'Unknown';const day=parseInt(document.getElementById('planDay').value);const time=document.getElementById('planTime').value||'12:00';const duration=parseFloat(document.getElementById('planDuration').value)||1;SharedStore.addPlanToStudent(currentStudent.id,{day,time,duration,subject});currentStudent=SharedStore.getStudentById(currentStudent.id);renderAllForCurrent();closePlanModal();});
-    document.getElementById('logForm').addEventListener('submit',e=>{e.preventDefault();if(!currentStudent)return alert('ابتدا وارد شوید');const date=document.getElementById('logDate').value||new Date().toISOString().split('T')[0];const subject=document.getElementById('logSubject').value||'Unknown';const duration=parseFloat(document.getElementById('logDuration').value)||1;const amount=document.getElementById('logAmount').value||'';SharedStore.addSessionToStudent(currentStudent.id,{date,subject,duration,amount});currentStudent=SharedStore.getStudentById(currentStudent.id);renderAllForCurrent();closeLogModal();});
-    bc.onmessage=()=>{if(!currentStudent)return;currentStudent=SharedStore.getStudentById(currentStudent.id);renderAllForCurrent();};
-    function refreshFromStore(){if(!currentStudent)return;currentStudent=SharedStore.getStudentById(currentStudent.id);renderAllForCurrent();}
-    document.addEventListener('DOMContentLoaded',()=>{document.getElementById('logDate').value=new Date().toISOString().split('T')[0];});
-
-    // reset the study-log for new week
-    
-    function onLoginSubmit(e) {
-      e.preventDefault();
-      const nid = document.getElementById('nationalId').value.trim();
-      const s = SharedStore.getStudentByNationalId(nid);
-      if (!s) {
-        alert('دانش‌آموزی با این کد ملی پیدا نشد');
-        return;
-      }
-      // بررسی هفته
-      resetLogsIfNewWeek(s);
-    
-      currentStudent = SharedStore.getStudentByNationalId(nid);
-      document.getElementById('loginSection').classList.add('hidden');
-      document.getElementById('mainSection').classList.remove('hidden');
-      renderStudentDashboard();
+    // Cheap HSL→RGB in shader (avoids sending pre-computed colors for dynamic hue)
+    vec3 hsl2rgb(float h, float s, float l){
+        vec3 rgb = clamp(abs(mod(h*6.0+vec3(0.0,4.0,2.0),6.0)-3.0)-1.0, 0.0, 1.0);
+        return l + s * (rgb-0.5) * (1.0-abs(2.0*l-1.0));
     }
+    `;
 
+    // ─── SHARED UNIFORM DECLARATIONS ──────────────────────────────────────────
+    const UNIFORM_BLOCK = `
+        uniform float time;
+        uniform float audioLevel;      // smoothed RMS
+        uniform float audioPeak;       // attack-weighted peak (for micro-jitter)
+        uniform float audioLow;        // low-frequency energy (bass presence)
+        uniform float radius;
+        uniform float spread;          // hand distance → volume mapping
+        uniform float height;          // hand Y → brightness/filter mapping
+        uniform float velocity;        // gesture speed
+        uniform float chordType;       // 0=none 1=major 2=minor 3=dominant
+        uniform float chordEnergy;     // decaying chord presence (0..1)
+        uniform float chordHue;        // current chord color
+        uniform float memoryHue;       // time-weighted average of recent chord hues
+        uniform float memoryInertia;   // running energy average → motion damping
+        uniform float memoryTension;   // accumulated dominant chord tension
+        uniform float coherencePulse;  // spikes when same chord repeats → symmetry
+        uniform float breathPhase;     // slow global clock
+        uniform float shockwave;       // timestamp of last shockwave trigger
+        uniform float shockwaveY;      // Y-origin of shockwave
+    `;
 
+    class HarmonicField {
+        constructor() {
+            this.running = false;
+            this.hands = { left: null, right: null };
+            this.fingers = { left: [0,0,0,0,0], right: [0,0,0,0,0] };
+            this.fingerTimers = { left: [0,0,0,0,0], right: [0,0,0,0,0] };
+            this.fingerDebounce = 50;
+            this.activeChords = new Map();
+            this.playingNotes = new Set();
 
+            // Audio analysis — multi-band
+            this.audioLevel = 0; this.audioSmooth = 0;
+            this.audioPeak = 0; this.audioPeakDecay = 0;
+            this.audioLow = 0; this.audioLowSmooth = 0;
 
-    function removePlan(dayIdx, planIdx) {
-  if (!currentStudent) return alert("ابتدا وارد شوید");
+            // Gestures
+            this.gestureSmooth = { spread:0.5, height:0.5, rotation:0.5, velocity:0 };
+            this.gestureTarget = { spread:0.5, height:0.5, rotation:0.5, velocity:0 };
+            this.prevPos = { left:{x:0.3,y:0.5}, right:{x:0.7,y:0.5}, t:Date.now() };
+            this.prevVelocity = 0;
 
-  if (!confirm("آیا مطمئنی می‌خوای این برنامه حذف بشه؟")) return;
+            // Volume
+            this.volumeSmooth = 0.5; this.volumeMin = 0.15; this.volumeMax = 0.9;
 
-  SharedStore.updateStudent(currentStudent.id, (s) => {
-    const arr = s.studyPlan || [];
-    let count = -1,
-      removeIdx = -1;
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i].day === dayIdx) {
-        count++;
-        if (count === planIdx) {
-          removeIdx = i;
-          break;
+            // Sphere
+            this.sphereRadius = 200; this.targetRadius = 200;
+
+            // ═══ INTERACTION MEMORY — the "soul" of musical intelligence ═══
+            //
+            // memoryHue: weighted average of recent chord hues.
+            //   WHY: the sphere slowly absorbs the harmonic color of what you play.
+            //   After an Em → Am → D progression, the sphere has a warm amber tint
+            //   even between chords. It "remembers" the harmonic landscape.
+            //
+            // memoryInertia: exponential moving average of loudness.
+            //   WHY: a loud passage makes the sphere feel "heavier" — slower rotation,
+            //   more resistance to change. Like a physical object that absorbed energy.
+            //
+            // memoryTension: accumulated from dominant chords, decays slowly.
+            //   WHY: dominant chords (B7) create harmonic tension that should persist
+            //   visually even after release — the sphere feels "unresolved" until
+            //   a major or minor chord brings resolution.
+            //
+            // coherencePulse: spikes when the same chord is played twice in a row.
+            //   WHY: repetition creates recognition. The sphere briefly aligns into
+            //   near-perfect symmetry — a visual "aha" moment.
+            //
+            this.memoryHue = 0.08;
+            this.memoryInertia = 0.0;
+            this.memoryTension = 0.0;
+            this.coherencePulse = 0.0;
+            this.chordHistory = [];     // [{hue, type, time, name}]
+            this.chordEnergy = 0;
+            this.currentChordHue = 0.08;
+            this.currentChordType = 0;  // 0=none, 1=major, 2=minor, 3=dominant
+            this.lastChordName = '';
+            this.shockwaveTime = -10;
+            this.shockwaveY = 0;
+
+            // Chord voicings — types now explicitly mapped to shader encoding
+            this.chords = {
+                left: {
+                    0:{name:'Em',  notes:['E2','B2','E3','G3','B3'],  hue:0.55, type:'minor',    typeCode:2},
+                    1:{name:'D',   notes:['D2','A2','D3','F#3','A3'], hue:0.14, type:'major',    typeCode:1},
+                    2:{name:'Am',  notes:['A2','E3','A3','C4','E4'],  hue:0.0,  type:'minor',    typeCode:2},
+                    3:{name:'B7',  notes:['B2','D#3','F#3','A3','B3'],hue:0.08, type:'dominant', typeCode:3},
+                    4:{name:'Em7', notes:['E2','B2','D3','G3','B3'],  hue:0.52, type:'minor',    typeCode:2}
+                },
+                right: {
+                    0:{name:'Em',   notes:['E3','G3','B3','E4','G4'],  hue:0.55, type:'minor',    typeCode:2},
+                    1:{name:'D/F#', notes:['F#2','D3','A3','D4','F#4'],hue:0.16, type:'major',    typeCode:1},
+                    2:{name:'Am7',  notes:['A2','E3','G3','C4','E4'],  hue:0.02, type:'minor',    typeCode:2},
+                    3:{name:'B7',   notes:['B2','F#3','A3','D#4','F#4'],hue:0.08,type:'dominant', typeCode:3},
+                    4:{name:'G',    notes:['G2','B2','D3','G3','B3'],  hue:0.18, type:'major',    typeCode:1}
+                }
+            };
+            document.getElementById('start').onclick = () => this.start();
         }
-      }
+
+        async start() {
+            try {
+                await this.initAudio(); this.initVisuals(); await this.initHands();
+                document.getElementById('intro').classList.add('hidden');
+                ['hud','fingers-container','meter','webcam'].forEach(id=>document.getElementById(id).classList.add('visible'));
+                this.running = true; this.animate();
+            } catch(e) { console.error(e); alert('Error: '+e.message); }
+        }
+
+        // ═══ AUDIO ENGINE ═══ (preserved — your synth architecture is excellent)
+        async initAudio() {
+            await Tone.start();
+            this.analyzer = new Tone.Analyser('waveform', 256);  // doubled for better low-freq resolution
+            this.masterGain = new Tone.Gain(0.5); this.masterGain.connect(this.analyzer); this.masterGain.toDestination();
+            this.limiter = new Tone.Limiter(-2).connect(this.masterGain);
+            this.reverb = new Tone.Reverb({decay:3.5,wet:0.3}).connect(this.limiter); await this.reverb.generate();
+            this.chorus = new Tone.Chorus({frequency:0.4,depth:0.5,wet:0.25}).connect(this.reverb); this.chorus.start();
+            this.filter = new Tone.Filter({frequency:3000,type:'lowpass',Q:1.5}).connect(this.chorus);
+            this.vibrato = new Tone.Vibrato({frequency:5,depth:0,wet:1}).connect(this.filter);
+            this.delay = new Tone.PingPongDelay({delayTime:0.3,feedback:0.15,wet:0.12}).connect(this.vibrato);
+            this.padSynth = new Tone.PolySynth(Tone.Synth,{oscillator:{type:'sine'},envelope:{attack:0.25,decay:0.4,sustain:0.75,release:2},volume:-8}).connect(this.delay);
+            this.bodySynth = new Tone.PolySynth(Tone.Synth,{oscillator:{type:'triangle'},envelope:{attack:0.35,decay:0.5,sustain:0.6,release:2.5},volume:-12}).connect(this.delay);
+            this.subSynth = new Tone.Synth({oscillator:{type:'sine'},envelope:{attack:0.2,decay:0.3,sustain:0.7,release:1.5},volume:-10}).connect(this.limiter);
+            this.shimmerSynth = new Tone.PolySynth(Tone.Synth,{oscillator:{type:'sine'},envelope:{attack:0.6,decay:0.8,sustain:0.3,release:3},volume:-18}).connect(this.reverb);
+            this.textureSynth = new Tone.PolySynth(Tone.FMSynth,{harmonicity:3,modulationIndex:1,envelope:{attack:0.8,decay:0.5,sustain:0.4,release:2},modulation:{type:'sine'},modulationEnvelope:{attack:0.3,decay:0.2,sustain:0.5,release:1},volume:-22}).connect(this.reverb);
+            this.currentBass = null;
+        }
+
+        playChord(hand, finger) {
+            const chord = this.chords[hand][finger]; const key = `${hand}-${finger}`;
+            if (this.activeChords.has(key)) return;
+            for (const [k,c] of this.activeChords) { if(c.name===chord.name && k!==key) return; }
+            const now = Tone.now(); const vel = this.getVelocity();
+            const notesToPlay = chord.notes.filter(n=>!this.playingNotes.has(n));
+            if (notesToPlay.length > 0) {
+                this.padSynth.triggerAttack(notesToPlay.slice(1), now, vel);
+                this.bodySynth.triggerAttack(notesToPlay.slice(1,4), now, vel*0.7);
+                const bass = notesToPlay[0];
+                if (bass !== this.currentBass) { if(this.currentBass) this.subSynth.triggerRelease(now); this.subSynth.triggerAttack(bass, now+0.02, vel*0.8); this.currentBass = bass; }
+                this.shimmerSynth.triggerAttack([notesToPlay[notesToPlay.length-1]], now+0.1, vel*0.3);
+                notesToPlay.forEach(n=>this.playingNotes.add(n));
+            }
+            this.activeChords.set(key, chord); this.updateChordDisplay();
+            this.targetRadius = Math.min(400, this.targetRadius + 30);
+
+            // ═══ MEMORY UPDATE ═══
+            // Coherence detection: same chord name played again → symmetry spike
+            if (chord.name === this.lastChordName) {
+                this.coherencePulse = 1.0; // sharp spike, decays in updateVisuals
+            }
+            this.lastChordName = chord.name;
+
+            this.chordHistory.push({hue:chord.hue, type:chord.type, typeCode:chord.typeCode, time:performance.now(), name:chord.name});
+            if (this.chordHistory.length > 16) this.chordHistory.shift();
+            this.chordEnergy = Math.min(1.0, this.chordEnergy + 0.4);
+            this.currentChordHue = chord.hue;
+            this.currentChordType = chord.typeCode;
+
+            // Tension accumulation from dominant chords
+            if (chord.typeCode === 3) this.memoryTension = Math.min(1.0, this.memoryTension + 0.3);
+            // Resolution from major/minor chords
+            else this.memoryTension *= 0.5;
+
+            this.emitBurst(chord.hue, chord.type, vel);
+        }
+
+        releaseChord(hand, finger) {
+            const key = `${hand}-${finger}`; const chord = this.activeChords.get(key); if(!chord) return;
+            const now = Tone.now(); const stillActive = new Set();
+            for (const [k,c] of this.activeChords) { if(k!==key) c.notes.forEach(n=>stillActive.add(n)); }
+            const toRelease = chord.notes.filter(n=>!stillActive.has(n));
+            if (toRelease.length > 0) {
+                this.padSynth.triggerRelease(toRelease, now); this.bodySynth.triggerRelease(toRelease, now); this.shimmerSynth.triggerRelease(toRelease, now);
+                if (toRelease.includes(this.currentBass)) { this.subSynth.triggerRelease(now); this.currentBass = null; }
+                toRelease.forEach(n=>this.playingNotes.delete(n));
+            }
+            this.activeChords.delete(key); this.updateChordDisplay();
+            this.targetRadius = Math.max(150, this.targetRadius - 20);
+            // If no chords remain, clear type
+            if (this.activeChords.size === 0) this.currentChordType = 0;
+        }
+
+        getVelocity() { return 0.5 + this.gestureSmooth.spread * 0.5; }
+
+        updateAudio() {
+            const rawVol = this.volumeMin + (this.volumeMax-this.volumeMin)*Math.pow(this.gestureSmooth.spread,1.5);
+            this.volumeSmooth += (rawVol-this.volumeSmooth)*0.08;
+            this.masterGain.gain.rampTo(this.volumeSmooth, 0.05);
+            document.getElementById('meter-fill').style.height = ((this.volumeSmooth-this.volumeMin)/(this.volumeMax-this.volumeMin)*100)+'%';
+            const baseFreq = 1000+this.gestureSmooth.height*4000;
+            const rotMod = Math.sin(this.gestureSmooth.rotation*Math.PI*2)*800;
+            this.filter.frequency.rampTo(baseFreq+rotMod, 0.1);
+            this.vibrato.depth.rampTo(Math.abs(this.gestureSmooth.rotation-0.5)*2*0.08, 0.1);
+
+            // Multi-band analysis from waveform
+            const wave = this.analyzer.getValue();
+            let sum=0, peak=0, lowSum=0;
+            const len = wave.length;
+            for (let i=0; i<len; i++) {
+                const v = Math.abs(wave[i]);
+                sum += v;
+                if (v > peak) peak = v;
+                // First quarter of waveform correlates with lower frequencies
+                if (i < len/4) lowSum += v;
+            }
+            this.audioLevel = sum / len;
+            this.audioSmooth += (this.audioLevel - this.audioSmooth) * 0.2;
+            this.audioPeak = peak;
+            this.audioPeakDecay = Math.max(this.audioPeak, this.audioPeakDecay * 0.93);
+            this.audioLow = lowSum / (len/4);
+            this.audioLowSmooth += (this.audioLow - this.audioLowSmooth) * 0.15;
+        }
+
+        updateChordDisplay() {
+            const names=[...new Set([...this.activeChords.values()].map(c=>c.name))];
+            const el=document.getElementById('chords');
+            el.textContent=names.length?names.join(' · '):'—';
+            el.classList.toggle('active', names.length>0);
+        }
+
+        // ═══ VISUALS — Particle Identity Architecture ═══
+        initVisuals() {
+            this.scene = new THREE.Scene();
+            this.camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 1, 2500);
+            this.camera.position.z = 700;
+            this.renderer = new THREE.WebGLRenderer({antialias:false, alpha:true});
+            this.renderer.setSize(innerWidth, innerHeight);
+            this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+            this.renderer.setClearColor(0x000000);
+            this.renderer.autoClear = false;
+            document.getElementById('canvas-container').appendChild(this.renderer.domElement);
+
+            // Single shared uniform object — all layers read from this
+            this.U = {
+                time:{value:0}, audioLevel:{value:0}, audioPeak:{value:0}, audioLow:{value:0},
+                radius:{value:this.sphereRadius}, spread:{value:0.5}, height:{value:0.5},
+                velocity:{value:0}, chordType:{value:0}, chordEnergy:{value:0},
+                chordHue:{value:0.08}, memoryHue:{value:0.08}, memoryInertia:{value:0},
+                memoryTension:{value:0}, coherencePulse:{value:0}, breathPhase:{value:0},
+                shockwave:{value:-10}, shockwaveY:{value:0}
+            };
+
+            this.buildCore();
+            this.buildSurface();
+            this.buildAura();
+            this.buildBurst();
+            this.buildPost();
+
+            window.onresize = () => {
+                this.camera.aspect=innerWidth/innerHeight; this.camera.updateProjectionMatrix();
+                this.renderer.setSize(innerWidth,innerHeight);
+                const w=innerWidth*Math.min(devicePixelRatio,2), h=innerHeight*Math.min(devicePixelRatio,2);
+                this.rt.setSize(w,h); this.postMat.uniforms.resolution.value.set(w,h);
+            };
+        }
+
+        // ─── LAYER 1: CORE — the "soul" ───
+        // Dense, slow, breathing. Contracts on audio peaks like a heartbeat.
+        // Particles here have high inertia (slow response) and root harmonic role.
+        buildCore() {
+            const N=2500, geo=new THREE.BufferGeometry();
+            const pos=new Float32Array(N*3), sz=new Float32Array(N), seed=new Float32Array(N);
+            const soft=new Float32Array(N), role=new Float32Array(N);
+            const ga=Math.PI*(3-Math.sqrt(5));
+            for(let i=0;i<N;i++){
+                const y=1-(i/(N-1))*2, rY=Math.sqrt(1-y*y), th=ga*i, r=this.sphereRadius*0.38;
+                pos[i*3]=Math.cos(th)*rY*r; pos[i*3+1]=y*r; pos[i*3+2]=Math.sin(th)*rY*r;
+                sz[i]=1.0+Math.random()*1.2;
+                seed[i]=Math.random()*100.0;  // unique motion identity
+                soft[i]=0.6+Math.random()*0.4; // high softness = more elastic
+                role[i]=0.0;  // all core particles are "root" — fundamental
+            }
+            geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+            geo.setAttribute('size',new THREE.BufferAttribute(sz,1));
+            geo.setAttribute('seed',new THREE.BufferAttribute(seed,1));
+            geo.setAttribute('softness',new THREE.BufferAttribute(soft,1));
+            geo.setAttribute('harmonicRole',new THREE.BufferAttribute(role,1));
+
+            const mat=new THREE.ShaderMaterial({
+                uniforms:this.U,
+                vertexShader: GLSL_LIB + UNIFORM_BLOCK + `
+                    attribute float size, seed, softness, harmonicRole;
+                    varying float vAlpha, vGlow; varying vec3 vColor;
+                    void main(){
+                        vec3 dir=normalize(position);
+
+                        // Breathing: core inhales slowly, each particle offset by seed
+                        float breath = 1.0 + sin(breathPhase * 0.6 + seed * 0.3) * 0.10 * softness;
+
+                        // Heartbeat: core contracts sharply on audio peak
+                        float heartbeat = 1.0 - audioPeak * 0.12 * (1.0 - softness * 0.5);
+
+                        // Curl flow — very slow, deep circulation
+                        vec3 curl = curlNoise(dir * 2.0 + time * 0.06 + seed * 0.01);
+
+                        // Core radius responds to chord type:
+                        //   major → slight expansion (opening)
+                        //   minor → slight contraction (closing in)
+                        //   dominant → asymmetric pulse
+                        float typeExpand = 0.0;
+                        typeExpand += step(0.5, chordType) * step(chordType, 1.5) * 0.08;  // major
+                        typeExpand -= step(1.5, chordType) * step(chordType, 2.5) * 0.05;  // minor
+                        typeExpand += step(2.5, chordType) * sin(time * 6.0 + seed) * 0.06 * chordEnergy; // dominant: pulsing tension
+
+                        float coreR = radius * 0.38 * breath * heartbeat * (1.0 + typeExpand * chordEnergy);
+                        vec3 newPos = dir * coreR + curl * 10.0 * (1.0 + memoryInertia * 0.4);
+
+                        // Coherence: when same chord repeats, core briefly aligns to perfect sphere
+                        newPos = mix(newPos, dir * coreR, coherencePulse * 0.6);
+
+                        // Slow dual-axis rotation
+                        float a1 = time * 0.04 + sin(time*0.015)*0.2;
+                        float c1=cos(a1),s1=sin(a1);
+                        float a2 = time * 0.025;
+                        float c2=cos(a2),s2=sin(a2);
+                        vec3 r1 = vec3(newPos.x*c1-newPos.z*s1, newPos.y, newPos.x*s1+newPos.z*c1);
+                        vec3 rotated = vec3(r1.x, r1.y*c2-r1.z*s2, r1.y*s2+r1.z*c2);
+
+                        vec4 mv=modelViewMatrix*vec4(rotated,1.0);
+
+                        // Color: warm gold base, shifts toward memory hue
+                        float h = mix(0.08, memoryHue, 0.25 + chordEnergy * 0.4);
+                        vColor = hsl2rgb(h, 0.6 + chordEnergy * 0.2, 0.65 + audioPeak * 0.15);
+                        vAlpha = 0.55 + audioLevel * 0.35;
+                        vGlow = 0.4 + chordEnergy * 0.5 + audioPeak * 0.2;
+
+                        gl_PointSize = size * (1.0 + audioLevel*0.4 + sin(seed+time*1.5)*0.15) * (250.0/-mv.z);
+                        gl_Position = projectionMatrix * mv;
+                    }`,
+                fragmentShader:`
+                    varying float vAlpha,vGlow; varying vec3 vColor;
+                    void main(){
+                        float d=length(gl_PointCoord-0.5); if(d>0.5) discard;
+                        float alpha=exp(-d*4.5);
+                        float core=exp(-d*14.0);
+                        gl_FragColor=vec4(vColor+vec3(1.0,0.95,0.88)*core*vGlow, alpha*vAlpha);
+                    }`,
+                transparent:true, blending:THREE.AdditiveBlending, depthWrite:false
+            });
+            this.scene.add(new THREE.Points(geo,mat));
+        }
+
+        // ─── LAYER 2: SURFACE — the "skin" with full musical intelligence ───
+        //
+        // THIS IS THE HEART OF THE REBUILD.
+        //
+        // Each of 14000 particles has:
+        //   harmonicRole: 0=root(25%), 1=third(25%), 2=fifth(25%), 3=seventh(25%)
+        //     → determines HOW the particle responds to each chord type
+        //   softness: 0..1 → elasticity of motion response
+        //   seed: unique float → deterministic variation (no two particles alike)
+        //
+        // Chord-driven behavior matrix (all in shader):
+        //   MAJOR chords → roots expand outward, thirds circulate clockwise,
+        //                  fifths brighten and lift, sevenths gently orbit
+        //   MINOR chords → roots contract inward, thirds slow oscillation,
+        //                  fifths subtle tremble, sevenths descend
+        //   DOMINANT    → roots pulse with tension, thirds shift erratically,
+        //                  fifths compress, sevenths create angular tension
+        //
+        buildSurface() {
+            const N=14000, geo=new THREE.BufferGeometry();
+            const pos=new Float32Array(N*3), col=new Float32Array(N*3);
+            const sz=new Float32Array(N), seed=new Float32Array(N);
+            const soft=new Float32Array(N), role=new Float32Array(N);
+            const ga=Math.PI*(3-Math.sqrt(5));
+            for(let i=0;i<N;i++){
+                const y=1-(i/(N-1))*2, rY=Math.sqrt(1-y*y), th=ga*i, r=this.sphereRadius;
+                pos[i*3]=Math.cos(th)*rY*r; pos[i*3+1]=y*r; pos[i*3+2]=Math.sin(th)*rY*r;
+                const hue=0.08+Math.random()*0.06, sat=0.5+Math.random()*0.3, light=0.5+Math.random()*0.2;
+                const rgb=this.hslToRgb(hue,sat,light);
+                col[i*3]=rgb[0]; col[i*3+1]=rgb[1]; col[i*3+2]=rgb[2];
+                sz[i]=1.5+Math.random()*2.5;
+                seed[i]=Math.random()*100.0;
+                soft[i]=0.2+Math.random()*0.8; // wide softness range = visible diversity
+                role[i]=float32(Math.floor(Math.random()*4)); // 0,1,2,3 equally distributed
+            }
+            geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+            geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+            geo.setAttribute('size',new THREE.BufferAttribute(sz,1));
+            geo.setAttribute('seed',new THREE.BufferAttribute(seed,1));
+            geo.setAttribute('softness',new THREE.BufferAttribute(soft,1));
+            geo.setAttribute('harmonicRole',new THREE.BufferAttribute(role,1));
+
+            const mat=new THREE.ShaderMaterial({
+                uniforms:this.U,
+                vertexShader: GLSL_LIB + UNIFORM_BLOCK + `
+                    attribute float size, seed, softness, harmonicRole;
+                    attribute vec3 color;
+                    varying vec3 vColor; varying float vAlpha, vGlow, vDepth;
+
+                    void main(){
+                        vec3 dir = normalize(position);
+                        float isRoot    = step(-0.5, harmonicRole) * step(harmonicRole, 0.5);
+                        float isThird   = step(0.5, harmonicRole)  * step(harmonicRole, 1.5);
+                        float isFifth   = step(1.5, harmonicRole)  * step(harmonicRole, 2.5);
+                        float isSeventh = step(2.5, harmonicRole);
+
+                        float isMajor    = step(0.5, chordType) * step(chordType, 1.5) * chordEnergy;
+                        float isMinor    = step(1.5, chordType) * step(chordType, 2.5) * chordEnergy;
+                        float isDominant = step(2.5, chordType) * chordEnergy;
+
+                        // ── TEMPORAL LAYERING ──
+                        // Each layer modulated by particle softness (soft particles respond more to slow motion,
+                        // stiff particles respond more to fast motion — like different instrument weights)
+                        float slowBreath = sin(breathPhase*0.45 + dir.y*1.8 + seed*0.2) * 0.055 * softness;
+                        float midPulse   = sin(time*3.2 + seed*1.5) * audioLevel * 0.035 * (1.0-softness*0.3);
+                        float fastJitter = sin(time*22.0 + seed*7.0) * audioPeak * 0.012 * (1.0-softness*0.6);
+                        float breathMod  = 1.0 + slowBreath + midPulse + fastJitter;
+
+                        // ── CURL NOISE FLOW ──
+                        float nt = time * 0.12;
+                        vec3 curl = curlNoise(dir * 2.8 + nt + seed*0.005);
+
+                        // Surface topology
+                        float macro = snoise(dir*3.5 + nt*0.4 + seed*0.01) * 22.0;
+                        float micro = snoise(dir*9.0 + nt*1.0) * 6.0;
+
+                        // Audio displacement
+                        float audioD = audioLevel * 40.0;
+                        float peakD  = audioPeak * 18.0;
+                        // Bass presence creates low-frequency swelling
+                        float bassD  = audioLow * 25.0 * (0.5 + 0.5*sin(time*1.5 + seed));
+
+                        // ══════════════════════════════════════════════════════
+                        // CHORD-DRIVEN INTELLIGENCE — the core of perception
+                        //
+                        // Each harmonic role responds DIFFERENTLY to each chord type.
+                        // This creates visible "voicing" in the particle field —
+                        // you can see roots behave differently from fifths.
+                        // ══════════════════════════════════════════════════════
+
+                        float chordDisplace = 0.0;
+                        float chordCirculation = 0.0; // tangential force multiplier
+                        float chordVertical = 0.0;    // Y-axis bias
+
+                        // ── MAJOR: expansion, circulation, brightness ──
+                        // Roots push outward (the foundation opens up)
+                        chordDisplace += isMajor * isRoot * 20.0;
+                        // Thirds circulate clockwise (the color of major)
+                        chordCirculation += isMajor * isThird * 1.5;
+                        // Fifths lift upward (the "brightness" of major)
+                        chordVertical += isMajor * isFifth * 12.0;
+                        // Sevenths gently orbit wider
+                        chordDisplace += isMajor * isSeventh * 10.0 * sin(time*2.0+seed);
+
+                        // ── MINOR: contraction, slow oscillation, weight ──
+                        // Roots pull inward (the foundation closes)
+                        chordDisplace -= isMinor * isRoot * 15.0;
+                        // Thirds oscillate slowly (emotional tremolo)
+                        chordDisplace += isMinor * isThird * 8.0 * sin(time*1.2+seed*2.0);
+                        // Fifths tremble subtly
+                        chordDisplace += isMinor * isFifth * 5.0 * sin(time*8.0+seed*3.0) * softness;
+                        // Sevenths descend
+                        chordVertical -= isMinor * isSeventh * 8.0;
+                        // Minor slows circulation
+                        chordCirculation -= isMinor * 0.5;
+
+                        // ── DOMINANT: tension, asymmetry, urgency ──
+                        // Roots pulse with unresolved tension
+                        chordDisplace += isDominant * isRoot * 12.0 * sin(time*5.0+seed);
+                        // Thirds shift erratically (the tritone instability)
+                        chordDisplace += isDominant * isThird * 10.0 * sin(time*7.0+seed*4.0);
+                        // Fifths compress inward (harmonic pressure)
+                        chordDisplace -= isDominant * isFifth * 10.0;
+                        // Sevenths angular tension — offset from sphere axis
+                        chordVertical += isDominant * isSeventh * 15.0 * sin(time*3.0+seed*2.0);
+                        // Memory tension amplifies dominant behavior
+                        chordDisplace += isDominant * memoryTension * 8.0 * sin(time*4.0);
+
+                        // ── SHOCKWAVE ──
+                        float waveAge = time - shockwave;
+                        float waveR = waveAge * 2.2;
+                        float originDir = acos(clamp(dot(dir, vec3(0.0, shockwaveY, sqrt(max(0.0,1.0-shockwaveY*shockwaveY)))), -1.0, 1.0));
+                        float waveFront = exp(-pow((originDir-waveR)*3.5, 2.0));
+                        float waveDecay = exp(-waveAge * 1.8);
+                        float shockD = waveFront * waveDecay * 30.0 * velocity;
+
+                        // ── COMBINE ALL FORCES ──
+                        float baseR = radius * (0.7 + spread * 0.6) * breathMod;
+                        float finalR = baseR + macro + micro + audioD + peakD + bassD
+                                     + chordDisplace + chordVertical * dir.y + shockD;
+
+                        // Tangential flow (curl + chord circulation)
+                        vec3 tangent = curl - dir * dot(curl, dir);
+                        float flowStrength = 12.0 + audioLevel*20.0 + chordCirculation*8.0;
+                        vec3 newPos = dir * finalR + tangent * flowStrength;
+
+                        // Vertical chord offset (applied to position directly)
+                        newPos.y += chordVertical * (1.0 - abs(dir.y)); // strongest at equator
+
+                        // Coherence: repeated chord → snap toward perfect sphere
+                        vec3 perfectPos = dir * baseR;
+                        newPos = mix(newPos, perfectPos, coherencePulse * 0.5 * softness);
+
+                        // Rotation — slowed by memory inertia
+                        float rotSpd = 0.08 * (1.0 - memoryInertia*0.55);
+                        float a = time * rotSpd;
+                        float ca=cos(a), sa=sin(a);
+                        vec3 rotated = vec3(newPos.x*ca-newPos.z*sa, newPos.y, newPos.x*sa+newPos.z*ca);
+
+                        vec4 mv = modelViewMatrix * vec4(rotated, 1.0);
+
+                        // ── COLOR: chord memory + current chord + base ──
+                        vec3 memCol = hsl2rgb(memoryHue, 0.5, 0.55);
+                        vec3 chordCol = hsl2rgb(chordHue, 0.65+chordEnergy*0.2, 0.6+audioPeak*0.1);
+                        // Blend: base → memory influence → active chord influence
+                        vColor = mix(color, memCol, 0.15 + chordEnergy*0.15);
+                        vColor = mix(vColor, chordCol, chordEnergy * 0.4);
+                        // Shockwave flash
+                        vColor += vec3(1.0,0.92,0.7) * waveFront * waveDecay * 0.45;
+                        // Tension adds warm desaturation
+                        vColor = mix(vColor, vec3(length(vColor)*0.75, length(vColor)*0.65, length(vColor)*0.55), memoryTension*0.2);
+
+                        vAlpha = 0.45 + audioLevel*0.4 + waveFront*waveDecay*0.25;
+                        vGlow = 0.25 + chordEnergy*0.35 + audioLevel*0.15;
+                        vDepth = -mv.z;
+
+                        float szMod = 1.0 + audioLevel*0.5 + chordEnergy*0.2 + waveFront*waveDecay*0.7;
+                        // Harmonic role affects size: roots slightly larger, sevenths slightly smaller
+                        szMod *= 1.0 + isRoot*0.15 - isSeventh*0.1;
+                        gl_PointSize = size * szMod * (300.0/-mv.z);
+                        gl_Position = projectionMatrix * mv;
+                    }`,
+                fragmentShader:`
+                    varying vec3 vColor; varying float vAlpha, vGlow, vDepth;
+                    void main(){
+                        float d=length(gl_PointCoord-0.5); if(d>0.5) discard;
+                        float alpha=1.0-smoothstep(0.0,0.5,d); alpha=pow(alpha,1.35);
+                        float core=1.0-smoothstep(0.0,0.16,d);
+                        vec3 col = vColor + vec3(1.0,0.93,0.78)*core*vGlow;
+                        // Depth fade — particles further away are subtly dimmer
+                        float depthFade = smoothstep(1100.0, 450.0, vDepth);
+                        alpha *= mix(0.35, 1.0, depthFade);
+                        gl_FragColor = vec4(col, alpha*vAlpha);
+                    }`,
+                transparent:true, blending:THREE.AdditiveBlending, depthWrite:false
+            });
+            this.scene.add(new THREE.Points(geo,mat));
+        }
+
+        // ─── LAYER 3: AURA — atmospheric field ───
+        // Breathes inversely to core. Responds to memory, not direct input.
+        // Gives the entity a sense of presence beyond its surface.
+        buildAura() {
+            const N=3500, geo=new THREE.BufferGeometry();
+            const pos=new Float32Array(N*3), sz=new Float32Array(N), seed=new Float32Array(N);
+            for(let i=0;i<N;i++){
+                const r=this.sphereRadius*(1.25+Math.random()*1.8);
+                const th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
+                pos[i*3]=r*Math.sin(ph)*Math.cos(th); pos[i*3+1]=r*Math.sin(ph)*Math.sin(th); pos[i*3+2]=r*Math.cos(ph);
+                sz[i]=1.8+Math.random()*3.5; seed[i]=Math.random()*100.0;
+            }
+            geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+            geo.setAttribute('size',new THREE.BufferAttribute(sz,1));
+            geo.setAttribute('seed',new THREE.BufferAttribute(seed,1));
+
+            const mat=new THREE.ShaderMaterial({
+                uniforms:this.U,
+                vertexShader: GLSL_LIB + UNIFORM_BLOCK + `
+                    attribute float size, seed;
+                    varying float vAlpha; varying vec3 vColor;
+                    void main(){
+                        vec3 dir=normalize(position); float origR=length(position);
+                        // Inverse breath — expands when core contracts
+                        float breath=1.0-sin(breathPhase*0.5+seed*0.2)*0.07;
+                        vec3 curl=curlNoise(dir*1.0+time*0.035+seed*0.005);
+                        float audioExpand=1.0+audioLevel*0.25+chordEnergy*0.12;
+                        // Tension makes aura contract (compressed energy)
+                        float tensionContract = 1.0 - memoryTension * 0.08;
+                        float r=origR*breath*audioExpand*tensionContract;
+                        vec3 newPos=dir*r+curl*22.0;
+                        // Counter-rotate from surface
+                        float a=-time*0.025; float ca=cos(a),sa=sin(a);
+                        newPos=vec3(newPos.x*ca-newPos.z*sa, newPos.y, newPos.x*sa+newPos.z*ca);
+                        vec4 mv=modelViewMatrix*vec4(newPos,1.0);
+                        // Color tracks memory with lag
+                        vec3 base=vec3(0.2,0.17,0.13);
+                        vec3 mem=hsl2rgb(memoryHue, 0.3, 0.35);
+                        vColor=mix(base, mem, 0.25+chordEnergy*0.2);
+                        vAlpha=(0.07+audioLevel*0.1+chordEnergy*0.05)*smoothstep(radius*3.2,radius*1.3,origR);
+                        gl_PointSize=size*(1.0+audioLevel*0.35)*(200.0/-mv.z);
+                        gl_Position=projectionMatrix*mv;
+                    }`,
+                fragmentShader:`
+                    varying float vAlpha; varying vec3 vColor;
+                    void main(){
+                        float d=length(gl_PointCoord-0.5); if(d>0.5) discard;
+                        gl_FragColor=vec4(vColor, exp(-d*d*8.0)*vAlpha);
+                    }`,
+                transparent:true, blending:THREE.AdditiveBlending, depthWrite:false
+            });
+            this.scene.add(new THREE.Points(geo,mat));
+        }
+
+        // ─── BURST SYSTEM — chord-triggered ejection ───
+        buildBurst() {
+            this.burstCount=5000;
+            const geo=new THREE.BufferGeometry();
+            const pos=new Float32Array(this.burstCount*3), col=new Float32Array(this.burstCount*3), sz=new Float32Array(this.burstCount);
+            geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+            geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+            geo.setAttribute('size',new THREE.BufferAttribute(sz,1));
+            this.burstVel=new Float32Array(this.burstCount*3); this.burstLife=new Float32Array(this.burstCount); this.burstIdx=0; this.burstGeo=geo;
+            const mat=new THREE.ShaderMaterial({
+                uniforms:{time:this.U.time},
+                vertexShader:`attribute float size; attribute vec3 color; varying vec3 vColor; varying float vA;
+                    void main(){ vColor=color; vec4 mv=modelViewMatrix*vec4(position,1.0);
+                    vA=smoothstep(0.0,1.5,size); gl_PointSize=size*(250.0/-mv.z); gl_Position=projectionMatrix*mv; }`,
+                fragmentShader:`varying vec3 vColor; varying float vA;
+                    void main(){ float d=length(gl_PointCoord-0.5); if(d>0.5) discard;
+                    float a=pow(1.0-smoothstep(0.0,0.5,d),1.3);
+                    gl_FragColor=vec4(vColor+vec3(1.0)*exp(-d*10.0)*0.5, a*vA); }`,
+                transparent:true, blending:THREE.AdditiveBlending, depthWrite:false
+            });
+            this.burstPts=new THREE.Points(geo,mat); this.scene.add(this.burstPts);
+        }
+
+        // ─── POST-PROCESS — chromatic aberration + glow + vignette ───
+        // Single extra draw call. No multi-pass bloom.
+        buildPost() {
+            const w=innerWidth*Math.min(devicePixelRatio,2), h=innerHeight*Math.min(devicePixelRatio,2);
+            this.rt=new THREE.WebGLRenderTarget(w,h,{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,format:THREE.RGBAFormat});
+            this.postScene=new THREE.Scene();
+            this.postCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+            this.postMat=new THREE.ShaderMaterial({
+                uniforms:{
+                    tDiffuse:{value:this.rt.texture}, resolution:{value:new THREE.Vector2(w,h)},
+                    caStr:{value:0}, glowStr:{value:0}, vig:{value:0.35}, time:this.U.time
+                },
+                vertexShader:`varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.0); }`,
+                fragmentShader:`
+                    uniform sampler2D tDiffuse; uniform vec2 resolution;
+                    uniform float caStr, glowStr, vig, time; varying vec2 vUv;
+                    void main(){
+                        vec2 uv=vUv, c=uv-0.5; float dist=length(c);
+                        // Chromatic aberration — RGB split increases toward edges
+                        float ca=caStr*dist*0.0025;
+                        float r=texture2D(tDiffuse,uv+c*ca).r;
+                        float g=texture2D(tDiffuse,uv).g;
+                        float b=texture2D(tDiffuse,uv-c*ca*1.2).b;
+                        vec3 col=vec3(r,g,b);
+                        // 8-tap glow
+                        float gr=3.5/resolution.x; vec3 glow=vec3(0.0);
+                        glow+=texture2D(tDiffuse,uv+vec2(gr,0)).rgb + texture2D(tDiffuse,uv-vec2(gr,0)).rgb;
+                        glow+=texture2D(tDiffuse,uv+vec2(0,gr)).rgb + texture2D(tDiffuse,uv-vec2(0,gr)).rgb;
+                        glow+=texture2D(tDiffuse,uv+vec2(gr)*0.707).rgb + texture2D(tDiffuse,uv-vec2(gr)*0.707).rgb;
+                        glow+=texture2D(tDiffuse,uv+vec2(gr,-gr)*0.707).rgb + texture2D(tDiffuse,uv-vec2(gr,-gr)*0.707).rgb;
+                        col += glow*0.125*glowStr;
+                        col *= 1.0-dist*dist*vig;
+                        col += (fract(sin(dot(uv*time,vec2(12.9898,78.233)))*43758.5453)-0.5)*0.012;
+                        gl_FragColor=vec4(col,1.0);
+                    }`,
+                depthTest:false, depthWrite:false
+            });
+            this.postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),this.postMat));
+        }
+
+        emitBurst(hue, type, intensity) {
+            const pos=this.burstGeo.attributes.position.array, col=this.burstGeo.attributes.color.array, sz=this.burstGeo.attributes.size.array;
+            const n=80+Math.floor(intensity*120);
+            for(let i=0;i<n;i++){
+                const idx=this.burstIdx%this.burstCount, i3=idx*3;
+                const th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1), r=this.sphereRadius*(0.9+Math.random()*0.2);
+                pos[i3]=r*Math.sin(ph)*Math.cos(th); pos[i3+1]=r*Math.sin(ph)*Math.sin(th); pos[i3+2]=r*Math.cos(ph);
+                const spd=2.5+Math.random()*4+intensity*3.5;
+                const d={x:pos[i3],y:pos[i3+1],z:pos[i3+2]};
+                const len=Math.sqrt(d.x*d.x+d.y*d.y+d.z*d.z);
+                // Burst direction varies by chord type
+                const yBias = type==='major' ? 1.5 : type==='minor' ? -0.8 : Math.sin(Math.random()*6.28)*2;
+                this.burstVel[i3]=(d.x/len)*spd; this.burstVel[i3+1]=(d.y/len)*spd+yBias; this.burstVel[i3+2]=(d.z/len)*spd;
+                const rgb=this.hslToRgb(hue,0.7,0.6); col[i3]=rgb[0]; col[i3+1]=rgb[1]; col[i3+2]=rgb[2];
+                sz[idx]=3+Math.random()*4.5; this.burstLife[idx]=1.0; this.burstIdx++;
+            }
+            this.burstGeo.attributes.position.needsUpdate=true; this.burstGeo.attributes.color.needsUpdate=true; this.burstGeo.attributes.size.needsUpdate=true;
+        }
+
+        // ═══ UPDATE LOOP — all intelligence computation ═══
+        updateVisuals(dt) {
+            const t=performance.now()*0.001;
+            this.sphereRadius += (this.targetRadius-this.sphereRadius)*0.045;
+
+            // ── Memory: weighted chord hue average ──
+            if(this.chordHistory.length>0){
+                let hS=0, wS=0; const now=performance.now();
+                this.chordHistory.forEach(ch=>{
+                    const age=(now-ch.time)/1000;
+                    const w=Math.exp(-age*0.25); // ~4s half-life
+                    hS+=ch.hue*w; wS+=w;
+                });
+                const targetHue = hS/(wS||1);
+                this.memoryHue += (targetHue-this.memoryHue)*0.04;
+            }
+
+            // ── Memory: inertia (energy absorption) ──
+            this.memoryInertia += (this.audioSmooth - this.memoryInertia) * 0.015;
+            this.memoryInertia = Math.min(1, this.memoryInertia);
+
+            // ── Memory: tension decay ──
+            this.memoryTension *= 0.993; // slow decay — tension lingers
+
+            // ── Chord energy decay ──
+            this.chordEnergy *= 0.965;
+            if(this.activeChords.size>0) this.chordEnergy = Math.max(this.chordEnergy, 0.3);
+
+            // ── Coherence pulse decay ──
+            // Fast-in, slow-out: the "recognition" moment
+            this.coherencePulse *= 0.94;
+
+            // ── Shockwave trigger ──
+            const vd = this.gestureSmooth.velocity - this.prevVelocity;
+            if(vd > 0.12 && t-this.shockwaveTime > 0.8){
+                this.shockwaveTime = t;
+                this.shockwaveY = (this.gestureSmooth.height-0.5)*2.0;
+            }
+            this.prevVelocity = this.gestureSmooth.velocity;
+
+            // ── Push all uniforms ──
+            const u=this.U;
+            u.time.value=t; u.audioLevel.value=this.audioSmooth; u.audioPeak.value=this.audioPeakDecay;
+            u.audioLow.value=this.audioLowSmooth;
+            u.radius.value=this.sphereRadius; u.spread.value=this.gestureSmooth.spread;
+            u.height.value=this.gestureSmooth.height; u.velocity.value=this.gestureSmooth.velocity;
+            u.chordType.value=this.currentChordType; u.chordEnergy.value=this.chordEnergy;
+            u.chordHue.value=this.currentChordHue; u.memoryHue.value=this.memoryHue;
+            u.memoryInertia.value=this.memoryInertia; u.memoryTension.value=this.memoryTension;
+            u.coherencePulse.value=this.coherencePulse; u.breathPhase.value=t*0.75;
+            u.shockwave.value=this.shockwaveTime; u.shockwaveY.value=this.shockwaveY;
+
+            // ── Post-process modulation ──
+            this.postMat.uniforms.caStr.value = 0.2 + this.chordEnergy*2.5 + this.gestureSmooth.velocity*1.2 + this.memoryTension*0.8;
+            this.postMat.uniforms.glowStr.value = 0.12 + this.audioSmooth*0.55 + this.chordEnergy*0.25;
+
+            // ── Burst particles (only CPU-updated system) ──
+            const bp=this.burstGeo.attributes.position.array, bc=this.burstGeo.attributes.color.array, bs=this.burstGeo.attributes.size.array;
+            for(let i=0;i<this.burstCount;i++){
+                if(this.burstLife[i]<=0) continue; const i3=i*3;
+                const ab=1+this.audioSmooth*1.2;
+                bp[i3]+=this.burstVel[i3]*ab; bp[i3+1]+=this.burstVel[i3+1]*ab; bp[i3+2]+=this.burstVel[i3+2]*ab;
+                this.burstVel[i3]*=0.97; this.burstVel[i3+1]*=0.97; this.burstVel[i3+2]*=0.97;
+                this.burstLife[i]-=0.011; bc[i3]*=0.996; bc[i3+1]*=0.996; bc[i3+2]*=0.996; bs[i]*=0.992;
+                if(this.burstLife[i]<=0){ bp[i3]=bp[i3+1]=bp[i3+2]=0; bs[i]=0; }
+            }
+            this.burstGeo.attributes.position.needsUpdate=true; this.burstGeo.attributes.color.needsUpdate=true; this.burstGeo.attributes.size.needsUpdate=true;
+
+            // ── Camera: gentle cinematic drift with irrational frequencies ──
+            this.camera.position.x = Math.sin(t*0.097)*28 + Math.sin(t*0.041)*12;
+            this.camera.position.y = Math.cos(t*0.073)*18 + Math.cos(t*0.059)*8;
+            this.camera.position.z = 700 + Math.sin(t*0.053)*25;
+            this.camera.lookAt(0,0,0);
+
+            if(this.activeChords.size===0) this.targetRadius += (200-this.targetRadius)*0.008;
+        }
+
+        hslToRgb(h,s,l){
+            const c=(1-Math.abs(2*l-1))*s, x=c*(1-Math.abs((h*6)%2-1)), m=l-c/2;
+            let r,g,b; const hh=((h%1)+1)%1*6;
+            if(hh<1){r=c;g=x;b=0;}else if(hh<2){r=x;g=c;b=0;}else if(hh<3){r=0;g=c;b=x;}
+            else if(hh<4){r=0;g=x;b=c;}else if(hh<5){r=x;g=0;b=c;}else{r=c;g=0;b=x;}
+            return[r+m,g+m,b+m];
+        }
+
+        // ═══ HAND TRACKING ═══
+        async initHands(){
+            const video=document.getElementById('webcam'), canvas=document.getElementById('hand-canvas'), ctx=canvas.getContext('2d');
+            const stream=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480}}); video.srcObject=stream;
+            await new Promise(r=>video.onloadedmetadata=r); canvas.width=video.videoWidth; canvas.height=video.videoHeight;
+            const hands=new Hands({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`});
+            hands.setOptions({maxNumHands:2,modelComplexity:1,minDetectionConfidence:0.7,minTrackingConfidence:0.5});
+            hands.onResults(r=>this.onHands(r,ctx,canvas));
+            const cam=new Camera(video,{onFrame:async()=>await hands.send({image:video}),width:640,height:480}); cam.start();
+        }
+        onHands(results,ctx,canvas){
+            ctx.clearRect(0,0,canvas.width,canvas.height); this.hands.left=null; this.hands.right=null;
+            if(results.multiHandLandmarks?.length){
+                document.getElementById('dot').classList.add('active'); document.getElementById('status').textContent='PLAYING';
+                results.multiHandLandmarks.forEach((lm,idx)=>{
+                    const label=results.multiHandedness[idx].label; this.drawHand(ctx,lm,canvas,label);
+                    const data=this.processLandmarks(lm);
+                    if(label==='Right') this.hands.left=data; else this.hands.right=data;
+                });
+                this.processGestures(); this.processFingers();
+            } else {
+                document.getElementById('dot').classList.remove('active'); document.getElementById('status').textContent='WAITING';
+                document.getElementById('gesture-hint').textContent='—'; document.getElementById('gesture-hint').classList.remove('active');
+                for(const [key] of this.activeChords){ const [h,f]=key.split('-'); this.releaseChord(h,parseInt(f)); }
+                this.fingers.left=[0,0,0,0,0]; this.fingers.right=[0,0,0,0,0]; this.updateFingerUI();
+            }
+        }
+        processLandmarks(lm){
+            const w=lm[0],im=lm[5],pm=lm[17],mm=lm[9];
+            const palm={x:(w.x+im.x+pm.x+mm.x)/4, y:(w.y+im.y+pm.y+mm.y)/4};
+            const rot=Math.atan2(im.y-pm.y, im.x-pm.x);
+            return {palm, rotation:(rot+Math.PI)/(Math.PI*2), fingers:[this.isThumbExtended(lm),this.isFingerExtended(lm,8,6,5),this.isFingerExtended(lm,12,10,9),this.isFingerExtended(lm,16,14,13),this.isFingerExtended(lm,20,18,17)], landmarks:lm};
+        }
+        isThumbExtended(lm){ return Math.abs(lm[4].x-lm[5].x)>Math.abs(lm[2].x-lm[5].x)*0.65; }
+        isFingerExtended(lm,tip,pip){ return lm[tip].y<lm[pip].y-0.025; }
+        processGestures(){
+            const now=Date.now(), dt=Math.max(16,now-this.prevPos.t)/1000;
+            const lp=this.hands.left?.palm||{x:0.3,y:0.5}, rp=this.hands.right?.palm||{x:0.7,y:0.5};
+            const lr=this.hands.left?.rotation||0.5, rr=this.hands.right?.rotation||0.5;
+            const dist=Math.sqrt((rp.x-lp.x)**2+(rp.y-lp.y)**2);
+            this.gestureTarget.spread=Math.min(1,Math.max(0,(dist-0.1)*1.4));
+            this.gestureTarget.height=Math.min(1,Math.max(0,1-(lp.y+rp.y)/2));
+            this.gestureTarget.rotation=(lr+rr)/2;
+            const lv=Math.sqrt((lp.x-this.prevPos.left.x)**2+(lp.y-this.prevPos.left.y)**2)/dt;
+            const rv=Math.sqrt((rp.x-this.prevPos.right.x)**2+(rp.y-this.prevPos.right.y)**2)/dt;
+            this.gestureTarget.velocity=Math.min(1,(lv+rv)*1.5);
+            this.gestureSmooth.spread+=(this.gestureTarget.spread-this.gestureSmooth.spread)*0.12;
+            this.gestureSmooth.height+=(this.gestureTarget.height-this.gestureSmooth.height)*0.15;
+            this.gestureSmooth.rotation+=(this.gestureTarget.rotation-this.gestureSmooth.rotation)*0.1;
+            this.gestureSmooth.velocity+=(this.gestureTarget.velocity-this.gestureSmooth.velocity)*0.2;
+            this.prevPos.left={...lp}; this.prevPos.right={...rp}; this.prevPos.t=now;
+            this.updateGestureHint(); this.updateAudio();
+        }
+        updateGestureHint(){
+            const h=[];
+            if(this.gestureSmooth.spread>0.7) h.push('FORTE'); else if(this.gestureSmooth.spread<0.25) h.push('PIANO');
+            if(this.gestureSmooth.height>0.65) h.push('BRIGHT'); else if(this.gestureSmooth.height<0.35) h.push('WARM');
+            if(Math.abs(this.gestureSmooth.rotation-0.5)>0.15) h.push('VIBRATO');
+            const el=document.getElementById('gesture-hint');
+            if(h.length){ el.textContent=h.join(' · '); el.classList.add('active'); }
+            else { el.textContent='—'; el.classList.remove('active'); }
+        }
+        processFingers(){
+            const now=Date.now();
+            const lf=this.hands.left?.fingers||[false,false,false,false,false];
+            const rf=this.hands.right?.fingers||[false,false,false,false,false];
+            for(let i=0;i<5;i++){
+                const lt=lf[i]?1:0;
+                if(lt!==this.fingers.left[i]){ if(now-this.fingerTimers.left[i]>this.fingerDebounce){ if(lt&&!this.fingers.left[i]) this.playChord('left',i); else if(!lt&&this.fingers.left[i]) this.releaseChord('left',i); this.fingers.left[i]=lt; this.fingerTimers.left[i]=now; }} else this.fingerTimers.left[i]=now;
+                const rt=rf[i]?1:0;
+                if(rt!==this.fingers.right[i]){ if(now-this.fingerTimers.right[i]>this.fingerDebounce){ if(rt&&!this.fingers.right[i]) this.playChord('right',i); else if(!rt&&this.fingers.right[i]) this.releaseChord('right',i); this.fingers.right[i]=rt; this.fingerTimers.right[i]=now; }} else this.fingerTimers.right[i]=now;
+            }
+            this.updateFingerUI();
+        }
+        updateFingerUI(){
+            document.querySelectorAll('#left-fingers .finger').forEach((el,i)=>el.classList.toggle('active',this.fingers.left[i]===1));
+            document.querySelectorAll('#right-fingers .finger').forEach((el,i)=>el.classList.toggle('active',this.fingers.right[i]===1));
+        }
+        drawHand(ctx,lm,canvas,label){
+            const conns=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],[0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]];
+            const hand=label==='Right'?'left':'right';
+            const c=label==='Right'?'rgba(255,180,120,0.4)':'rgba(120,200,200,0.4)';
+            ctx.strokeStyle=c; ctx.lineWidth=1.5;
+            conns.forEach(([a,b])=>{ ctx.beginPath(); ctx.moveTo(lm[a].x*canvas.width,lm[a].y*canvas.height); ctx.lineTo(lm[b].x*canvas.width,lm[b].y*canvas.height); ctx.stroke(); });
+            [4,8,12,16,20].forEach((t,i)=>{ const act=this.fingers[hand][i]; ctx.beginPath(); ctx.arc(lm[t].x*canvas.width,lm[t].y*canvas.height,act?4:2,0,Math.PI*2); ctx.fillStyle=act?'#ffc080':c; ctx.fill(); });
+        }
+
+        // ═══ ANIMATION LOOP ═══
+        animate(){
+            if(!this.running) return;
+            requestAnimationFrame(()=>this.animate());
+            this.updateVisuals(1/60);
+            this.renderer.setRenderTarget(this.rt);
+            this.renderer.clear();
+            this.renderer.render(this.scene,this.camera);
+            this.renderer.setRenderTarget(null);
+            this.renderer.clear();
+            this.renderer.render(this.postScene,this.postCam);
+        }
     }
-    if (removeIdx !== -1) arr.splice(removeIdx, 1);
-  });
 
-  currentStudent = SharedStore.getStudentById(currentStudent.id);
-  renderAllForCurrent();
-}
+    // Helper for float attribute values
+    function float32(v) { return v; }
 
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/jalali-moment/dist/jalali-moment.browser.js"></script>
-
-  
+    new HarmonicField();
+    </script>
 </body>
 </html>
