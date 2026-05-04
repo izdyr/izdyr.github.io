@@ -704,6 +704,196 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 }
 .send-btn:active{transform:scale(.88);}
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   VOICE RECORDING UI
+   When .ishell.recording is set, the input pill transforms into a
+   recording surface. When .ishell.locked is set, the gestures swap to
+   hands-free controls. .cancelling adds a discard preview.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* While recording, hide the textarea + mic + plus button.
+   The recording surface paints over the pill. */
+.ishell.recording .ibox,
+.ishell.recording .mic-inline,
+.ishell.recording .send-btn{
+  visibility:hidden;
+}
+.ibar.recording-active .plus-btn{
+  opacity:0.4;pointer-events:none;
+}
+
+/* The recording surface — sits absolutely inside the pill */
+.rec-surface{
+  position:absolute;inset:0;
+  border-radius:inherit;
+  display:none;
+  align-items:center;
+  padding:0 14px 0 6px;
+  direction:rtl;
+  pointer-events:none;
+  overflow:hidden;
+}
+.ishell.recording .rec-surface{display:flex;}
+
+/* Red "live" pulsing dot */
+.rec-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:#FF3B30;
+  flex-shrink:0;margin-left:8px;
+  animation:rec-pulse 1.2s ease-in-out infinite;
+}
+@keyframes rec-pulse{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%    {opacity:0.45;transform:scale(0.85);}
+}
+
+/* Live duration counter */
+.rec-time{
+  font-size:14px;color:var(--ink);
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum";
+  flex-shrink:0;
+  margin-left:10px;
+  min-width:34px;
+}
+
+/* Live waveform — bars scrolling in from RTL-end */
+.rec-wave{
+  flex:1;
+  display:flex;align-items:center;
+  height:22px;
+  overflow:hidden;
+  gap:2px;
+  /* fade out on the LTR-end so older bars dissolve */
+  mask-image:linear-gradient(to right, transparent 0%, #000 12%);
+  -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 12%);
+}
+.rec-bar{
+  width:2.5px;
+  background:var(--ink-2);
+  border-radius:99px;
+  flex-shrink:0;
+  animation:rec-bar-in 200ms var(--ease) both;
+}
+@keyframes rec-bar-in{
+  from{transform:scaleY(0.2);opacity:0.4;}
+  to  {transform:scaleY(1);opacity:1;}
+}
+
+/* Slide-to-cancel hint — sits on LTR-end of pill */
+.rec-cancel{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--ink-3);
+  flex-shrink:0;
+  transition:transform var(--quick) var(--ease);
+}
+.rec-cancel-arrow{
+  display:inline-flex;
+  animation:rec-arrow 1.4s ease-in-out infinite;
+}
+@keyframes rec-arrow{
+  0%,100%{transform:translateX(0);opacity:0.5;}
+  50%    {transform:translateX(-4px);opacity:1;}
+}
+
+/* Cancelling state: the entire surface dims, hint says "release to cancel" */
+.ishell.cancelling .rec-surface{
+  background:rgba(255,59,48,0.08);
+}
+.ishell.cancelling .rec-bar{background:#FF3B30;}
+.ishell.cancelling .rec-cancel{color:#FF3B30;font-weight:600;}
+
+/* Mic button while recording — turns red, scales up */
+.mic-inline.recording-mic{
+  position:absolute;
+  bottom:7px;left:7px;
+  width:42px;height:42px;
+  background:var(--blue);
+  color:#fff;
+  z-index:10;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 200ms var(--ease),background 200ms var(--ease);
+  pointer-events:none;
+  /* finger position can offset this via JS (--lift, --slide) */
+  transform:translate(var(--rec-slide,0),var(--rec-lift,0)) scale(1.4);
+  box-shadow:0 4px 14px rgba(0,122,255,0.35);
+}
+.ishell.cancelling .mic-inline.recording-mic{
+  background:#FF3B30;
+  box-shadow:0 4px 14px rgba(255,59,48,0.35);
+}
+
+/* Lock indicator — appears above the mic when slide-up active */
+.rec-lock{
+  position:absolute;
+  bottom:62px;left:13px;
+  width:30px;
+  background:var(--bg);
+  border:1px solid var(--hair);
+  border-radius:18px;
+  padding:6px 0 4px;
+  display:none;flex-direction:column;align-items:center;gap:4px;
+  z-index:9;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  pointer-events:none;
+  animation:rec-lock-in 200ms var(--ease) both;
+}
+@keyframes rec-lock-in{
+  from{opacity:0;transform:translateY(8px);}
+  to  {opacity:1;transform:translateY(0);}
+}
+.ibar.recording-active .rec-lock{display:flex;}
+.ibar.recording-active.locked .rec-lock{display:none;}
+.ibar.recording-active.locking .rec-lock{
+  /* stronger when in lock zone */
+  background:var(--blue);border-color:var(--blue);color:#fff;
+  transform:scale(1.1) translateY(-4px);
+}
+.rec-lock-arrow{
+  font-size:11px;color:var(--ink-3);
+  animation:rec-arrow-up 1.4s ease-in-out infinite;
+}
+.ibar.recording-active.locking .rec-lock-arrow{color:#fff;}
+@keyframes rec-arrow-up{
+  0%,100%{transform:translateY(0);opacity:0.5;}
+  50%    {transform:translateY(-3px);opacity:1;}
+}
+
+/* LOCKED STATE — hands-free recording.
+   Replaces the input bar entirely with delete + waveform + send. */
+.ishell.locked .rec-surface{
+  /* re-style for locked: still shows time + waveform, no cancel hint */
+  padding:0 14px;
+}
+.ishell.locked .rec-cancel{display:none;}
+
+.rec-locked-controls{
+  display:none;
+}
+.ibar.recording-active.locked .rec-locked-controls{
+  display:flex;align-items:center;gap:8px;
+}
+.ibar.recording-active.locked .plus-btn{display:none;}
+.rec-trash,.rec-stop,.rec-send{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:transform var(--quick) var(--ease),background var(--quick) var(--ease);
+}
+.rec-trash{background:transparent;color:#FF3B30;}
+.rec-trash:hover{background:rgba(255,59,48,0.10);}
+.rec-trash:active{transform:scale(0.9);}
+.rec-stop{
+  background:var(--ink);color:var(--bg);
+}
+.rec-stop:active{transform:scale(0.9);}
+.rec-send{
+  background:var(--blue);color:#fff;
+  box-shadow:0 4px 12px rgba(0,122,255,0.3);
+}
+.rec-send:active{transform:scale(0.9);}
+
 /* ━━━ BOTTOM SHEET ━━━ */
 .scrim{
   position:fixed;inset:0;
@@ -980,7 +1170,7 @@ function openConv(id){
         <div class="l3"></div>
         <div class="l4"></div>
       </div>
-      <div class="ibar">
+      <div class="ibar" id="ibar">
         <button class="plus-btn" aria-label="more">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -991,7 +1181,8 @@ function openConv(id){
             placeholder="iMessage"
             onkeydown="handleKey(event)"
             oninput="autoResize(this);updateSendBtn()"></textarea>
-          <button class="mic-inline" id="mic-btn" onclick="sendVoice()" aria-label="record voice">
+          <button class="mic-inline" id="mic-btn" aria-label="record voice"
+            onpointerdown="recPress(event)">
             <svg width="14" height="17" viewBox="0 0 14 17" fill="none">
               <rect x="4" y="1" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
               <path d="M1 9a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -1001,6 +1192,53 @@ function openConv(id){
           <button class="send-btn" id="send-btn" onclick="sendText()" aria-label="send">
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
               <path d="M6.5 11V2M6.5 2L2.5 6M6.5 2l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <!-- Recording surface — overlays the pill while recording -->
+          <div class="rec-surface">
+            <span class="rec-dot"></span>
+            <span class="rec-time" id="rec-time">0:00</span>
+            <div class="rec-wave" id="rec-wave"></div>
+            <span class="rec-cancel" id="rec-cancel">
+              <span class="rec-cancel-arrow">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path d="M7 2L3 5l4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span>برای لغو، بکشید</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Lock indicator — appears during slide-up gesture -->
+        <div class="rec-lock" id="rec-lock">
+          <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+            <rect x="2" y="7" width="10" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 7V4a3 3 0 016 0v3" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span class="rec-lock-arrow">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+              <path d="M1 5L5 1L9 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+
+        <!-- Locked controls — replace plus button when locked -->
+        <div class="rec-locked-controls">
+          <button class="rec-trash" onclick="recCancel()" aria-label="discard">
+            <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
+              <path d="M2 4h12M5 4V2h6v2M3 4l1 12h8l1-12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="rec-stop" onclick="recPauseToggle()" aria-label="pause">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="3" y="3" width="8" height="8" rx="1" fill="currentColor"/>
+            </svg>
+          </button>
+          <button class="rec-send" onclick="recFinish()" aria-label="send">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 11V2M7 2L3 6M7 2l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
         </div>
@@ -1351,10 +1589,255 @@ function advanceTick(msgId,newState){
   }));
 }
 
-function sendVoice(){
+/* ════════════════ VOICE RECORDING ════════
+   State machine:
+     idle → recording → (locked | finished | cancelled)
+   On mobile: press-and-hold the mic. Slide-left to cancel, slide-up to lock.
+   On desktop: tap to enter locked state immediately (no awkward mouse-hold).
+*/
+const REC = {
+  state: 'idle',          // 'idle' | 'recording' | 'locked'
+  startTime: 0,
+  pausedAt: 0,            // accumulated paused duration
+  pauseStart: null,       // when current pause started, null if not paused
+  startX: 0, startY: 0,
+  barTimer: null,
+  timeTimer: null,
+  bars: [],               // generated bar heights for replay
+  cancelThresholdX: 80,   // px finger has to drag toward LTR-end to cancel
+  lockThresholdY: 50,     // px finger has to drag up to lock
+};
+
+function isMobile(){
+  return window.matchMedia('(max-width:760px)').matches || ('ontouchstart' in window);
+}
+
+function recPress(e){
+  // Block if there's text in the input — send button takes over instead
+  if(document.getElementById('ishell').classList.contains('has-text'))return;
+  e.preventDefault();
+
+  if(!isMobile()){
+    // Desktop: tap = enter locked state directly
+    recStart();
+    recEnterLocked();
+    return;
+  }
+
+  // Mobile: press-and-hold flow
+  REC.startX = e.clientX;
+  REC.startY = e.clientY;
+  recStart();
+
+  // pointerup/move tracked on the document so user can slide outside the mic
+  document.addEventListener('pointermove', recMove);
+  document.addEventListener('pointerup', recRelease, {once:true});
+  document.addEventListener('pointercancel', recRelease, {once:true});
+
+  // capture pointer on mic button so we keep getting events
+  e.target.setPointerCapture?.(e.pointerId);
+}
+
+function recStart(){
+  REC.state = 'recording';
+  REC.startTime = Date.now();
+  REC.pausedAt = 0;
+  REC.pauseStart = null;
+  REC.bars = [];
+
+  document.getElementById('ishell').classList.add('recording');
+  document.getElementById('ibar').classList.add('recording-active');
+
+  // make the mic button into the floating recording-mic for mobile feedback
+  const micBtn = document.getElementById('mic-btn');
+  if(isMobile()){
+    micBtn.classList.add('recording-mic');
+    micBtn.style.setProperty('--rec-slide','0px');
+    micBtn.style.setProperty('--rec-lift','0px');
+  }
+
+  // start ticking the duration counter
+  REC.timeTimer = setInterval(updateRecTime, 100);
+
+  // start generating bars (~ every 90ms, so 30 bars in 2.7s; matches a natural feel)
+  REC.barTimer = setInterval(addRecBar, 90);
+}
+
+function updateRecTime(){
+  if(REC.pauseStart!==null)return;
+  const total = Date.now() - REC.startTime - REC.pausedAt;
+  const sec = Math.floor(total/1000);
+  const m = Math.floor(sec/60), s = sec%60;
+  const el = document.getElementById('rec-time');
+  if(el) el.textContent = `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function addRecBar(){
+  if(REC.pauseStart!==null)return;
+  // pseudo-random amplitude — actual MediaRecorder data goes here later
+  const h = 4 + Math.random()*16 + Math.random()*Math.random()*8;
+  REC.bars.push(h);
+
+  const wave = document.getElementById('rec-wave');
+  if(!wave)return;
+  const bar = document.createElement('div');
+  bar.className = 'rec-bar';
+  bar.style.height = Math.round(h)+'px';
+  wave.appendChild(bar);
+
+  // keep only the bars that fit visually (avoid runaway DOM)
+  while(wave.children.length > 60) wave.firstChild.remove();
+}
+
+function recMove(e){
+  if(REC.state !== 'recording')return;
+  const dx = e.clientX - REC.startX;   // negative = moved toward LTR-end
+  const dy = e.clientY - REC.startY;   // negative = moved up
+
+  // For RTL: cancel direction is LTR-end which is visually LEFT, so dx negative.
+  // We want to read "drag amount toward cancel" as positive number for clarity.
+  const dragCancel = Math.max(0, -dx);
+  const dragLock = Math.max(0, -dy);
+
+  const micBtn = document.getElementById('mic-btn');
+  const ishell = document.getElementById('ishell');
+  const ibar = document.getElementById('ibar');
+
+  // mic follows finger horizontally a little and lifts upward toward lock
+  micBtn.style.setProperty('--rec-slide', `-${Math.min(dragCancel, REC.cancelThresholdX)}px`);
+  micBtn.style.setProperty('--rec-lift',  `-${Math.min(dragLock, REC.lockThresholdY)}px`);
+
+  // toggle .cancelling once we cross the cancel threshold
+  ishell.classList.toggle('cancelling', dragCancel >= REC.cancelThresholdX);
+
+  // toggle .locking when in lock zone
+  ibar.classList.toggle('locking', dragLock >= REC.lockThresholdY*0.7);
+
+  // commit lock if user fully drags up
+  if(dragLock >= REC.lockThresholdY){
+    document.removeEventListener('pointermove', recMove);
+    recEnterLocked();
+  }
+}
+
+function recRelease(){
+  document.removeEventListener('pointermove', recMove);
+
+  if(REC.state !== 'recording')return;
+  // if cancelling state was active, discard
+  const ishell = document.getElementById('ishell');
+  if(ishell.classList.contains('cancelling')){
+    recCancel();
+    return;
+  }
+  // otherwise finish & send
+  recFinish();
+}
+
+function recEnterLocked(){
+  REC.state = 'locked';
+  document.getElementById('ibar').classList.add('locked');
+  document.getElementById('ibar').classList.remove('locking');
+  // hide the floating mic since locked controls take over
+  const micBtn = document.getElementById('mic-btn');
+  micBtn.classList.remove('recording-mic');
+  micBtn.style.removeProperty('--rec-slide');
+  micBtn.style.removeProperty('--rec-lift');
+}
+
+function recPauseToggle(){
+  if(REC.state !== 'locked')return;
+  if(REC.pauseStart === null){
+    REC.pauseStart = Date.now();
+    // change stop button into resume (play triangle)
+    const btn = document.querySelector('.rec-stop');
+    if(btn){
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 2v10l9-5z" fill="currentColor"/></svg>';
+      btn.setAttribute('aria-label','resume');
+    }
+  } else {
+    REC.pausedAt += Date.now() - REC.pauseStart;
+    REC.pauseStart = null;
+    const btn = document.querySelector('.rec-stop');
+    if(btn){
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="3" y="3" width="8" height="8" rx="1" fill="currentColor"/></svg>';
+      btn.setAttribute('aria-label','pause');
+    }
+  }
+}
+
+function recFinish(){
+  if(REC.state === 'idle')return;
+
+  // total duration in seconds (excluding pauses)
+  const totalMs = Date.now() - REC.startTime - REC.pausedAt
+                  - (REC.pauseStart ? Date.now()-REC.pauseStart : 0);
+  const dur = Math.max(1, Math.round(totalMs/1000));
+
+  recCleanup();
+
+  // Emit the voice message into the conversation
   if(!activeId)return;
-  const msgs=MSGS[activeId]=MSGS[activeId]||[];
-  msgs.push({id:Date.now(),s:'out',type:'voice',dur:9,t:'الان',bps:[],tickState:'seen'});
+  const msgs = MSGS[activeId] = MSGS[activeId] || [];
+  msgs.push({
+    id: Date.now(),
+    s: 'out',
+    type: 'voice',
+    dur: dur,
+    t: 'الان',
+    bps: [],
+    tickState: 'sending',     // optimistic — will switch to delivered
+  });
+  renderClusters();
+  scrollBot();
+
+  // simulate delivery progression
+  const newId = msgs[msgs.length-1].id;
+  setTimeout(() => {
+    const m = msgs.find(x => x.id===newId);
+    if(m){m.tickState = 'delivered'; renderClusters();}
+  }, 600);
+  setTimeout(() => {
+    const m = msgs.find(x => x.id===newId);
+    if(m){m.tickState = 'seen'; renderClusters();}
+  }, 1800);
+}
+
+function recCancel(){
+  recCleanup();
+}
+
+function recCleanup(){
+  REC.state = 'idle';
+  clearInterval(REC.barTimer);
+  clearInterval(REC.timeTimer);
+  REC.barTimer = null;
+  REC.timeTimer = null;
+
+  const ishell = document.getElementById('ishell');
+  const ibar = document.getElementById('ibar');
+  const micBtn = document.getElementById('mic-btn');
+
+  ishell.classList.remove('recording','cancelling','locked');
+  ibar.classList.remove('recording-active','locking','locked');
+  micBtn.classList.remove('recording-mic');
+  micBtn.style.removeProperty('--rec-slide');
+  micBtn.style.removeProperty('--rec-lift');
+
+  // clear the live wave
+  const wave = document.getElementById('rec-wave');
+  if(wave) wave.innerHTML = '';
+  const time = document.getElementById('rec-time');
+  if(time) time.textContent = '0:00';
+}
+
+/* Legacy hook for any code that still calls sendVoice() — wraps recFinish */
+function sendVoice(){
+  if(REC.state !== 'idle'){recFinish();return;}
+  // not currently recording → simulate a quick 2-second voice message
+  if(!activeId)return;
+  const msgs = MSGS[activeId] = MSGS[activeId] || [];
+  msgs.push({id:Date.now(),s:'out',type:'voice',dur:2,t:'الان',bps:[],tickState:'seen'});
   renderClusters();scrollBot();
 }
 
