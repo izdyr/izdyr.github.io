@@ -208,6 +208,12 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
   .ch{padding-top:calc(8px + env(safe-area-inset-top));min-height:calc(56px + env(safe-area-inset-top));}
 }
 
+.ch-actions{
+  display:flex;align-items:center;gap:4px;
+  margin-right:auto;          /* push to LTR end (visually left in RTL) */
+  flex-shrink:0;
+}
+
 .back-btn{
   display:none;align-items:center;justify-content:center;
   width:36px;height:36px;border-radius:50%;
@@ -559,18 +565,8 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 
 /* ━━━ EMPTY STATES ━━━ */
 .conv-empty{
-  flex:1;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:6px;
-  direction:rtl;padding:80px 2rem 90px;
+  flex:1;
 }
-.conv-empty-av{
-  width:80px;height:80px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:30px;font-weight:500;margin-bottom:14px;
-  background:var(--grey);color:var(--ink-2);
-}
-.conv-empty-name{font-size:18px;font-weight:600;color:var(--ink);}
-.conv-empty-hint{font-size:14px;color:var(--ink-3);margin-top:4px;}
 
 .empty{
   flex:1;display:flex;flex-direction:column;
@@ -682,7 +678,13 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
   width:28px;height:28px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   color:var(--ink-3);flex-shrink:0;
-  transition:opacity var(--quick) var(--ease);
+  transition:opacity var(--quick) var(--ease),width var(--quick) var(--ease);
+  overflow:hidden;
+}
+.ishell.has-text .mic-inline{
+  opacity:0;
+  width:0;
+  pointer-events:none;
 }
 
 /* send button — only when text. blue circle. */
@@ -700,7 +702,6 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 .ishell.has-text .send-btn{
   opacity:1;transform:scale(1);pointer-events:auto;
 }
-.ishell.has-text .mic-inline{opacity:0;}
 .send-btn:active{transform:scale(.88);}
 
 /* ━━━ BOTTOM SHEET ━━━ */
@@ -930,13 +931,8 @@ function openConv(id){
   const msgs=MSGS[id]||[];
   const isEmpty=msgs.length===0;
 
-  /* FIX #11: empty conversation state uses conv avatar+name */
   const chatBody=isEmpty
-    ?`<div class="conv-empty">
-        <div class="conv-empty-av">${initials(conv.name)}</div>
-        <div class="conv-empty-name">${conv.name}</div>
-        <div class="conv-empty-hint">شروع مکالمه</div>
-      </div>`
+    ?`<div class="conv-empty"></div>`
     :`<div class="msgs" id="msgs">
         <div class="day-sep"><span class="when">امروز</span><span class="at">۱۴:۳۲</span></div>
         <div id="clusters"></div>
@@ -952,7 +948,7 @@ function openConv(id){
       <div class="ch">
         <button class="back-btn" onclick="goBack()" aria-label="back">
           <svg width="11" height="18" viewBox="0 0 11 18" fill="none">
-            <path d="M9 1.5L1.5 9l7.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 1.5L9.5 9l-7.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
         <div class="av" style="flex-shrink:0">${initials(conv.name)}</div>
@@ -961,13 +957,21 @@ function openConv(id){
           <div class="ch-name">${conv.name}</div>
           <div class="ch-sub">${conv.sub}</div>
         </div>
-        <button class="ib" style="flex-shrink:0;margin-right:auto" aria-label="info">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.4"/>
-            <circle cx="10" cy="6.5" r="0.8" fill="currentColor"/>
-            <path d="M10 9v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          </svg>
-        </button>
+        <div class="ch-actions">
+          <button class="ib" aria-label="video call">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="5" width="11" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M13 8.5L18 6v8l-5-2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="ib" aria-label="info">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="10" cy="6.5" r="0.8" fill="currentColor"/>
+              <path d="M10 9v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
       ${chatBody}
       <div class="ibar-bg" aria-hidden="true">
