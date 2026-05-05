@@ -2,7 +2,10 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
 <title>پارس موزیک</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,16 +54,50 @@
   --tap-2:     rgba(255,255,255,0.10);
 }
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;}
+*,*::before,*::after{
+  box-sizing:border-box;margin:0;padding:0;
+  -webkit-tap-highlight-color:transparent;
+  /* PWA polish: nothing is selectable by default. Only inputs (below) opt in. */
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;     /* no iOS "Copy / Look Up" callout menu */
+  -webkit-user-drag:none;          /* no drag-to-save on images */
+}
+html,body{
+  height:100%;overflow:hidden;
+  /* No rubber-band on the page itself. Scrollable lists handle their own. */
+  overscroll-behavior:none;
+  /* No pinch-zoom, no double-tap zoom. Only allow vertical scroll. */
+  touch-action:pan-y;
+  overflow-x:hidden;
+}
 body{
   font-family:var(--fa);
   background:var(--bg);
   color:var(--ink);
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
+  /* iOS PWA: position:fixed prevents the body from rubber-banding when keyboard opens */
+  position:fixed;inset:0;
+  /* No double-tap zoom delay */
+  touch-action:manipulation;
 }
 button,textarea,input{font-family:inherit;background:none;border:none;cursor:pointer;color:inherit;}
+
+/* iOS Safari auto-zooms on focus into ANY input with font-size < 16px.
+   The textarea + search input MUST be 16px to prevent the zoom-on-focus jump. */
+.ibox,.search input,.sh-ta{font-size:16px;}
+
+/* The ONLY places text is selectable are real input fields.
+   Everything else stays unselectable so the app feels native, not like a webpage.
+   When we add long-press-to-copy on bubbles later, we'll re-enable selectively. */
+.ibox,
+.search input,
+.sh-ta{
+  -webkit-user-select:text;
+  user-select:text;
+  -webkit-touch-callout:default;
+}
 
 .app{display:flex;height:100vh;height:100dvh;overflow:hidden;direction:ltr;}
 
@@ -112,7 +149,7 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 .search svg{color:var(--ink-3);flex-shrink:0;}
 .search input{
   background:none;border:none;outline:none;
-  font-size:15px;color:var(--ink);width:100%;direction:rtl;
+  font-size:16px;color:var(--ink);width:100%;direction:rtl;
 }
 .search input::placeholder{color:var(--ink-3);}
 
@@ -894,6 +931,94 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 }
 .rec-send:active{transform:scale(0.9);}
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   REACTIONS (TAPBACK)
+   Long-press a text bubble or bpc card → popover with reaction picker.
+   Tap a reaction → it attaches to the bubble's corner.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* The picker — appended to body, absolutely positioned above the target */
+.rxn-picker{
+  position:fixed;
+  display:flex;align-items:center;gap:2px;
+  padding:6px;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--hair);
+  border-radius:99px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.18),
+             0 1px 0 rgba(255,255,255,0.6) inset;
+  z-index:300;
+  opacity:0;
+  transform:translateY(6px) scale(0.86);
+  transform-origin:bottom center;
+  transition:opacity 180ms var(--ease),transform 220ms var(--ease);
+  pointer-events:none;
+}
+[data-dark] .rxn-picker{
+  box-shadow:0 8px 28px rgba(0,0,0,0.45),
+             0 1px 0 rgba(255,255,255,0.06) inset;
+}
+.rxn-picker.on{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+
+.rxn-btn{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;line-height:1;
+  transition:transform 160ms var(--ease),background 120ms var(--ease);
+  /* emoji should sit on baseline cleanly */
+  padding-bottom:1px;
+}
+.rxn-btn:hover{transform:scale(1.18);background:var(--tap);}
+.rxn-btn:active{transform:scale(0.92);}
+.rxn-btn.selected{background:color-mix(in srgb, var(--blue) 16%, transparent);}
+
+/* Applied reaction — sits on the bubble's corner.
+   The corner WITHOUT the tail (out: top-left, in: top-right). */
+.rxn-applied{
+  position:absolute;top:-10px;
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  background:var(--bg);
+  border:1.5px solid var(--bg);
+  box-shadow:0 2px 6px rgba(0,0,0,0.10);
+  z-index:3;
+  /* enter animation — pops in from scale 0 with a slight overshoot */
+  animation:rxn-pop 280ms cubic-bezier(0.34,1.56,0.64,1) both;
+  cursor:pointer;
+  /* keep selectable hover/tap surface */
+  -webkit-user-select:none;user-select:none;
+}
+@keyframes rxn-pop{
+  0%   {transform:scale(0);}
+  60%  {transform:scale(1.18);}
+  100% {transform:scale(1);}
+}
+.cluster.out .rxn-applied{left:-8px;}
+.cluster.in  .rxn-applied{right:-8px;}
+
+/* Bubble dimming when picker is active for a different bubble.
+   Visually the focused bubble pops, others recede. */
+.msgs.rxn-active .bubble:not(.rxn-target),
+.msgs.rxn-active .bpc:not(.rxn-target),
+.msgs.rxn-active .vbub{
+  opacity:0.55;
+  transition:opacity 200ms var(--ease);
+}
+
+/* Pulse glow on the targeted bubble */
+.bubble.rxn-target,
+.bpc.rxn-target{
+  position:relative;z-index:2;
+}
+
+
 /* ━━━ BOTTOM SHEET ━━━ */
 .scrim{
   position:fixed;inset:0;
@@ -942,7 +1067,7 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
   background:var(--grey);
   border:none;
   border-radius:12px;padding:12px 14px;
-  font-size:15px;color:var(--ink);resize:none;outline:none;
+  font-size:16px;color:var(--ink);resize:none;outline:none;
   direction:rtl;line-height:1.55;min-height:90px;
   font-family:var(--fa);
 }
@@ -1292,9 +1417,17 @@ function renderClusters(){
 
 function buildRow(m,isLast,side){
   let inner='';
+  const rxnHTML = m.reaction
+    ? `<span class="rxn-applied" onclick="event.stopPropagation();applyReaction(${m.id},null)">${RXN_GLYPH[m.reaction]||m.reaction}</span>`
+    : '';
+
   if(m.type==='text'){
     const pill=m.body.replace(/\s/g,'').length<=8;
-    inner=`<div class="bubble${pill?' pill':''}">${m.body}</div>`;
+    inner=`<div class="bubble${pill?' pill':''}"
+      onpointerdown="rxnPress(event,${m.id})"
+      onpointerup="rxnRelease()" onpointercancel="rxnRelease()"
+      onpointermove="rxnPressMove(event)"
+      onpointerleave="rxnRelease()">${m.body}${rxnHTML}</div>`;
 
   }else if(m.type==='voice'){
     inner=`<div class="vbub" id="vb-${m.id}"
@@ -1319,7 +1452,11 @@ function buildRow(m,isLast,side){
       return `<div class="bpc-ref-bar${isHi?' hi':''}" style="height:${Math.round(h)}px"></div>`;
     }).join('');
     const jumpAttr=m.srcId?`onclick="jumpToBp(${m.srcId},${m.srcPct||0})"`:'';
-    inner=`<div class="bpc${m.srcId?' bpc-clickable':''}" ${jumpAttr}>
+    inner=`<div class="bpc${m.srcId?' bpc-clickable':''}" ${jumpAttr}
+      onpointerdown="rxnPress(event,${m.id})"
+      onpointerup="rxnRelease()" onpointercancel="rxnRelease()"
+      onpointermove="rxnPressMove(event)"
+      onpointerleave="rxnRelease()">
       <div class="bpc-lbl">
         <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
           <circle cx="4.5" cy="4.5" r="3.5" stroke="currentColor" stroke-width="1"/>
@@ -1332,6 +1469,7 @@ function buildRow(m,isLast,side){
         <span class="bpc-ref-ts">${m.bpTs}</span>
         <div class="bpc-ref-bars">${refBars}</div>
       </div>
+      ${rxnHTML}
     </div>`;
   }
 
@@ -1433,6 +1571,159 @@ function jumpToBp(srcId,pct){
     const dur=m?m.dur:24;
     togglePlay(vbId,dur);
   },420);
+}
+
+/* ════════════════ REACTIONS ═══════════
+   Long-press a text bubble or breakpoint card → reaction picker appears
+   above. Tap a reaction → it attaches to the bubble's corner.
+*/
+const RXN_GLYPH = {
+  heart:    '❤️',
+  thumbsup: '👍',
+  haha:     '😂',
+  emphasize:'‼️',
+  question: '❓',
+};
+const RXN_ORDER = ['heart','thumbsup','haha','emphasize','question'];
+
+let rxnTimer = null, rxnTargetEl = null, rxnTargetMsgId = null,
+    rxnStartXY = null, rxnPickerEl = null;
+
+function rxnPress(e,msgId){
+  // ignore if right-click on desktop
+  if(e.button === 2) return;
+  // ignore if a reaction is already open — let the click on a button work
+  if(rxnPickerEl && rxnPickerEl.classList.contains('on')) return;
+
+  rxnStartXY = {x:e.clientX, y:e.clientY};
+  rxnTargetEl = e.currentTarget;
+  rxnTargetMsgId = msgId;
+
+  // 380ms = slightly faster than the breakpoint long-press (500ms) so it
+  // feels responsive. Bubbles are smaller targets so users hold less time.
+  rxnTimer = setTimeout(() => {
+    showRxnPicker(rxnTargetEl, msgId);
+    rxnTimer = null;
+  }, 380);
+}
+
+function rxnPressMove(e){
+  if(!rxnStartXY || !rxnTimer) return;
+  const dx = e.clientX - rxnStartXY.x;
+  const dy = e.clientY - rxnStartXY.y;
+  if(dx*dx + dy*dy > 100){    // 10px radius cancels
+    rxnRelease();
+  }
+}
+
+function rxnRelease(){
+  if(rxnTimer){clearTimeout(rxnTimer); rxnTimer = null;}
+  rxnStartXY = null;
+}
+
+function showRxnPicker(targetEl, msgId){
+  // remove any existing picker
+  dismissRxnPicker(true);
+
+  // build picker
+  const picker = document.createElement('div');
+  picker.className = 'rxn-picker';
+  // figure out the current reaction so we can highlight it
+  const msg = (MSGS[activeId]||[]).find(x => x.id === msgId);
+  const current = msg && msg.reaction;
+  picker.innerHTML = RXN_ORDER.map(type => `
+    <button class="rxn-btn ${type===current?'selected':''}" data-rxn="${type}">
+      ${RXN_GLYPH[type]}
+    </button>
+  `).join('');
+
+  // wire up clicks
+  picker.querySelectorAll('.rxn-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const type = btn.getAttribute('data-rxn');
+      // toggle: tapping the current one removes it
+      applyReaction(msgId, type === current ? null : type);
+      dismissRxnPicker();
+    });
+  });
+
+  document.body.appendChild(picker);
+  rxnPickerEl = picker;
+
+  // mark target so dimming applies
+  targetEl.classList.add('rxn-target');
+  document.getElementById('msgs')?.classList.add('rxn-active');
+
+  // position the picker above the target
+  positionRxnPicker(targetEl, picker);
+
+  // animate in (next frame so the transform transition runs)
+  requestAnimationFrame(() => picker.classList.add('on'));
+
+  // dismiss on tap outside
+  setTimeout(() => {
+    document.addEventListener('pointerdown', dismissRxnHandler, {capture:true});
+    document.addEventListener('keydown', escDismiss);
+  }, 0);
+}
+
+function positionRxnPicker(targetEl, picker){
+  const r = targetEl.getBoundingClientRect();
+  const pickerRect = picker.getBoundingClientRect();
+  // try above first
+  let top = r.top - pickerRect.height - 10;
+  let originBottom = true;
+  // if doesn't fit above (too close to header), put below
+  if(top < 80){
+    top = r.bottom + 10;
+    originBottom = false;
+  }
+  // center horizontally on target, but clamp to viewport edges
+  let left = r.left + r.width/2 - pickerRect.width/2;
+  const margin = 12;
+  if(left < margin) left = margin;
+  if(left + pickerRect.width > window.innerWidth - margin){
+    left = window.innerWidth - margin - pickerRect.width;
+  }
+  picker.style.top = top + 'px';
+  picker.style.left = left + 'px';
+  picker.style.transformOrigin = originBottom ? 'bottom center' : 'top center';
+}
+
+function dismissRxnHandler(e){
+  // if click is inside the picker, ignore
+  if(rxnPickerEl && rxnPickerEl.contains(e.target)) return;
+  dismissRxnPicker();
+}
+function escDismiss(e){
+  if(e.key === 'Escape') dismissRxnPicker();
+}
+
+function dismissRxnPicker(immediate){
+  document.removeEventListener('pointerdown', dismissRxnHandler, {capture:true});
+  document.removeEventListener('keydown', escDismiss);
+  document.querySelectorAll('.rxn-target').forEach(el => el.classList.remove('rxn-target'));
+  document.getElementById('msgs')?.classList.remove('rxn-active');
+  if(!rxnPickerEl) return;
+  if(immediate){
+    rxnPickerEl.remove();
+    rxnPickerEl = null;
+    return;
+  }
+  rxnPickerEl.classList.remove('on');
+  const el = rxnPickerEl;
+  rxnPickerEl = null;
+  setTimeout(() => el.remove(), 220);
+}
+
+function applyReaction(msgId, type){
+  const msgs = MSGS[activeId];
+  if(!msgs) return;
+  const msg = msgs.find(x => x.id === msgId);
+  if(!msg) return;
+  msg.reaction = type;          // null removes
+  renderClusters();
 }
 
 /* ════════════════ LONG PRESS → SHEET ═ */
@@ -1862,6 +2153,38 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('.bpin'))
     document.querySelectorAll('.btip').forEach(t=>t.classList.remove('on'));
 });
+
+/* ════════════════ PWA HARDENING ════════════════
+   CSS handles most of it. These JS guards catch the iOS edge cases
+   where Safari ignores user-scalable=no or touch-action:manipulation. */
+
+// Block iOS pinch-zoom gesture events (Safari sometimes ignores the meta tag)
+['gesturestart','gesturechange','gestureend'].forEach(evt=>{
+  document.addEventListener(evt, e=>e.preventDefault(), {passive:false});
+});
+
+// Block double-tap-to-zoom: if a tap happens within 300ms of the last tap, prevent it.
+// This catches what touch-action:manipulation misses on older iOS.
+let lastTouchEnd = 0;
+document.addEventListener('touchend', e=>{
+  const now = Date.now();
+  if(now - lastTouchEnd <= 300) e.preventDefault();
+  lastTouchEnd = now;
+}, {passive:false});
+
+// Prevent the browser's default context menu on long-press of anything
+// EXCEPT input fields where the user genuinely needs paste/select.
+document.addEventListener('contextmenu', e=>{
+  const t = e.target;
+  if(t.matches && t.matches('input,textarea')) return;
+  e.preventDefault();
+});
+
+// Block accidental browser swipe-to-go-back on Chrome Android / iOS Safari
+// for horizontal swipes near the screen edge (interferes with chat scroll).
+document.addEventListener('touchstart', e=>{
+  if(e.touches.length > 1) e.preventDefault();
+}, {passive:false});
 
 renderSidebar();
 openConv(1);
