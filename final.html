@@ -311,13 +311,33 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 }
 .msgs::-webkit-scrollbar{width:0;}
 
-/* day stamp — "Today 2:51 PM" */
+/* day stamp — "Today 2:51 PM" — frosted glass capsule
+   Single pill that holds the day word + time. Translucent so it sits
+   inside the message stream without feeling like a band, blurry so the
+   chat bg gives it depth. Works the same way in light & dark — only
+   the tint changes. */
 .day-sep{
   display:flex;align-items:center;justify-content:center;
-  margin:14px 0 12px;gap:6px;
+  margin:14px 0 16px;
 }
-.day-sep .when{font-size:12px;font-weight:600;color:var(--ink-2);}
-.day-sep .at{font-size:12px;font-weight:400;color:var(--ink-3);}
+.day-sep-cap{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;
+  border-radius:99px;
+  /* translucent surface + heavy blur = real frosted glass, not a flat pill */
+  background:rgba(245,245,247,0.72);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  backdrop-filter:blur(18px) saturate(160%);
+  border:.5px solid rgba(0,0,0,0.06);
+  box-shadow:0 1px 2px rgba(0,0,0,0.03);
+}
+[data-dark] .day-sep-cap{
+  background:rgba(44,44,46,0.62);
+  border-color:rgba(255,255,255,0.08);
+  box-shadow:0 1px 2px rgba(0,0,0,0.30);
+}
+.day-sep .when{font-size:11.5px;font-weight:600;color:var(--ink-2);letter-spacing:.1px;}
+.day-sep .at  {font-size:11.5px;font-weight:400;color:var(--ink-3);letter-spacing:.1px;}
 
 /* ━━━ CLUSTERS ━━━ */
 .cluster{
@@ -389,6 +409,9 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 }
 .cluster.out .bmeta{justify-content:flex-end;}
 .cluster.in  .bmeta{display:none;}
+/* When an incoming bubble is edited, the meta gets force-shown via inline style;
+   align it to the start so it sits right beneath the bubble on the left. */
+.cluster.in [data-msgid] > .bmeta{justify-content:flex-start;}
 .btime{display:none;}    /* no per-bubble timestamps. ever. */
 
 /* ━━━ TICKS ━━━ */
@@ -938,75 +961,67 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 /* The picker — appended to body, absolutely positioned above the target */
-.rxn-picker{
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   UNIFIED REACTION + ACTION POPOVER
+   One frosted card. Reactions row on top. Hairline divider.
+   Action list below. iMessage / WhatsApp pattern.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.rxn-popover{
   position:fixed;
-  display:flex;align-items:center;gap:2px;
-  padding:6px;
-  background:color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter:blur(20px) saturate(180%);
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  display:flex;flex-direction:column;
+  min-width:240px;
+  background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
   border:1px solid var(--hair);
-  border-radius:99px;
-  box-shadow:0 8px 28px rgba(0,0,0,0.18),
+  border-radius:18px;
+  box-shadow:0 10px 32px rgba(0,0,0,0.18),
              0 1px 0 rgba(255,255,255,0.6) inset;
   z-index:300;
   opacity:0;
-  transform:translateY(6px) scale(0.86);
-  transform-origin:bottom center;
-  transition:opacity 180ms var(--ease),transform 220ms var(--ease);
-  pointer-events:none;
-}
-[data-dark] .rxn-picker{
-  box-shadow:0 8px 28px rgba(0,0,0,0.45),
-             0 1px 0 rgba(255,255,255,0.06) inset;
-}
-.rxn-picker.on{
-  opacity:1;
-  transform:translateY(0) scale(1);
-  pointer-events:auto;
-}
-
-.rxn-btn{
-  width:38px;height:38px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;line-height:1;
-  transition:transform 160ms var(--ease),background 120ms var(--ease);
-  /* emoji should sit on baseline cleanly */
-  padding-bottom:1px;
-}
-.rxn-btn:hover{transform:scale(1.18);background:var(--tap);}
-.rxn-btn:active{transform:scale(0.92);}
-.rxn-btn.selected{background:color-mix(in srgb, var(--blue) 16%, transparent);}
-
-/* ━━━ ACTION MENU — sits below the reaction picker ━━━
-   Tapping any item dismisses the whole popover. */
-.rxn-menu{
-  position:fixed;
-  background:color-mix(in srgb, var(--bg) 92%, transparent);
-  backdrop-filter:blur(20px) saturate(180%);
-  -webkit-backdrop-filter:blur(20px) saturate(180%);
-  border:1px solid var(--hair);
-  border-radius:14px;
-  min-width:200px;
-  box-shadow:0 8px 28px rgba(0,0,0,0.18),
-             0 1px 0 rgba(255,255,255,0.6) inset;
-  z-index:300;
-  opacity:0;
-  transform:translateY(-6px) scale(0.92);
-  transform-origin:top center;
+  transform:translateY(6px) scale(0.92);
   transition:opacity 180ms var(--ease),transform 220ms var(--ease);
   pointer-events:none;
   overflow:hidden;
   direction:rtl;
 }
-[data-dark] .rxn-menu{
-  box-shadow:0 8px 28px rgba(0,0,0,0.45),
+[data-dark] .rxn-popover{
+  box-shadow:0 10px 32px rgba(0,0,0,0.55),
              0 1px 0 rgba(255,255,255,0.06) inset;
 }
-.rxn-menu.on{
+.rxn-popover.on{
   opacity:1;
   transform:translateY(0) scale(1);
   pointer-events:auto;
+}
+
+/* Top zone — reactions row */
+.rxn-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:2px;
+  padding:6px 8px;
+  /* hairline below to separate from action list */
+}
+.rxn-row.has-actions{
+  border-bottom:0.5px solid var(--hair);
+}
+
+.rxn-btn{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;line-height:1;
+  transition:transform 160ms var(--ease),background 120ms var(--ease);
+  padding-bottom:1px;
+  flex-shrink:0;
+}
+.rxn-btn:hover{transform:scale(1.18);background:var(--tap);}
+.rxn-btn:active{transform:scale(0.92);}
+.rxn-btn.selected{background:color-mix(in srgb, var(--blue) 16%, transparent);}
+
+/* Bottom zone — action list */
+.rxn-actions{
+  display:flex;flex-direction:column;
+  /* row-by-row hairlines via item border-top */
 }
 
 .rxn-menu-item{
@@ -1033,41 +1048,137 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
   opacity:0.85;
 }
 
-/* "edited" indicator next to the timestamp on edited bubbles */
+/* "ویرایش شده" indicator — same frosted-glass language as the day-sep capsule,
+   just smaller. Sits next to the timestamp on outgoing bubbles, or as its own
+   tiny pill below incoming bubbles. Works in both light and dark. */
 .bubble-edited{
-  font-size:10px;color:var(--ink-3);
-  font-style:italic;
-  margin-right:4px;
+  display:inline-flex;align-items:center;
+  font-size:10px;font-weight:500;
+  color:var(--ink-2);
+  padding:2px 8px;
+  border-radius:99px;
+  background:rgba(245,245,247,0.72);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  backdrop-filter:blur(14px) saturate(160%);
+  border:.5px solid rgba(0,0,0,0.05);
+  letter-spacing:.1px;
+  margin-right:2px;
+  /* tighten line-height so it doesn't push the meta row taller */
+  line-height:1.4;
+}
+[data-dark] .bubble-edited{
+  background:rgba(44,44,46,0.62);
+  border-color:rgba(255,255,255,0.08);
+  color:var(--ink-2);
 }
 
-/* Editing state — when a message is being edited in place */
-.ishell.editing{
-  border-color:var(--blue);
-  background:color-mix(in srgb, var(--blue) 4%, var(--bg));
+/* ━━━ EDIT MODE — banner is part of the input bar, fused with the pill ━━━
+   When editing, the .ibar becomes a vertical stack:
+     1) a banner row (accent stripe • label • preview • close X)
+     2) the existing input pill, with its top edge shared with the banner
+   Together they read as ONE component. */
+.ibar.editing-mode{
+  flex-direction:column;
+  align-items:stretch;
+  gap:0;
+  padding:8px 12px;
+  padding-bottom:calc(8px + env(safe-area-inset-bottom));
 }
+.ibar.editing-mode .edit-row{
+  display:flex;align-items:stretch;gap:8px;
+}
+.ibar:not(.editing-mode) .edit-row{display:contents;}
+
+/* The banner — a slim panel sitting above the input pill, fused with it */
 .edit-banner{
-  display:none;
-  position:absolute;left:0;right:0;bottom:calc(100% + 6px);
-  padding:6px 14px;
-  background:var(--blue);color:#fff;
-  border-radius:12px;
-  font-size:12px;font-weight:500;
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px 8px 12px;
+  margin-bottom:6px;
+  background:color-mix(in srgb, var(--blue) 10%, var(--bg));
+  border:1px solid color-mix(in srgb, var(--blue) 26%, var(--hair));
+  border-radius:14px;
   direction:rtl;
-  animation:edit-banner-in 200ms var(--ease) both;
+  position:relative;overflow:hidden;
+  animation:edit-banner-in 220ms cubic-bezier(0.34,1.56,0.64,1) both;
+  /* The banner shares the bottom edge with the pill below — flatten the
+     bottom corners and overlap by 1px so the borders kiss seamlessly. */
+  border-bottom-left-radius:6px;
+  border-bottom-right-radius:6px;
+  margin-bottom:-1px;
+}
+.ibar.editing-mode .ishell{
+  border-top-left-radius:6px;
+  border-top-right-radius:6px;
+  border-color:color-mix(in srgb, var(--blue) 26%, var(--hair));
+}
+.ibar.editing-mode .ishell:focus-within{
+  border-color:var(--blue);
+}
+[data-dark] .edit-banner{
+  background:color-mix(in srgb, var(--blue) 16%, var(--bg-2));
+  border-color:color-mix(in srgb, var(--blue) 32%, var(--hair));
 }
 @keyframes edit-banner-in{
-  from{opacity:0;transform:translateY(4px);}
-  to  {opacity:1;transform:translateY(0);}
+  from{opacity:0;transform:translateY(6px) scaleY(.85);transform-origin:bottom center;}
+  to  {opacity:1;transform:translateY(0)   scaleY(1);}
 }
-.ibar:not(.editing-mode) .edit-banner{display:none;}
-.edit-banner-cancel{
-  width:20px;height:20px;border-radius:50%;
+
+/* Accent stripe on the right (RTL leading) edge — communicates "edit" mode */
+.edit-banner::before{
+  content:'';position:absolute;
+  top:8px;bottom:8px;right:0;
+  width:3px;border-radius:0 99px 99px 0;
+  background:var(--blue);
+}
+
+.edit-banner-ico{
+  width:28px;height:28px;border-radius:50%;
+  background:color-mix(in srgb, var(--blue) 14%, transparent);
+  color:var(--blue);
   display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,0.20);
-  color:#fff;
+  flex-shrink:0;
 }
-.edit-banner-cancel:hover{background:rgba(255,255,255,0.32);}
+[data-dark] .edit-banner-ico{
+  background:color-mix(in srgb, var(--blue) 22%, transparent);
+}
+.edit-banner-meta{
+  flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;
+}
+.edit-banner-lbl{
+  font-size:11.5px;font-weight:600;color:var(--blue);
+  letter-spacing:.1px;line-height:1.15;
+  display:flex;align-items:center;gap:4px;
+}
+.edit-banner-prev{
+  font-size:13px;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-top:2px;line-height:1.3;direction:rtl;
+}
+.edit-banner-cancel{
+  width:28px;height:28px;border-radius:50%;
+  background:color-mix(in srgb, var(--ink) 6%, transparent);
+  color:var(--ink-2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:background var(--quick) var(--ease),color var(--quick) var(--ease),transform var(--quick) var(--ease);
+}
+.edit-banner-cancel:hover{
+  background:color-mix(in srgb, var(--ink) 10%, transparent);
+  color:var(--ink);
+}
+.edit-banner-cancel:active{transform:scale(.9);}
+[data-dark] .edit-banner-cancel{
+  background:color-mix(in srgb, var(--ink) 10%, transparent);
+}
+[data-dark] .edit-banner-cancel:hover{
+  background:color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+/* Faint blue tint on the input pill while editing — subtle, just enough
+   to signal "your edits go here" without screaming */
+.ishell.editing{
+  background:color-mix(in srgb, var(--blue) 4%, var(--bg));
+}
 
 /* Undo-delete toast — slides up from the bottom */
 .undo-toast{
@@ -1102,30 +1213,57 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 [data-dark] .undo-toast{background:var(--grey);color:var(--ink);}
 [data-dark] .undo-toast-action{background:rgba(255,255,255,0.10);color:var(--ink);}
 
-/* Applied reaction — sits on the bubble's corner.
-   The corner WITHOUT the tail (out: top-left, in: top-right). */
+/* Applied reaction — sits on the bubble's outer corner.
+   Sized to feel like a real chip (not a tiny dot). The chip uses the
+   bubble's color family — blue for outgoing, grey for incoming —
+   so it reads as "from that bubble". A ring in the chat-bg color
+   cuts it cleanly off the bubble edge. */
 .rxn-applied{
-  position:absolute;top:-10px;
-  width:26px;height:26px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;
-  background:var(--bg);
-  border:1.5px solid var(--bg);
-  box-shadow:0 2px 6px rgba(0,0,0,0.10);
+  position:absolute;
+  /* sit higher above the bubble so it doesn't cover any text */
+  top:-16px;
+  min-width:32px;height:32px;
+  padding:0 8px;
+  border-radius:99px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:18px;line-height:1;       /* up from 14px — emoji reads at a glance */
   z-index:3;
+  /* 2.5px ring of chat-bg between bubble and chip = clean cut-out */
+  box-shadow:
+    0 0 0 2.5px var(--bg),
+    0 1px 4px rgba(0,0,0,0.10);
   /* enter animation — pops in from scale 0 with a slight overshoot */
   animation:rxn-pop 280ms cubic-bezier(0.34,1.56,0.64,1) both;
   cursor:pointer;
-  /* keep selectable hover/tap surface */
   -webkit-user-select:none;user-select:none;
+  transition:transform 140ms var(--ease);
 }
+.rxn-applied:active{transform:scale(0.92);}
 @keyframes rxn-pop{
   0%   {transform:scale(0);}
   60%  {transform:scale(1.18);}
   100% {transform:scale(1);}
 }
-.cluster.out .rxn-applied{left:-8px;}
-.cluster.in  .rxn-applied{right:-8px;}
+
+/* OUT bubble (blue) → chip on the LEFT corner, blue tinted */
+.cluster.out .rxn-applied{
+  left:-12px;
+  background:linear-gradient(180deg,var(--blue-2) 0%, var(--blue) 100%);
+}
+/* IN bubble (grey) → chip on the RIGHT corner, grey tinted */
+.cluster.in .rxn-applied{
+  right:-12px;
+  background:var(--grey);
+}
+/* dark mode: lift the in-chip slightly off the bubble grey for contrast */
+[data-dark] .cluster.in .rxn-applied{background:#3a3a3d;}
+
+/* When a bubble has a reaction, give the cluster a bit of extra top margin
+   so the chip doesn't bump into the previous bubble */
+.cluster.out .bubble:has(> .rxn-applied),
+.cluster.in  .bubble:has(> .rxn-applied){
+  margin-top:10px;
+}
 
 /* Bubble dimming when picker is active for a different bubble.
    Visually the focused bubble pops, others recede. */
@@ -1309,11 +1447,11 @@ const MSGS={
       {pct:.70,ts:'۰:۱۷',note:'آرنج دست چپ بالاتر — صدا داره خفه میشه'},
     ]},
     {id:5,s:'out',type:'text', body:'شنیدم آراز جان',t:'۴:۰۱',tickState:'seen'},
-    {id:6,s:'out',type:'text', body:'خوب بود، دو جا نیاز به اصلاح داره',t:'۴:۰۱',tickState:'seen'},
+    {id:6,s:'out',type:'text', body:'خوب بود، دو جا نیاز به اصلاح داره',t:'۴:۰۱',tickState:'seen',reaction:'heart'},
     {id:7,s:'out',type:'bpc', bpTs:'۰:۰۸',note:'اینجا نفس‌گیری کوتاه بزن — قبل از اون فراز طولانی ریه رو پر کن',t:'۴:۰۲',tickState:'seen'},
     {id:8,s:'out',type:'bpc', bpTs:'۰:۱۷',note:'آرنج دست چپ بالاتر — صدا داره خفه میشه',t:'۴:۰۲',tickState:'seen'},
-    {id:9,s:'in', type:'text', body:'ممنون استاد ❤️',t:'۴:۰۵'},
-    {id:10,s:'in',type:'text', body:'الان دوباره تمرین می‌کنم',t:'۴:۰۵'},
+    {id:9,s:'in', type:'text', body:'ممنون استاد ❤️',t:'۴:۰۵',reaction:'thumbsup'},
+    {id:10,s:'in',type:'text', body:'الان دوباره تمرین می‌کنم',t:'۴:۰۵',edited:true},
   ],
   2:[
     {id:1,s:'in',type:'text',body:'استاد سلام',t:'۱۴:۳۰'},
@@ -1362,6 +1500,11 @@ function openConv(id){
     chat.classList.add('switching');
   }
 
+  /* reset edit state — the chat HTML is about to be rebuilt and any
+     in-progress edit can't survive that */
+  editingMsgId = null;
+  editingOriginal = '';
+
   activeId=id;
   const conv=CONVS.find(c=>c.id===id);
   conv.unread=0;renderSidebar();
@@ -1373,7 +1516,7 @@ function openConv(id){
   const chatBody=isEmpty
     ?`<div class="conv-empty"></div>`
     :`<div class="msgs" id="msgs">
-        <div class="day-sep"><span class="when">امروز</span><span class="at">۱۴:۳۲</span></div>
+        <div class="day-sep"><span class="day-sep-cap"><span class="when">امروز</span><span class="at">۱۴:۳۲</span></span></div>
         <div id="clusters"></div>
         <div id="tr" class="typing-row" style="display:none">
           <div class="t-av">${initials(conv.name)}</div>
@@ -1600,10 +1743,16 @@ function buildRow(m,isLast,side){
   const tickHtml=side==='out'?tickSVG(m.tickState||'seen'):'';
   const editedTag=m.edited?`<span class="bubble-edited">ویرایش شده</span>`:'';
   let meta='';
-  if(isLast){
+  if(side==='out' && isLast){
+    /* Outgoing last bubble: full meta row (edited tag + time + tick) */
     meta=`<div class="bmeta">${editedTag}<span class="btime">${m.t}</span>${tickHtml}</div>`;
-  } else if(m.edited){
+  } else if(side==='out' && m.edited){
+    /* Outgoing non-last but edited: show only the edited tag */
     meta=`<div class="bmeta" style="display:flex;">${editedTag}</div>`;
+  } else if(side==='in' && m.edited){
+    /* Incoming edited (any position): just the edited tag, force-shown
+       because .cluster.in .bmeta is display:none by default */
+    meta=`<div class="bmeta" style="display:flex;justify-content:flex-start;">${editedTag}</div>`;
   }
   return `<div data-msgid="${m.id}">${inner}${meta}</div>`;
 }
@@ -1757,18 +1906,41 @@ function showRxnPicker(targetEl, msgId){
   const msg = (MSGS[activeId]||[]).find(x => x.id === msgId);
   if(!msg) return;
 
-  // build picker — only for text bubbles and outgoing/incoming bpc cards.
-  // (voice messages have their own long-press = breakpoint, so they
-  //  don't reach this code path)
-  const picker = document.createElement('div');
-  picker.className = 'rxn-picker';
+  // What action items apply for this message?
+  const actionItems = buildActionItems(msg);
+
+  // Build single unified popover container
+  const pop = document.createElement('div');
+  pop.className = 'rxn-popover';
+
+  // Reactions row
   const current = msg.reaction;
-  picker.innerHTML = RXN_ORDER.map(type => `
-    <button class="rxn-btn ${type===current?'selected':''}" data-rxn="${type}">
-      ${RXN_GLYPH[type]}
-    </button>
-  `).join('');
-  picker.querySelectorAll('.rxn-btn').forEach(btn => {
+  const reactionsRowHTML = `
+    <div class="rxn-row${actionItems.length ? ' has-actions' : ''}">
+      ${RXN_ORDER.map(type => `
+        <button class="rxn-btn ${type===current?'selected':''}" data-rxn="${type}">
+          ${RXN_GLYPH[type]}
+        </button>
+      `).join('')}
+    </div>
+  `;
+
+  // Actions section (may be empty)
+  const actionsHTML = actionItems.length ? `
+    <div class="rxn-actions">
+      ${actionItems.map((item,i) => `
+        <button class="rxn-menu-item ${item.destructive?'destructive':''}" data-idx="${i}">
+          <span>${item.label}</span>
+          <span class="rxn-menu-item-icon">${item.icon}</span>
+        </button>
+      `).join('')}
+    </div>
+  ` : '';
+
+  pop.innerHTML = reactionsRowHTML + actionsHTML;
+
+  // Wire reaction buttons
+  pop.querySelectorAll('.rxn-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const type = btn.getAttribute('data-rxn');
@@ -1776,28 +1948,36 @@ function showRxnPicker(targetEl, msgId){
       dismissRxnPicker();
     });
   });
-  document.body.appendChild(picker);
-  rxnPickerEl = picker;
 
-  // build action menu — what's available depends on message type and side
-  const menu = buildActionMenu(msg);
-  if(menu){
-    document.body.appendChild(menu);
-    rxnMenuEl = menu;
-  }
+  // Wire action items
+  pop.querySelectorAll('.rxn-menu-item').forEach((btn, i) => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      dismissRxnPicker();
+      // small delay so dismiss animation can start before the action fires
+      setTimeout(() => actionItems[i].action(), 80);
+    });
+  });
+
+  document.body.appendChild(pop);
+  rxnPickerEl = pop;
+  rxnMenuEl = null;        // unified now — keep null for backwards compat in dismiss
 
   // mark target so dimming applies
   targetEl.classList.add('rxn-target');
   document.getElementById('msgs')?.classList.add('rxn-active');
 
-  // position picker above and menu below
-  positionRxnPicker(targetEl, picker, menu);
+  // Position the unified popover
+  positionRxnPopover(targetEl, pop);
+
+  // Choose transform-origin based on which side of the bubble we ended up on,
+  // so the spring animation comes from the bubble.
+  // (positionRxnPopover sets data-flip on the element)
+  const flipped = pop.dataset.flipped === 'true';
+  pop.style.transformOrigin = flipped ? 'top center' : 'bottom center';
 
   // animate in (next frame so the transform transition runs)
-  requestAnimationFrame(() => {
-    picker.classList.add('on');
-    if(menu) menu.classList.add('on');
-  });
+  requestAnimationFrame(() => pop.classList.add('on'));
 
   // dismiss on tap outside
   setTimeout(() => {
@@ -1806,14 +1986,14 @@ function showRxnPicker(targetEl, msgId){
   }, 0);
 }
 
-function buildActionMenu(msg){
-  // figure out what actions apply
+/* Action items for a given message — returns array of {label, icon, action, destructive?} */
+function buildActionItems(msg){
   const items = [];
   const isOut = msg.s === 'out';
   const isText = msg.type === 'text';
   const isBpc = msg.type === 'bpc';
 
-  if(isText){
+  if(isText || isBpc){
     items.push({
       label: 'کپی',
       icon: `<svg viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="10" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 3V2a1 1 0 011-1h7a1 1 0 011 1v10a1 1 0 01-1 1h-1" stroke="currentColor" stroke-width="1.5"/></svg>`,
@@ -1821,7 +2001,6 @@ function buildActionMenu(msg){
     });
   }
 
-  // edit + delete only for outgoing messages
   if(isOut && (isText || isBpc)){
     if(isText){
       items.push({
@@ -1844,81 +2023,40 @@ function buildActionMenu(msg){
     });
   }
 
-  if(items.length === 0) return null;
-
-  const menu = document.createElement('div');
-  menu.className = 'rxn-menu';
-  menu.innerHTML = items.map((item,i) => `
-    <button class="rxn-menu-item ${item.destructive?'destructive':''}" data-idx="${i}">
-      <span>${item.label}</span>
-      <span class="rxn-menu-item-icon">${item.icon}</span>
-    </button>
-  `).join('');
-  menu.querySelectorAll('.rxn-menu-item').forEach((btn,i) => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      dismissRxnPicker();
-      // small delay so dismiss animation can start before the action fires
-      setTimeout(() => items[i].action(), 80);
-    });
-  });
-  return menu;
+  return items;
 }
 
-function positionRxnPicker(targetEl, picker, menu){
+function positionRxnPopover(targetEl, pop){
   const r = targetEl.getBoundingClientRect();
-  const pw = picker.offsetWidth;
-  const ph = picker.offsetHeight;
-  const mw = menu ? menu.offsetWidth : 0;
-  const mh = menu ? menu.offsetHeight : 0;
+  const pw = pop.offsetWidth;
+  const ph = pop.offsetHeight;
   const margin = 12;
   const winW = window.innerWidth;
   const winH = window.innerHeight;
-
-  // STACK ORDER (iMessage iOS): menu on top, picker just below menu, then bubble.
-  // So we calculate from the bottom-up: bubble's top → 10px gap → picker → 6px → menu
-  // Total stack above bubble = picker height + 6px + (menu? menu height + 6px : 0)
   const gapBubble = 10;
-  const gapStack = 6;
-  const stackHeight = ph + (menu ? (mh + gapStack) : 0);
 
-  // Try to fit the whole stack above the bubble first
-  let pickerTop, menuTop;
-  let fitsAbove = (r.top - stackHeight - gapBubble) >= 80;
-
-  if(fitsAbove){
-    // Above the bubble: picker right above bubble, menu above picker
-    pickerTop = r.top - gapBubble - ph;
-    if(menu) menuTop = pickerTop - gapStack - mh;
-  } else {
-    // Not enough room above — place stack below bubble.
-    // Below: picker right below bubble, menu below picker.
-    pickerTop = r.bottom + gapBubble;
-    if(menu) menuTop = pickerTop + ph + gapStack;
-    // if even below doesn't fit, clamp
-    if(menu && menuTop + mh > winH - margin){
-      menuTop = winH - margin - mh;
+  // Try fitting popover above the bubble first
+  let top = r.top - ph - gapBubble;
+  let flipped = false;
+  if(top < 80){
+    // not enough room above → place below
+    top = r.bottom + gapBubble;
+    flipped = true;
+    // if it would overflow the bottom, clamp
+    if(top + ph > winH - margin){
+      top = winH - margin - ph;
     }
   }
 
-  // Horizontally, both centered on the bubble's center, clamped.
+  // Horizontally: center on the bubble, clamped to viewport
   const center = r.left + r.width/2;
+  let left = center - pw/2;
+  if(left < margin) left = margin;
+  if(left + pw > winW - margin) left = winW - margin - pw;
 
-  let pLeft = center - pw/2;
-  if(pLeft < margin) pLeft = margin;
-  if(pLeft + pw > winW - margin) pLeft = winW - margin - pw;
-  picker.style.top = pickerTop + 'px';
-  picker.style.left = pLeft + 'px';
-  picker.style.transformOrigin = fitsAbove ? 'bottom center' : 'top center';
-
-  if(menu){
-    let mLeft = center - mw/2;
-    if(mLeft < margin) mLeft = margin;
-    if(mLeft + mw > winW - margin) mLeft = winW - margin - mw;
-    menu.style.top = menuTop + 'px';
-    menu.style.left = mLeft + 'px';
-    menu.style.transformOrigin = fitsAbove ? 'bottom center' : 'top center';
-  }
+  pop.style.top = top + 'px';
+  pop.style.left = left + 'px';
+  pop.dataset.flipped = flipped ? 'true' : 'false';
 }
 
 function dismissRxnHandler(e){
@@ -1985,13 +2123,16 @@ function copyMessage(msgId){
 
 /* Editing — when user starts editing, we put the message into the input and
    show a banner above the input identifying which message is being edited.
-   Send button changes behavior to "save". */
+   Send button changes behavior to "save". If the user saves without
+   actually changing anything, we silently exit edit mode (no "edited" mark). */
 let editingMsgId = null;
+let editingOriginal = '';     /* the original trimmed body, for diff check */
 
 function startEditMessage(msgId){
   const msg = (MSGS[activeId]||[]).find(x => x.id === msgId);
   if(!msg || msg.type !== 'text') return;
   editingMsgId = msgId;
+  editingOriginal = (msg.body || '').trim();
 
   const ibar = document.getElementById('ibar');
   const ishell = document.getElementById('ishell');
@@ -2004,25 +2145,46 @@ function startEditMessage(msgId){
   ibar.classList.add('editing-mode');
   ishell.classList.add('editing');
 
-  // Inject the edit banner if not already present
-  if(!document.querySelector('.edit-banner')){
+  // Wrap [+ button + ishell] in an edit-row so the banner can sit above as a peer.
+  // The wrapping happens once per session; cancel re-flattens via classes only.
+  if(!ibar.querySelector('.edit-row')){
+    const row = document.createElement('div');
+    row.className = 'edit-row';
+    // move the existing ibar children (except .ibar-bg) into the row,
+    // preserving their order and event handlers
+    const movable = Array.from(ibar.children).filter(el =>
+      !el.classList.contains('ibar-bg') && !el.classList.contains('edit-banner')
+    );
+    movable.forEach(el => row.appendChild(el));
+    ibar.appendChild(row);
+  }
+
+  // Inject the new banner structure (icon + label + preview + close)
+  // ABOVE the edit-row, as a sibling — that's how it visually fuses with the pill.
+  if(!ibar.querySelector('.edit-banner')){
     const banner = document.createElement('div');
     banner.className = 'edit-banner';
     banner.innerHTML = `
-      <span style="display:flex;align-items:center;gap:6px;">
-        <svg width="13" height="13" viewBox="0 0 18 18" fill="none">
-          <path d="M3 13L11 5l3 3-8 8H3v-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M11 5l2-2 3 3-2 2" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <div class="edit-banner-ico">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+          <path d="M9.5 2L12 4.5L4.5 12H2V9.5L9.5 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
         </svg>
-        ویرایش پیام
-      </span>
-      <button class="edit-banner-cancel" onclick="cancelEditMessage()" aria-label="cancel">
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-          <path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </div>
+      <div class="edit-banner-meta">
+        <div class="edit-banner-lbl">ویرایش پیام</div>
+        <div class="edit-banner-prev"></div>
+      </div>
+      <button class="edit-banner-cancel" onclick="cancelEditMessage()" aria-label="لغو ویرایش">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+          <path d="M2.2 2.2l6.6 6.6M8.8 2.2l-6.6 6.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
       </button>
     `;
-    ishell.appendChild(banner);
+    // banner goes ABOVE the .edit-row inside the ibar
+    ibar.insertBefore(banner, ibar.querySelector('.edit-row'));
+    banner.querySelector('.edit-banner-prev').textContent = msg.body;
+  } else {
+    ibar.querySelector('.edit-banner-prev').textContent = msg.body;
   }
 
   ibox.focus();
@@ -2033,6 +2195,7 @@ function startEditMessage(msgId){
 
 function cancelEditMessage(){
   editingMsgId = null;
+  editingOriginal = '';
   const ibar = document.getElementById('ibar');
   const ishell = document.getElementById('ishell');
   const ibox = document.getElementById('ibox');
@@ -2042,7 +2205,7 @@ function cancelEditMessage(){
     ibox.value = '';
     ibox.dispatchEvent(new Event('input'));
   }
-  document.querySelector('.edit-banner')?.remove();
+  ibar?.querySelector('.edit-banner')?.remove();
 }
 
 function saveEditMessage(){
@@ -2053,8 +2216,16 @@ function saveEditMessage(){
   if(!msg) return false;
   const ibox = document.getElementById('ibox');
   const newBody = ibox.value.trim();
+
+  /* NO-CHANGE GUARD: if the trimmed text is unchanged from the original,
+     just silently exit edit mode. Don't mark edited, don't re-render. */
+  if(newBody === editingOriginal){
+    cancelEditMessage();
+    return true;
+  }
+
   if(!newBody){
-    // empty save = delete (matches iMessage behavior, sort of)
+    // empty save = silently exit (don't blank the message via edit)
     cancelEditMessage();
     return true;
   }
