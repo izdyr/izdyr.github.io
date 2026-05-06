@@ -978,6 +978,130 @@ button,textarea,input{font-family:inherit;background:none;border:none;cursor:poi
 .rxn-btn:active{transform:scale(0.92);}
 .rxn-btn.selected{background:color-mix(in srgb, var(--blue) 16%, transparent);}
 
+/* ━━━ ACTION MENU — sits below the reaction picker ━━━
+   Tapping any item dismisses the whole popover. */
+.rxn-menu{
+  position:fixed;
+  background:color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--hair);
+  border-radius:14px;
+  min-width:200px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.18),
+             0 1px 0 rgba(255,255,255,0.6) inset;
+  z-index:300;
+  opacity:0;
+  transform:translateY(-6px) scale(0.92);
+  transform-origin:top center;
+  transition:opacity 180ms var(--ease),transform 220ms var(--ease);
+  pointer-events:none;
+  overflow:hidden;
+  direction:rtl;
+}
+[data-dark] .rxn-menu{
+  box-shadow:0 8px 28px rgba(0,0,0,0.45),
+             0 1px 0 rgba(255,255,255,0.06) inset;
+}
+.rxn-menu.on{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+
+.rxn-menu-item{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  width:100%;
+  padding:11px 16px;
+  font-size:15px;
+  color:var(--ink);
+  background:transparent;
+  text-align:right;
+  transition:background 80ms var(--ease);
+  letter-spacing:-0.1px;
+}
+.rxn-menu-item + .rxn-menu-item{
+  border-top:0.5px solid var(--hair);
+}
+.rxn-menu-item:hover{background:var(--tap);}
+.rxn-menu-item:active{background:var(--tap-2);}
+.rxn-menu-item.destructive{color:#FF3B30;}
+.rxn-menu-item-icon{
+  display:flex;align-items:center;justify-content:center;
+  width:18px;height:18px;
+  flex-shrink:0;color:inherit;
+  opacity:0.85;
+}
+
+/* "edited" indicator next to the timestamp on edited bubbles */
+.bubble-edited{
+  font-size:10px;color:var(--ink-3);
+  font-style:italic;
+  margin-right:4px;
+}
+
+/* Editing state — when a message is being edited in place */
+.ishell.editing{
+  border-color:var(--blue);
+  background:color-mix(in srgb, var(--blue) 4%, var(--bg));
+}
+.edit-banner{
+  display:none;
+  position:absolute;left:0;right:0;bottom:calc(100% + 6px);
+  padding:6px 14px;
+  background:var(--blue);color:#fff;
+  border-radius:12px;
+  font-size:12px;font-weight:500;
+  display:flex;align-items:center;justify-content:space-between;
+  direction:rtl;
+  animation:edit-banner-in 200ms var(--ease) both;
+}
+@keyframes edit-banner-in{
+  from{opacity:0;transform:translateY(4px);}
+  to  {opacity:1;transform:translateY(0);}
+}
+.ibar:not(.editing-mode) .edit-banner{display:none;}
+.edit-banner-cancel{
+  width:20px;height:20px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.20);
+  color:#fff;
+}
+.edit-banner-cancel:hover{background:rgba(255,255,255,0.32);}
+
+/* Undo-delete toast — slides up from the bottom */
+.undo-toast{
+  position:fixed;
+  bottom:90px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--bg);
+  border-radius:99px;
+  padding:10px 8px 10px 18px;
+  display:flex;align-items:center;gap:12px;
+  font-size:14px;
+  z-index:250;
+  box-shadow:0 8px 24px rgba(0,0,0,0.25);
+  opacity:0;
+  transition:opacity 200ms var(--ease),transform 280ms var(--ease);
+  pointer-events:none;
+  direction:rtl;
+}
+.undo-toast.on{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+  pointer-events:auto;
+}
+.undo-toast-action{
+  background:rgba(255,255,255,0.18);
+  color:#fff;
+  border-radius:99px;
+  padding:5px 14px;
+  font-size:13px;font-weight:600;
+}
+.undo-toast-action:hover{background:rgba(255,255,255,0.28);}
+[data-dark] .undo-toast{background:var(--grey);color:var(--ink);}
+[data-dark] .undo-toast-action{background:rgba(255,255,255,0.10);color:var(--ink);}
+
 /* Applied reaction — sits on the bubble's corner.
    The corner WITHOUT the tail (out: top-left, in: top-right). */
 .rxn-applied{
@@ -1169,30 +1293,30 @@ function initials(name){
 
 /* ════════════════ DATA ════════════════ */
 const CONVS=[
-  {id:1,name:'ایزدیار جلالی پور',    sub:'فلوت · سال دوم',     av:'ab',online:true, unread:0,time:'الان', prev:'پاسخ دادم'},
-  {id:2,name:'پریا درخشانی', sub:'پیانو · سال سوم',    av:'at',online:false,unread:3,time:'۱۴:۳۲',prev:'ممنون استاد'},
-  {id:3,name:'رضا افشاری',   sub:'تار · سال اول',      av:'aa',online:true, unread:0,time:'دیروز', prev:'فایل رو دیدم'},
-  {id:4,name:'درسا احدی',  sub:'سه‌تار · سال چهارم', av:'ar',online:false,unread:1,time:'شنبه',  prev:'سؤال داشتم…'},
-  {id:5,name:'دانیال مهربانی', sub:'ویولن · سال دوم',    av:'ap',online:false,unread:0,time:'جمعه',  prev:'نُت رو فرستادم'},
+  {id:1,name:'آراز نظری',    sub:'فلوت · سال دوم',     av:'ab',online:true, unread:0,time:'الان', prev:'پاسخ دادم'},
+  {id:2,name:'نیلوفر رضایی', sub:'پیانو · سال سوم',    av:'at',online:false,unread:3,time:'۱۴:۳۲',prev:'ممنون استاد'},
+  {id:3,name:'سینا محمدی',   sub:'تار · سال اول',      av:'aa',online:true, unread:0,time:'دیروز', prev:'فایل رو دیدم'},
+  {id:4,name:'پریسا کریمی',  sub:'سه‌تار · سال چهارم', av:'ar',online:false,unread:1,time:'شنبه',  prev:'سؤال داشتم…'},
+  {id:5,name:'کامیار هاشمی', sub:'ویولن · سال دوم',    av:'ap',online:false,unread:0,time:'جمعه',  prev:'نُت رو فرستادم'},
 ];
 const MSGS={
   1:[
-    {id:1,s:'in', type:'text', body:'درود استاد',t:'۳:۵۰'},
+    {id:1,s:'in', type:'text', body:'سلام استاد',t:'۳:۵۰'},
     {id:2,s:'in', type:'text', body:'تمرین کردم امروز',t:'۳:۵۰'},
-    {id:3,s:'in', type:'text', body:'یه ویس فرستادم، نظر بدید',t:'۳:۵۱'},
+    {id:3,s:'in', type:'text', body:'یه ضبط فرستادم، نظر بدید',t:'۳:۵۱'},
     {id:4,s:'in', type:'voice',dur:24,t:'۳:۵۲',bps:[
-      {pct:.33,ts:'۰:۰۸',note:'اینجا نفس بگیر چون بعدش دیگه برات نفسی نمیمونه'},
-      {pct:.70,ts:'۰:۱۷',note:'اینجا رو فورته بزن چون صدا داره خفه میشه'},
+      {pct:.33,ts:'۰:۰۸',note:'اینجا نفس‌گیری کوتاه بزن — قبل از اون فراز طولانی ریه رو پر کن'},
+      {pct:.70,ts:'۰:۱۷',note:'آرنج دست چپ بالاتر — صدا داره خفه میشه'},
     ]},
-    {id:5,s:'out',type:'text', body:'شنیدم ایزدیار جان',t:'۴:۰۱',tickState:'seen'},
+    {id:5,s:'out',type:'text', body:'شنیدم آراز جان',t:'۴:۰۱',tickState:'seen'},
     {id:6,s:'out',type:'text', body:'خوب بود، دو جا نیاز به اصلاح داره',t:'۴:۰۱',tickState:'seen'},
-    {id:7,s:'out',type:'bpc', bpTs:'۰:۰۸',note:'اینجا نفس بگیر چون بعدش دیگه برات نفسی نمیمونه',t:'۴:۰۲',tickState:'seen'},
+    {id:7,s:'out',type:'bpc', bpTs:'۰:۰۸',note:'اینجا نفس‌گیری کوتاه بزن — قبل از اون فراز طولانی ریه رو پر کن',t:'۴:۰۲',tickState:'seen'},
     {id:8,s:'out',type:'bpc', bpTs:'۰:۱۷',note:'آرنج دست چپ بالاتر — صدا داره خفه میشه',t:'۴:۰۲',tickState:'seen'},
     {id:9,s:'in', type:'text', body:'ممنون استاد ❤️',t:'۴:۰۵'},
     {id:10,s:'in',type:'text', body:'الان دوباره تمرین می‌کنم',t:'۴:۰۵'},
   ],
   2:[
-    {id:1,s:'in',type:'text',body:'استاد درود',t:'۱۴:۳۰'},
+    {id:1,s:'in',type:'text',body:'استاد سلام',t:'۱۴:۳۰'},
     {id:2,s:'in',type:'text',body:'سؤال داشتم در مورد تمپوی قطعه',t:'۱۴:۳۱'},
     {id:3,s:'in',type:'text',body:'ممنون استاد',t:'۱۴:۳۲'},
   ],
@@ -1474,8 +1598,13 @@ function buildRow(m,isLast,side){
   }
 
   const tickHtml=side==='out'?tickSVG(m.tickState||'seen'):'';
-  const meta=isLast
-    ?`<div class="bmeta"><span class="btime">${m.t}</span>${tickHtml}</div>`:'';
+  const editedTag=m.edited?`<span class="bubble-edited">ویرایش شده</span>`:'';
+  let meta='';
+  if(isLast){
+    meta=`<div class="bmeta">${editedTag}<span class="btime">${m.t}</span>${tickHtml}</div>`;
+  } else if(m.edited){
+    meta=`<div class="bmeta" style="display:flex;">${editedTag}</div>`;
+  }
   return `<div data-msgid="${m.id}">${inner}${meta}</div>`;
 }
 
@@ -1587,7 +1716,7 @@ const RXN_GLYPH = {
 const RXN_ORDER = ['heart','thumbsup','haha','emphasize','question'];
 
 let rxnTimer = null, rxnTargetEl = null, rxnTargetMsgId = null,
-    rxnStartXY = null, rxnPickerEl = null;
+    rxnStartXY = null, rxnPickerEl = null, rxnMenuEl = null;
 
 function rxnPress(e,msgId){
   // ignore if right-click on desktop
@@ -1622,44 +1751,53 @@ function rxnRelease(){
 }
 
 function showRxnPicker(targetEl, msgId){
-  // remove any existing picker
+  // remove any existing picker/menu
   dismissRxnPicker(true);
 
-  // build picker
+  const msg = (MSGS[activeId]||[]).find(x => x.id === msgId);
+  if(!msg) return;
+
+  // build picker — only for text bubbles and outgoing/incoming bpc cards.
+  // (voice messages have their own long-press = breakpoint, so they
+  //  don't reach this code path)
   const picker = document.createElement('div');
   picker.className = 'rxn-picker';
-  // figure out the current reaction so we can highlight it
-  const msg = (MSGS[activeId]||[]).find(x => x.id === msgId);
-  const current = msg && msg.reaction;
+  const current = msg.reaction;
   picker.innerHTML = RXN_ORDER.map(type => `
     <button class="rxn-btn ${type===current?'selected':''}" data-rxn="${type}">
       ${RXN_GLYPH[type]}
     </button>
   `).join('');
-
-  // wire up clicks
   picker.querySelectorAll('.rxn-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
       const type = btn.getAttribute('data-rxn');
-      // toggle: tapping the current one removes it
       applyReaction(msgId, type === current ? null : type);
       dismissRxnPicker();
     });
   });
-
   document.body.appendChild(picker);
   rxnPickerEl = picker;
+
+  // build action menu — what's available depends on message type and side
+  const menu = buildActionMenu(msg);
+  if(menu){
+    document.body.appendChild(menu);
+    rxnMenuEl = menu;
+  }
 
   // mark target so dimming applies
   targetEl.classList.add('rxn-target');
   document.getElementById('msgs')?.classList.add('rxn-active');
 
-  // position the picker above the target
-  positionRxnPicker(targetEl, picker);
+  // position picker above and menu below
+  positionRxnPicker(targetEl, picker, menu);
 
   // animate in (next frame so the transform transition runs)
-  requestAnimationFrame(() => picker.classList.add('on'));
+  requestAnimationFrame(() => {
+    picker.classList.add('on');
+    if(menu) menu.classList.add('on');
+  });
 
   // dismiss on tap outside
   setTimeout(() => {
@@ -1668,32 +1806,125 @@ function showRxnPicker(targetEl, msgId){
   }, 0);
 }
 
-function positionRxnPicker(targetEl, picker){
+function buildActionMenu(msg){
+  // figure out what actions apply
+  const items = [];
+  const isOut = msg.s === 'out';
+  const isText = msg.type === 'text';
+  const isBpc = msg.type === 'bpc';
+
+  if(isText){
+    items.push({
+      label: 'کپی',
+      icon: `<svg viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="10" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M6 3V2a1 1 0 011-1h7a1 1 0 011 1v10a1 1 0 01-1 1h-1" stroke="currentColor" stroke-width="1.5"/></svg>`,
+      action: () => copyMessage(msg.id),
+    });
+  }
+
+  // edit + delete only for outgoing messages
+  if(isOut && (isText || isBpc)){
+    if(isText){
+      items.push({
+        label: 'ویرایش',
+        icon: `<svg viewBox="0 0 18 18" fill="none"><path d="M3 13L11 5l3 3-8 8H3v-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M11 5l2-2 3 3-2 2" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+        action: () => startEditMessage(msg.id),
+      });
+    } else if(isBpc){
+      items.push({
+        label: 'ویرایش یادداشت',
+        icon: `<svg viewBox="0 0 18 18" fill="none"><path d="M3 13L11 5l3 3-8 8H3v-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M11 5l2-2 3 3-2 2" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>`,
+        action: () => startEditBreakpoint(msg.id),
+      });
+    }
+    items.push({
+      label: 'حذف',
+      destructive: true,
+      icon: `<svg viewBox="0 0 18 18" fill="none"><path d="M3 5h12M6 5V3h6v2M4 5l1 11h8l1-11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      action: () => deleteMessage(msg.id),
+    });
+  }
+
+  if(items.length === 0) return null;
+
+  const menu = document.createElement('div');
+  menu.className = 'rxn-menu';
+  menu.innerHTML = items.map((item,i) => `
+    <button class="rxn-menu-item ${item.destructive?'destructive':''}" data-idx="${i}">
+      <span>${item.label}</span>
+      <span class="rxn-menu-item-icon">${item.icon}</span>
+    </button>
+  `).join('');
+  menu.querySelectorAll('.rxn-menu-item').forEach((btn,i) => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      dismissRxnPicker();
+      // small delay so dismiss animation can start before the action fires
+      setTimeout(() => items[i].action(), 80);
+    });
+  });
+  return menu;
+}
+
+function positionRxnPicker(targetEl, picker, menu){
   const r = targetEl.getBoundingClientRect();
-  const pickerRect = picker.getBoundingClientRect();
-  // try above first
-  let top = r.top - pickerRect.height - 10;
-  let originBottom = true;
-  // if doesn't fit above (too close to header), put below
-  if(top < 80){
-    top = r.bottom + 10;
-    originBottom = false;
-  }
-  // center horizontally on target, but clamp to viewport edges
-  let left = r.left + r.width/2 - pickerRect.width/2;
+  const pw = picker.offsetWidth;
+  const ph = picker.offsetHeight;
+  const mw = menu ? menu.offsetWidth : 0;
+  const mh = menu ? menu.offsetHeight : 0;
   const margin = 12;
-  if(left < margin) left = margin;
-  if(left + pickerRect.width > window.innerWidth - margin){
-    left = window.innerWidth - margin - pickerRect.width;
+  const winW = window.innerWidth;
+  const winH = window.innerHeight;
+
+  // STACK ORDER (iMessage iOS): menu on top, picker just below menu, then bubble.
+  // So we calculate from the bottom-up: bubble's top → 10px gap → picker → 6px → menu
+  // Total stack above bubble = picker height + 6px + (menu? menu height + 6px : 0)
+  const gapBubble = 10;
+  const gapStack = 6;
+  const stackHeight = ph + (menu ? (mh + gapStack) : 0);
+
+  // Try to fit the whole stack above the bubble first
+  let pickerTop, menuTop;
+  let fitsAbove = (r.top - stackHeight - gapBubble) >= 80;
+
+  if(fitsAbove){
+    // Above the bubble: picker right above bubble, menu above picker
+    pickerTop = r.top - gapBubble - ph;
+    if(menu) menuTop = pickerTop - gapStack - mh;
+  } else {
+    // Not enough room above — place stack below bubble.
+    // Below: picker right below bubble, menu below picker.
+    pickerTop = r.bottom + gapBubble;
+    if(menu) menuTop = pickerTop + ph + gapStack;
+    // if even below doesn't fit, clamp
+    if(menu && menuTop + mh > winH - margin){
+      menuTop = winH - margin - mh;
+    }
   }
-  picker.style.top = top + 'px';
-  picker.style.left = left + 'px';
-  picker.style.transformOrigin = originBottom ? 'bottom center' : 'top center';
+
+  // Horizontally, both centered on the bubble's center, clamped.
+  const center = r.left + r.width/2;
+
+  let pLeft = center - pw/2;
+  if(pLeft < margin) pLeft = margin;
+  if(pLeft + pw > winW - margin) pLeft = winW - margin - pw;
+  picker.style.top = pickerTop + 'px';
+  picker.style.left = pLeft + 'px';
+  picker.style.transformOrigin = fitsAbove ? 'bottom center' : 'top center';
+
+  if(menu){
+    let mLeft = center - mw/2;
+    if(mLeft < margin) mLeft = margin;
+    if(mLeft + mw > winW - margin) mLeft = winW - margin - mw;
+    menu.style.top = menuTop + 'px';
+    menu.style.left = mLeft + 'px';
+    menu.style.transformOrigin = fitsAbove ? 'bottom center' : 'top center';
+  }
 }
 
 function dismissRxnHandler(e){
-  // if click is inside the picker, ignore
+  // if click is inside the picker or the menu, ignore
   if(rxnPickerEl && rxnPickerEl.contains(e.target)) return;
+  if(rxnMenuEl && rxnMenuEl.contains(e.target)) return;
   dismissRxnPicker();
 }
 function escDismiss(e){
@@ -1705,16 +1936,22 @@ function dismissRxnPicker(immediate){
   document.removeEventListener('keydown', escDismiss);
   document.querySelectorAll('.rxn-target').forEach(el => el.classList.remove('rxn-target'));
   document.getElementById('msgs')?.classList.remove('rxn-active');
-  if(!rxnPickerEl) return;
+  if(!rxnPickerEl && !rxnMenuEl) return;
+  const picker = rxnPickerEl;
+  const menu = rxnMenuEl;
+  rxnPickerEl = null;
+  rxnMenuEl = null;
   if(immediate){
-    rxnPickerEl.remove();
-    rxnPickerEl = null;
+    picker?.remove();
+    menu?.remove();
     return;
   }
-  rxnPickerEl.classList.remove('on');
-  const el = rxnPickerEl;
-  rxnPickerEl = null;
-  setTimeout(() => el.remove(), 220);
+  picker?.classList.remove('on');
+  menu?.classList.remove('on');
+  setTimeout(() => {
+    picker?.remove();
+    menu?.remove();
+  }, 220);
 }
 
 function applyReaction(msgId, type){
@@ -1724,6 +1961,190 @@ function applyReaction(msgId, type){
   if(!msg) return;
   msg.reaction = type;          // null removes
   renderClusters();
+}
+
+/* ════════════════ MESSAGE ACTIONS (copy, edit, delete) ═══════ */
+
+function copyMessage(msgId){
+  const msg = (MSGS[activeId]||[]).find(x => x.id === msgId);
+  if(!msg) return;
+  let text = '';
+  if(msg.type === 'text') text = msg.body;
+  else if(msg.type === 'bpc') text = `${msg.note} (${msg.bpTs})`;
+  if(!text) return;
+  if(navigator.clipboard?.writeText){
+    navigator.clipboard.writeText(text).catch(()=>{});
+  } else {
+    // fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove();
+  }
+  showToast('کپی شد');
+}
+
+/* Editing — when user starts editing, we put the message into the input and
+   show a banner above the input identifying which message is being edited.
+   Send button changes behavior to "save". */
+let editingMsgId = null;
+
+function startEditMessage(msgId){
+  const msg = (MSGS[activeId]||[]).find(x => x.id === msgId);
+  if(!msg || msg.type !== 'text') return;
+  editingMsgId = msgId;
+
+  const ibar = document.getElementById('ibar');
+  const ishell = document.getElementById('ishell');
+  const ibox = document.getElementById('ibox');
+  if(!ibox) return;
+
+  ibox.value = msg.body;
+  ibox.dispatchEvent(new Event('input'));     // triggers updateSendBtn
+
+  ibar.classList.add('editing-mode');
+  ishell.classList.add('editing');
+
+  // Inject the edit banner if not already present
+  if(!document.querySelector('.edit-banner')){
+    const banner = document.createElement('div');
+    banner.className = 'edit-banner';
+    banner.innerHTML = `
+      <span style="display:flex;align-items:center;gap:6px;">
+        <svg width="13" height="13" viewBox="0 0 18 18" fill="none">
+          <path d="M3 13L11 5l3 3-8 8H3v-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M11 5l2-2 3 3-2 2" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+        ویرایش پیام
+      </span>
+      <button class="edit-banner-cancel" onclick="cancelEditMessage()" aria-label="cancel">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+    `;
+    ishell.appendChild(banner);
+  }
+
+  ibox.focus();
+  // move cursor to end
+  const len = ibox.value.length;
+  ibox.setSelectionRange(len, len);
+}
+
+function cancelEditMessage(){
+  editingMsgId = null;
+  const ibar = document.getElementById('ibar');
+  const ishell = document.getElementById('ishell');
+  const ibox = document.getElementById('ibox');
+  ibar?.classList.remove('editing-mode');
+  ishell?.classList.remove('editing');
+  if(ibox){
+    ibox.value = '';
+    ibox.dispatchEvent(new Event('input'));
+  }
+  document.querySelector('.edit-banner')?.remove();
+}
+
+function saveEditMessage(){
+  if(editingMsgId === null) return false;
+  const msgs = MSGS[activeId];
+  if(!msgs) return false;
+  const msg = msgs.find(x => x.id === editingMsgId);
+  if(!msg) return false;
+  const ibox = document.getElementById('ibox');
+  const newBody = ibox.value.trim();
+  if(!newBody){
+    // empty save = delete (matches iMessage behavior, sort of)
+    cancelEditMessage();
+    return true;
+  }
+  msg.body = newBody;
+  msg.edited = true;
+  cancelEditMessage();
+  renderClusters();
+  return true;
+}
+
+/* Editing a breakpoint card's note — uses the same bottom sheet as creation
+   but pre-filled with the existing note. */
+function startEditBreakpoint(msgId){
+  const msg = (MSGS[activeId]||[]).find(x => x.id === msgId);
+  if(!msg || msg.type !== 'bpc') return;
+  pendingBp = {vbId: 'vb-'+(msg.srcId||0), pct: msg.srcPct || 0, ts: msg.bpTs, editingMsgId: msgId};
+  document.getElementById('sh-sub').textContent = 'در لحظه ' + msg.bpTs;
+  buildSheetWave(msg.srcPct || 0);
+  document.getElementById('sh-note').value = msg.note;
+  document.getElementById('scrim').classList.add('on');
+  setTimeout(() => document.getElementById('sh-note').focus(), 350);
+}
+
+/* Deletion with undo toast — message is removed from view immediately,
+   but we hold it in pendingDelete for ~5s. Tapping undo restores it. */
+let pendingDelete = null;
+let pendingDeleteTimer = null;
+
+function deleteMessage(msgId){
+  const msgs = MSGS[activeId];
+  if(!msgs) return;
+  const idx = msgs.findIndex(x => x.id === msgId);
+  if(idx < 0) return;
+  pendingDelete = {msg: msgs[idx], idx, convId: activeId};
+  msgs.splice(idx, 1);
+  renderClusters();
+  showUndoToast();
+}
+
+function showUndoToast(){
+  // remove any existing toast
+  document.querySelector('.undo-toast')?.remove();
+  if(pendingDeleteTimer){clearTimeout(pendingDeleteTimer); pendingDeleteTimer = null;}
+
+  const toast = document.createElement('div');
+  toast.className = 'undo-toast';
+  toast.innerHTML = `
+    <span>پیام حذف شد</span>
+    <button class="undo-toast-action">بازگردانی</button>
+  `;
+  toast.querySelector('button').addEventListener('click', () => {
+    if(!pendingDelete) return;
+    const conv = MSGS[pendingDelete.convId];
+    if(conv){
+      conv.splice(pendingDelete.idx, 0, pendingDelete.msg);
+      if(pendingDelete.convId === activeId) renderClusters();
+    }
+    pendingDelete = null;
+    hideUndoToast();
+  });
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('on'));
+
+  pendingDeleteTimer = setTimeout(() => {
+    pendingDelete = null;
+    hideUndoToast();
+  }, 5000);
+}
+
+function hideUndoToast(){
+  const t = document.querySelector('.undo-toast');
+  if(!t) return;
+  t.classList.remove('on');
+  setTimeout(() => t.remove(), 300);
+  if(pendingDeleteTimer){clearTimeout(pendingDeleteTimer); pendingDeleteTimer = null;}
+}
+
+/* Tiny "copied!" toast — generic, reusable */
+function showToast(text){
+  const existing = document.querySelector('.simple-toast');
+  if(existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'simple-toast undo-toast';
+  t.innerHTML = `<span style="padding:0 8px;">${text}</span>`;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('on'));
+  setTimeout(() => {
+    t.classList.remove('on');
+    setTimeout(() => t.remove(), 300);
+  }, 1500);
 }
 
 /* ════════════════ LONG PRESS → SHEET ═ */
@@ -1797,28 +2218,44 @@ function closeSheet(e){
 function saveBp(){
   const note=document.getElementById('sh-note').value.trim();
   if(!note||!pendingBp){document.getElementById('sh-note').focus();return;}
-  const{vbId,pct,ts}=pendingBp;
+  const{vbId,pct,ts,editingMsgId}=pendingBp;
 
-  // find the source voice message and persist the breakpoint into its bps array
-  const srcId=Number(vbId.replace(/^vb-/,''));
   const msgs=MSGS[activeId]=MSGS[activeId]||[];
-  const srcMsg=msgs.find(m=>m.id===srcId);
-  if(srcMsg){
-    srcMsg.bps=srcMsg.bps||[];
-    srcMsg.bps.push({pct,ts,note});
+
+  if(editingMsgId){
+    // EDIT MODE — update the existing bpc and the corresponding source-voice bps entry
+    const bpcMsg = msgs.find(m=>m.id===editingMsgId);
+    if(bpcMsg){
+      bpcMsg.note = note;
+      bpcMsg.edited = true;
+    }
+    // also update the source voice's bps entry that matches this pct
+    const srcId = Number(vbId.replace(/^vb-/,''));
+    const srcMsg = msgs.find(m=>m.id===srcId);
+    if(srcMsg && srcMsg.bps){
+      // find the bps entry whose pct is closest to ours (we stored pct exactly,
+      // but allow tiny float drift)
+      const entry = srcMsg.bps.find(b => Math.abs(b.pct - pct) < 0.001);
+      if(entry) entry.note = note;
+    }
+  } else {
+    // CREATE MODE — original behavior
+    const srcId=Number(vbId.replace(/^vb-/,''));
+    const srcMsg=msgs.find(m=>m.id===srcId);
+    if(srcMsg){
+      srcMsg.bps=srcMsg.bps||[];
+      srcMsg.bps.push({pct,ts,note});
+    }
+    msgs.push({
+      id:Date.now(),
+      s:'out',type:'bpc',
+      bpTs:ts,note,
+      srcId,
+      srcPct:pct,
+      t:'الان',tickState:'seen'
+    });
   }
 
-  // emit a breakpoint card message that references the source voice
-  msgs.push({
-    id:Date.now(),
-    s:'out',type:'bpc',
-    bpTs:ts,note,
-    srcId,                  // ← new: reference to source voice message
-    srcPct:pct,             // ← new: position within source
-    t:'الان',tickState:'seen'
-  });
-
-  // close the sheet, clear pending state, re-render
   document.getElementById('scrim').classList.remove('on');
   cancelLpMarker();
   pendingBp=null;
@@ -1840,6 +2277,11 @@ function tickSVG(state){
 
 /* ════════════════ SEND ════════════════ */
 function sendText(){
+  // if we're in editing mode, save the edit instead
+  if(editingMsgId !== null){
+    saveEditMessage();
+    return;
+  }
   const box=document.getElementById('ibox');
   if(!box||!activeId)return;
   const txt=box.value.trim();if(!txt)return;
