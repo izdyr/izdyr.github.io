@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="theme-color" content="#161412" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>پارس موزیک — تماس</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     PARS MUSIC — VOICE CALL
+     A surface, not a screen. The voice is the visual.
+     ========================================================= */
+
+  :root {
+    /* Warm dark palette — extends the established design system.
+       Not pure black: the call should feel like dim candlelight, not a server room. */
+    --ink:        #161412;
+    --ink-2:      #1d1a17;
+    --ink-3:      #2a2521;
+    --paper:      #faf9f7;
+    --warm-1:     #c97a5f;   /* terracotta */
+    --warm-2:     #8b5a3c;   /* burnt sienna, deeper */
+    --warm-3:     #d4a574;   /* honey */
+    --cool-1:     #5a6b7a;   /* dusk steel — counterpoint */
+    --accent:     #e8d4a8;   /* parchment glow */
+    --rose:       #b85450;   /* end-call, never red-red */
+
+    --text:       rgba(250, 249, 247, 0.92);
+    --text-soft:  rgba(250, 249, 247, 0.55);
+    --text-faint: rgba(250, 249, 247, 0.32);
+
+    --hairline:   rgba(250, 249, 247, 0.08);
+    --hairline-2: rgba(250, 249, 247, 0.14);
+
+    --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease:   cubic-bezier(0.32, 0.72, 0, 1);
+
+    --safe-top:    env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+
+  body {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-weight: 300;
+    color: var(--text);
+    background: var(--ink);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: 0.01em;
+  }
+
+  /* =========================================================
+     STAGE — full viewport, holds every layer
+     ========================================================= */
+  .stage {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  /* Layer 0: deep base wash — never pure black */
+  .stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 120% 80% at 50% 0%, rgba(201, 122, 95, 0.08), transparent 60%),
+      radial-gradient(ellipse 100% 100% at 50% 100%, rgba(90, 107, 122, 0.06), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* =========================================================
+     AURORA — slow drifting gradient blobs.
+     This is the "presence" of the other person.
+     They breathe and shift with the audio.
+     ========================================================= */
+  .aurora {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    filter: blur(60px) saturate(1.1);
+    opacity: 0.85;
+    transition: opacity 1.2s var(--ease);
+  }
+  .aurora__blob {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform, opacity;
+  }
+  .aurora__blob--1 {
+    width: 70vmax; height: 70vmax;
+    top: -20vmax; right: -20vmax;
+    background: radial-gradient(circle at 30% 30%, var(--warm-1), transparent 60%);
+    animation: drift1 28s ease-in-out infinite;
+  }
+  .aurora__blob--2 {
+    width: 80vmax; height: 80vmax;
+    bottom: -30vmax; left: -25vmax;
+    background: radial-gradient(circle at 50% 50%, var(--warm-2), transparent 65%);
+    animation: drift2 34s ease-in-out infinite;
+  }
+  .aurora__blob--3 {
+    width: 50vmax; height: 50vmax;
+    top: 30%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 50% 50%, var(--warm-3), transparent 70%);
+    animation: drift3 22s ease-in-out infinite;
+    opacity: 0.5;
+  }
+  .aurora__blob--4 {
+    width: 40vmax; height: 40vmax;
+    top: 60%; right: 10%;
+    background: radial-gradient(circle at 50% 50%, var(--cool-1), transparent 70%);
+    animation: drift4 40s ease-in-out infinite;
+    opacity: 0.4;
+  }
+
+  @keyframes drift1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%      { transform: translate(-8vmax, 6vmax) scale(1.08); }
+    66%      { transform: translate(4vmax, -4vmax) scale(0.95); }
+  }
+  @keyframes drift2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(6vmax, -8vmax) scale(1.1); }
+  }
+  @keyframes drift3 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50%      { transform: translate(-40%, -55%) scale(1.15); }
+  }
+  @keyframes drift4 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(-5vmax, 4vmax) scale(0.9); }
+  }
+
+  /* Grain overlay — film, not noise. Keeps gradients from looking "AI" */
+  .grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.7'/></svg>");
+  }
+
+  /* =========================================================
+     STATUS — minimal top chrome.
+     Persian name, Jalali-style call timer, presence.
+     Fades out 4s after last interaction.
+     ========================================================= */
+  .status {
+    position: absolute;
+    top: calc(var(--safe-top) + 14px);
+    left: 0; right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+  }
+  .status--hidden {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+  }
+
+  .status__handle {
+    width: 36px; height: 5px;
+    border-radius: 3px;
+    background: var(--hairline-2);
+    margin-bottom: 4px;
+  }
+
+  .status__name {
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--text);
+  }
+
+  .status__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-soft);
+    font-variant-numeric: tabular-nums;
+    font-weight: 400;
+  }
+
+  .status__pulse {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--warm-3);
+    box-shadow: 0 0 12px var(--warm-3);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.3); }
+  }
+
+  .status__dot { color: var(--text-faint); }
+
+  /* =========================================================
+     ORB — the listener. Center stage.
+     SVG canvas with audio-reactive rings.
+     Not an avatar. The voice itself.
+     ========================================================= */
+  .orb {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -52%);
+    width: min(74vw, 360px);
+    height: min(74vw, 360px);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .orb__svg {
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+
+  /* Inner core — the warm center, breathes always */
+  .orb__core {
+    transform-origin: center;
+    animation: breathe 5.5s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1);    opacity: 0.92; }
+    50%      { transform: scale(1.03); opacity: 1; }
+  }
+
+  /* Person's monogram, very subtle, in the core */
+  .orb__name {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 38px;
+    font-weight: 300;
+    color: rgba(250, 249, 247, 0.88);
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.3);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* =========================================================
+     WAVEFORM RIBBON — bottom presence indicator
+     A thin horizontal bar of audio that appears even when
+     the orb is calm. Like the FaceTime audio visualizer.
+     ========================================================= */
+  .ribbon {
+    position: absolute;
+    bottom: calc(var(--safe-bottom) + 138px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 28px;
+    z-index: 6;
+    opacity: 0.7;
+    transition: opacity 0.4s var(--ease);
+  }
+  .ribbon__bar {
+    width: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: height 80ms var(--ease), opacity 200ms var(--ease);
+    height: 4px;
+    opacity: 0.4;
+  }
+
+  /* =========================================================
+     CONTROLS — floating glass island.
+     Tap stage to toggle. Auto-hide after 4s of stillness.
+     ========================================================= */
+  .controls {
+    position: absolute;
+    bottom: calc(var(--safe-bottom) + 28px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 999px;
+    background: rgba(22, 20, 18, 0.55);
+    backdrop-filter: blur(40px) saturate(1.5);
+    -webkit-backdrop-filter: blur(40px) saturate(1.5);
+    border: 1px solid var(--hairline-2);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 24px 60px -20px rgba(0, 0, 0, 0.5),
+      0 8px 30px -8px rgba(0, 0, 0, 0.35);
+    z-index: 20;
+    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+  }
+  .controls--hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
+    pointer-events: none;
+  }
+
+  .ctrl {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(250, 249, 247, 0.08);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+      transform 0.4s var(--spring),
+      background 0.3s var(--ease),
+      color 0.3s var(--ease);
+    position: relative;
+  }
+  .ctrl:active { transform: scale(0.88); }
+  .ctrl:hover  { background: rgba(250, 249, 247, 0.12); }
+
+  .ctrl svg { width: 22px; height: 22px; stroke-width: 1.6; }
+
+  .ctrl--active {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .ctrl--active:hover { background: #fff; }
+
+  .ctrl--end {
+    background: var(--rose);
+    color: var(--paper);
+    width: 60px; height: 60px;
+  }
+  .ctrl--end:hover { background: #c25a56; }
+  .ctrl--end svg { width: 24px; height: 24px; }
+
+  /* The mark-this-moment button.
+     Pars Music breakpoint feature — but ambient, not loud. */
+  .ctrl--mark {
+    width: 52px; height: 52px;
+    background: rgba(232, 212, 168, 0.12);
+    color: var(--accent);
+  }
+  .ctrl--mark:hover { background: rgba(232, 212, 168, 0.2); }
+
+  /* =========================================================
+     HINT — appears once, gently, then fades
+     ========================================================= */
+  .hint {
+    position: absolute;
+    bottom: calc(var(--safe-bottom) + 110px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--text-faint);
+    z-index: 6;
+    pointer-events: none;
+    transition: opacity 0.8s var(--ease);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .hint--hidden { opacity: 0; }
+
+  /* =========================================================
+     MARK FLASH — when teacher taps the breakpoint button,
+     a soft ring pulses outward from the orb. Subtle. Felt, not seen.
+     ========================================================= */
+  .mark-flash {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    transform: translate(-50%, -52%) scale(0.6);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .mark-flash--fire {
+    animation: markPulse 1.4s var(--ease) forwards;
+  }
+  @keyframes markPulse {
+    0%   { transform: translate(-50%, -52%) scale(0.6); opacity: 0;   border-width: 2px; }
+    20%  { opacity: 0.8; }
+    100% { transform: translate(-50%, -52%) scale(2.2); opacity: 0;   border-width: 0.5px; }
+  }
+
+  /* =========================================================
+     END CALL OVERLAY — soft fade, summary card emerges
+     ========================================================= */
+  .end-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(22, 20, 18, 0.92);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s var(--ease);
+  }
+  .end-overlay--shown {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .end-card {
+    text-align: center;
+    transform: scale(0.92);
+    opacity: 0;
+    transition: transform 0.7s var(--spring), opacity 0.5s var(--ease);
+  }
+  .end-overlay--shown .end-card {
+    transform: scale(1);
+    opacity: 1;
+    transition-delay: 0.15s;
+  }
+  .end-card__label { font-size: 13px; color: var(--text-faint); margin-bottom: 8px; }
+  .end-card__name  { font-size: 22px; font-weight: 400; margin-bottom: 4px; }
+  .end-card__time  { font-size: 15px; color: var(--text-soft); font-variant-numeric: tabular-nums; margin-bottom: 28px; }
+  .end-card__again {
+    background: var(--paper);
+    color: var(--ink);
+    border: none;
+    padding: 14px 32px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.3s var(--spring);
+  }
+  .end-card__again:active { transform: scale(0.95); }
+
+  /* =========================================================
+     Larger screens — keep mobile-first feel, just centered
+     ========================================================= */
+  @media (min-width: 640px) {
+    .stage {
+      max-width: 480px;
+      margin: 0 auto;
+      border-radius: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora__blob, .orb__core, .status__pulse { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- Atmospheric layers -->
+  <div class="aurora" id="aurora">
+    <div class="aurora__blob aurora__blob--1"></div>
+    <div class="aurora__blob aurora__blob--2"></div>
+    <div class="aurora__blob aurora__blob--3"></div>
+    <div class="aurora__blob aurora__blob--4"></div>
+  </div>
+  <div class="grain"></div>
+
+  <!-- Status (top) -->
+  <div class="status" id="status">
+    <div class="status__handle"></div>
+    <div class="status__name">سارا احمدی</div>
+    <div class="status__meta">
+      <span class="status__pulse"></span>
+      <span>در حال صحبت</span>
+      <span class="status__dot">·</span>
+      <span id="timer">۰۰:۰۰</span>
+    </div>
+  </div>
+
+  <!-- The orb — voice as visual -->
+  <div class="orb">
+    <svg class="orb__svg" id="orbSvg" viewBox="-200 -200 400 400">
+      <defs>
+        <radialGradient id="coreGrad" cx="50%" cy="40%" r="60%">
+          <stop offset="0%"   stop-color="#f4d9b8" stop-opacity="0.95"/>
+          <stop offset="40%"  stop-color="#d4a574" stop-opacity="0.7"/>
+          <stop offset="80%"  stop-color="#8b5a3c" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#161412" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="ringGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="60%" stop-color="#e8d4a8" stop-opacity="0"/>
+          <stop offset="85%" stop-color="#e8d4a8" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#e8d4a8" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="softGlow">
+          <feGaussianBlur stdDeviation="3"/>
+        </filter>
+      </defs>
+
+      <!-- Outermost soft halo -->
+      <circle id="ringOuter" cx="0" cy="0" r="170"
+              fill="none" stroke="url(#ringGrad)" stroke-width="1.2"
+              opacity="0.5"/>
+
+      <!-- Audio-reactive ring (drawn as path, updated by JS) -->
+      <path id="reactRing" d="" fill="none"
+            stroke="rgba(232, 212, 168, 0.55)" stroke-width="1.4"
+            stroke-linejoin="round" stroke-linecap="round"
+            filter="url(#softGlow)"/>
+
+      <!-- Core orb -->
+      <g class="orb__core">
+        <circle cx="0" cy="0" r="120" fill="url(#coreGrad)"/>
+        <circle cx="0" cy="0" r="120" fill="none"
+                stroke="rgba(250, 249, 247, 0.06)" stroke-width="0.5"/>
+      </g>
+    </svg>
+    <div class="orb__name">س</div>
+  </div>
+
+  <!-- Mark flash (breakpoint feedback) -->
+  <div class="mark-flash" id="markFlash"></div>
+
+  <!-- Audio ribbon -->
+  <div class="ribbon" id="ribbon"></div>
+
+  <!-- Hint -->
+  <div class="hint" id="hint">برای علامت‌گذاری لحظه، روی ستاره ضربه بزنید</div>
+
+  <!-- Floating controls -->
+  <div class="controls" id="controls">
+    <button class="ctrl" id="btnSpeaker" aria-label="بلندگو">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 5L6 9H3v6h3l5 4V5z" stroke-linejoin="round"/><path d="M15.5 8.5a5 5 0 010 7M19 5a9 9 0 010 14" stroke-linecap="round"/></svg>
+    </button>
+
+    <button class="ctrl ctrl--mark" id="btnMark" aria-label="علامت‌گذاری لحظه">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l2.5 6 6.5.5-5 4.5 1.5 6.5L12 17l-5.5 3.5L8 14 3 9.5 9.5 9 12 3z" stroke-linejoin="round"/></svg>
+    </button>
+
+    <button class="ctrl" id="btnMute" aria-label="بی‌صدا">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3" stroke-linecap="round"/></svg>
+    </button>
+
+    <button class="ctrl ctrl--end" id="btnEnd" aria-label="پایان تماس">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 9c-2.4 0-4.7.4-6.9 1.2-.7.2-1.1.9-1.1 1.6v2.7c0 .5.3 1 .8 1.2l3 1.3c.4.2.9.1 1.2-.2l1.6-1.6c.3-.3.7-.4 1.1-.3 1.7.5 3.5.5 5.3 0 .4-.1.8 0 1.1.3l1.6 1.6c.3.3.8.4 1.2.2l3-1.3c.5-.2.8-.7.8-1.2v-2.7c0-.7-.4-1.4-1.1-1.6C16.7 9.4 14.4 9 12 9z" transform="rotate(135 12 13)"/></svg>
+    </button>
+  </div>
+
+  <!-- End-call overlay -->
+  <div class="end-overlay" id="endOverlay">
+    <div class="end-card">
+      <div class="end-card__label">تماس به پایان رسید</div>
+      <div class="end-card__name">سارا احمدی</div>
+      <div class="end-card__time" id="endTime">۰۰:۰۰</div>
+      <button class="end-card__again" id="btnAgain">تماس دوباره</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   PARS MUSIC CALL — runtime
+   - Audio-reactive orb (Web Audio + simulated incoming voice)
+   - Auto-hiding controls
+   - Persian/Jalali timer
+   - Breakpoint marker
+   ========================================================= */
+(() => {
+  'use strict';
+
+  // ---------- Persian numerals ----------
+  const faDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  const toFa = (n) => String(n).replace(/\d/g, d => faDigits[+d]);
+
+  // ---------- Timer ----------
+  const timerEl = document.getElementById('timer');
+  const endTimeEl = document.getElementById('endTime');
+  let elapsed = 0;
+  const fmt = (s) => {
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return toFa(String(m).padStart(2,'0') + ':' + String(r).padStart(2,'0'));
+  };
+  const tick = setInterval(() => {
+    elapsed++;
+    timerEl.textContent = fmt(elapsed);
+  }, 1000);
+
+  // ---------- Auto-hide controls + status ----------
+  const stage = document.getElementById('stage');
+  const controls = document.getElementById('controls');
+  const status = document.getElementById('status');
+  const hint = document.getElementById('hint');
+  let hideTO = null;
+  let chromeShown = true;
+
+  const showChrome = () => {
+    controls.classList.remove('controls--hidden');
+    status.classList.remove('status--hidden');
+    chromeShown = true;
+    clearTimeout(hideTO);
+    hideTO = setTimeout(hideChrome, 4200);
+  };
+  const hideChrome = () => {
+    controls.classList.add('controls--hidden');
+    status.classList.add('status--hidden');
+    chromeShown = false;
+  };
+  const toggleChrome = () => chromeShown ? hideChrome() : showChrome();
+
+  // Tap on stage (but not on controls) toggles chrome
+  stage.addEventListener('click', (e) => {
+    if (e.target.closest('.controls') || e.target.closest('.end-overlay')) return;
+    toggleChrome();
+  });
+
+  // Initial: show then auto-fade
+  hideTO = setTimeout(hideChrome, 4200);
+  // Fade hint after 5s
+  setTimeout(() => hint.classList.add('hint--hidden'), 5000);
+
+  // ---------- Audio-reactive orb ----------
+  // We simulate an "incoming voice" stream that the orb reacts to.
+  // In production, this hooks to the WebRTC remote audio track via:
+  //   const src = audioCtx.createMediaStreamSource(remoteStream);
+  //   src.connect(analyser);
+
+  const orbSvg = document.getElementById('orbSvg');
+  const reactRing = document.getElementById('reactRing');
+  const ringOuter = document.getElementById('ringOuter');
+  const ribbon = document.getElementById('ribbon');
+
+  // Build ribbon bars
+  const RIB_BARS = 32;
+  const ribBars = [];
+  for (let i = 0; i < RIB_BARS; i++) {
+    const b = document.createElement('div');
+    b.className = 'ribbon__bar';
+    ribbon.appendChild(b);
+    ribBars.push(b);
+  }
+
+  // Build the reactive ring as a closed path with N points.
+  // We perturb each point's radius based on simulated audio bands.
+  const POINTS = 64;
+  const BASE_R = 145;
+
+  // Simulated voice envelope — combines slow "speech bursts" with quick noise
+  // so the orb feels alive. Replace with real analyser.getByteFrequencyData() in prod.
+  let phase = 0;
+  let burstAmp = 0;
+  let burstTarget = 0;
+  let burstClock = 0;
+
+  // Each point has its own phase offset for organic motion
+  const pointPhases = Array.from({length: POINTS}, () => Math.random() * Math.PI * 2);
+  const pointFreqs  = Array.from({length: POINTS}, () => 0.5 + Math.random() * 1.5);
+
+  function frame(t) {
+    phase += 0.012;
+    burstClock += 0.016;
+
+    // Every ~0.4–1.2s pick a new "speech burst" target — feels like a voice
+    if (burstClock > 0.4 + Math.random() * 0.8) {
+      burstClock = 0;
+      // 70% of the time, real activity. 30% silence.
+      burstTarget = Math.random() < 0.7 ? 0.3 + Math.random() * 0.7 : 0.05;
+    }
+    // Smooth toward target — voice has attack/decay
+    burstAmp += (burstTarget - burstAmp) * 0.08;
+
+    // Build the path
+    let d = '';
+    for (let i = 0; i < POINTS; i++) {
+      const a = (i / POINTS) * Math.PI * 2;
+      // Simulated band energy for this angle
+      const wob = Math.sin(phase * pointFreqs[i] + pointPhases[i]) * 0.5 + 0.5;
+      const energy = burstAmp * (0.6 + wob * 0.4);
+      const r = BASE_R + energy * 28 + Math.sin(phase * 3 + i * 0.4) * 2;
+      const x = Math.cos(a) * r;
+      const y = Math.sin(a) * r;
+      d += (i === 0 ? 'M' : 'L') + x.toFixed(2) + ',' + y.toFixed(2) + ' ';
+    }
+    d += 'Z';
+    reactRing.setAttribute('d', d);
+
+    // Outer halo subtly scales with amp
+    const haloScale = 1 + burstAmp * 0.04;
+    ringOuter.setAttribute('r', 168 * haloScale);
+    ringOuter.setAttribute('opacity', 0.35 + burstAmp * 0.3);
+
+    // Ribbon bars — sample 32 "bands"
+    for (let i = 0; i < RIB_BARS; i++) {
+      // distance from center bell-curve so middle bars are taller
+      const center = (i - RIB_BARS / 2) / (RIB_BARS / 2);
+      const bell = 1 - center * center * 0.6;
+      const wob2 = Math.sin(phase * (1 + i * 0.13) + i) * 0.5 + 0.5;
+      const h = 3 + burstAmp * bell * wob2 * 22;
+      ribBars[i].style.height = h.toFixed(1) + 'px';
+      ribBars[i].style.opacity = (0.3 + burstAmp * 0.6).toFixed(2);
+    }
+
+    // Aurora opacity gently follows energy (presence "warms" with voice)
+    document.getElementById('aurora').style.opacity = (0.7 + burstAmp * 0.25).toFixed(2);
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // ---------- Controls ----------
+  const btnMute = document.getElementById('btnMute');
+  const btnSpeaker = document.getElementById('btnSpeaker');
+  const btnMark = document.getElementById('btnMark');
+  const btnEnd = document.getElementById('btnEnd');
+  const btnAgain = document.getElementById('btnAgain');
+  const endOverlay = document.getElementById('endOverlay');
+  const markFlash = document.getElementById('markFlash');
+
+  btnMute.addEventListener('click', (e) => {
+    e.stopPropagation();
+    btnMute.classList.toggle('ctrl--active');
+    showChrome();
+  });
+  btnSpeaker.addEventListener('click', (e) => {
+    e.stopPropagation();
+    btnSpeaker.classList.toggle('ctrl--active');
+    showChrome();
+  });
+
+  btnMark.addEventListener('click', (e) => {
+    e.stopPropagation();
+    // Fire ring
+    markFlash.classList.remove('mark-flash--fire');
+    // force reflow
+    void markFlash.offsetWidth;
+    markFlash.classList.add('mark-flash--fire');
+    showChrome();
+    // Haptic on supporting devices
+    if (navigator.vibrate) navigator.vibrate(8);
+  });
+
+  btnEnd.addEventListener('click', (e) => {
+    e.stopPropagation();
+    clearInterval(tick);
+    endTimeEl.textContent = fmt(elapsed);
+    endOverlay.classList.add('end-overlay--shown');
+    if (navigator.vibrate) navigator.vibrate([10, 40, 10]);
+  });
+
+  btnAgain.addEventListener('click', () => {
+    endOverlay.classList.remove('end-overlay--shown');
+    elapsed = 0;
+    timerEl.textContent = fmt(0);
+    // restart tick
+    setInterval(() => { elapsed++; timerEl.textContent = fmt(elapsed); }, 1000);
+    showChrome();
+  });
+
+  // Long-press orb area to mark too (alternative gesture)
+  let pressTO = null;
+  const orbArea = document.querySelector('.orb');
+  orbArea.style.pointerEvents = 'auto';
+  const startPress = (e) => {
+    pressTO = setTimeout(() => {
+      btnMark.click();
+    }, 500);
+  };
+  const endPress = () => clearTimeout(pressTO);
+  orbArea.addEventListener('touchstart', startPress, {passive: true});
+  orbArea.addEventListener('touchend', endPress);
+  orbArea.addEventListener('mousedown', startPress);
+  orbArea.addEventListener('mouseup', endPress);
+  orbArea.addEventListener('mouseleave', endPress);
+
+})();
+</script>
+
+</body>
+</html>
