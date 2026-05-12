@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baymax Build Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #f0f4f8;
+    --bg: #0a0e14;
+    --bg2: #111620;
+    --accent: #e8f0fe;
+    --red: #ff4d4d;
+    --blue: #4d9fff;
+    --green: #4dffaa;
+    --yellow: #ffe14d;
+    --muted: #4a5568;
+    --border: rgba(255,255,255,0.07);
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(–bg);
+color: var(–white);
+font-family: ‘Space Mono’, monospace;
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* HERO */
+.hero {
+padding: 60px 40px 40px;
+text-align: center;
+position: relative;
+border-bottom: 1px solid var(–border);
+}
+
+.hero-tag {
+font-family: ‘Space Mono’, monospace;
+font-size: 11px;
+letter-spacing: 4px;
+color: var(–blue);
+text-transform: uppercase;
+margin-bottom: 16px;
+opacity: 0;
+animation: fadeUp 0.6s 0.1s forwards;
+}
+
+.hero h1 {
+font-family: ‘Syne’, sans-serif;
+font-size: clamp(40px, 8vw, 80px);
+font-weight: 800;
+line-height: 1;
+letter-spacing: -2px;
+opacity: 0;
+animation: fadeUp 0.6s 0.2s forwards;
+}
+
+.hero h1 span { color: var(–blue); }
+
+.hero-sub {
+margin-top: 16px;
+font-size: 13px;
+color: var(–muted);
+opacity: 0;
+animation: fadeUp 0.6s 0.3s forwards;
+}
+
+.stats-row {
+display: flex;
+justify-content: center;
+gap: 40px;
+margin-top: 40px;
+flex-wrap: wrap;
+opacity: 0;
+animation: fadeUp 0.6s 0.4s forwards;
+}
+
+.stat {
+text-align: center;
+}
+
+.stat-num {
+font-family: ‘Syne’, sans-serif;
+font-size: 32px;
+font-weight: 800;
+color: var(–blue);
+}
+
+.stat-label {
+font-size: 10px;
+color: var(–muted);
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-top: 4px;
+}
+
+/* TIMELINE */
+.timeline {
+max-width: 900px;
+margin: 0 auto;
+padding: 60px 24px;
+}
+
+.month {
+display: grid;
+grid-template-columns: 80px 1fr;
+gap: 0 24px;
+margin-bottom: 8px;
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.5s, transform 0.5s;
+}
+
+.month.visible {
+opacity: 1;
+transform: translateY(0);
+}
+
+.month-left {
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.month-num {
+font-family: ‘Syne’, sans-serif;
+font-size: 11px;
+font-weight: 800;
+letter-spacing: 2px;
+color: var(–muted);
+text-transform: uppercase;
+padding: 16px 0 8px;
+white-space: nowrap;
+}
+
+.month-line {
+width: 1px;
+flex: 1;
+min-height: 20px;
+background: var(–border);
+}
+
+.month-dot {
+width: 10px;
+height: 10px;
+border-radius: 50%;
+border: 2px solid;
+margin-top: 20px;
+flex-shrink: 0;
+}
+
+.month-card {
+background: var(–bg2);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 20px 24px;
+margin: 10px 0 10px;
+transition: border-color 0.2s, transform 0.2s;
+cursor: default;
+}
+
+.month-card:hover {
+transform: translateX(4px);
+}
+
+.month-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 12px;
+flex-wrap: wrap;
+gap: 8px;
+}
+
+.month-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 18px;
+font-weight: 700;
+}
+
+.month-badge {
+font-size: 10px;
+letter-spacing: 2px;
+text-transform: uppercase;
+padding: 4px 10px;
+border-radius: 20px;
+font-family: ‘Space Mono’, monospace;
+}
+
+.month-desc {
+font-size: 12px;
+color: var(–muted);
+line-height: 1.7;
+margin-bottom: 16px;
+}
+
+.tasks {
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
+
+.task {
+display: flex;
+align-items: flex-start;
+gap: 10px;
+font-size: 12px;
+line-height: 1.5;
+}
+
+.task-dot {
+width: 5px;
+height: 5px;
+border-radius: 50%;
+margin-top: 6px;
+flex-shrink: 0;
+}
+
+.deliverable {
+margin-top: 16px;
+padding: 12px 14px;
+border-radius: 8px;
+font-size: 11px;
+letter-spacing: 0.5px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.deliverable-label {
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 2px;
+font-size: 9px;
+opacity: 0.7;
+}
+
+/* COLOR THEMES PER MONTH */
+.m1 { –mc: var(–blue); }
+.m2 { –mc: #a78bfa; }
+.m3 { –mc: var(–green); }
+.m4 { –mc: var(–yellow); }
+.m5 { –mc: #fb923c; }
+.m6 { –mc: var(–red); }
+
+.month-card { border-color: var(–border); }
+.month-card:hover { border-color: var(–mc); }
+.month-dot { border-color: var(–mc); background: var(–mc); }
+.month-title { color: var(–mc); }
+.month-badge { background: color-mix(in srgb, var(–mc) 15%, transparent); color: var(–mc); border: 1px solid color-mix(in srgb, var(–mc) 30%, transparent); }
+.task-dot { background: var(–mc); }
+.deliverable { background: color-mix(in srgb, var(–mc) 10%, transparent); border: 1px solid color-mix(in srgb, var(–mc) 20%, transparent); color: var(–mc); }
+
+/* BUDGET */
+.budget-section {
+max-width: 900px;
+margin: 0 auto;
+padding: 0 24px 60px;
+}
+
+.section-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 4px;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 20px;
+}
+
+.budget-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+gap: 12px;
+}
+
+.budget-item {
+background: var(–bg2);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 16px;
+}
+
+.budget-item-name {
+font-size: 11px;
+color: var(–muted);
+margin-bottom: 6px;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.budget-item-price {
+font-family: ‘Syne’, sans-serif;
+font-size: 20px;
+font-weight: 700;
+color: var(–green);
+}
+
+.budget-total {
+margin-top: 16px;
+padding: 20px 24px;
+background: color-mix(in srgb, var(–green) 8%, transparent);
+border: 1px solid color-mix(in srgb, var(–green) 25%, transparent);
+border-radius: 12px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.budget-total-label {
+font-size: 12px;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 2px;
+}
+
+.budget-total-num {
+font-family: ‘Syne’, sans-serif;
+font-size: 28px;
+font-weight: 800;
+color: var(–green);
+}
+
+/* RESULT */
+.result-section {
+max-width: 900px;
+margin: 0 auto;
+padding: 0 24px 80px;
+}
+
+.result-card {
+background: var(–bg2);
+border: 1px solid color-mix(in srgb, var(–blue) 30%, transparent);
+border-radius: 16px;
+padding: 32px;
+}
+
+.result-title {
+font-family: ‘Syne’, sans-serif;
+font-size: 22px;
+font-weight: 800;
+color: var(–blue);
+margin-bottom: 16px;
+}
+
+.result-list {
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+
+.result-item {
+display: flex;
+align-items: center;
+gap: 12px;
+font-size: 13px;
+}
+
+.check { color: var(–green); font-size: 16px; }
+.cross { color: var(–red); font-size: 16px; }
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(16px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+.hero { padding: 40px 20px 30px; }
+.stats-row { gap: 24px; }
+.month { grid-template-columns: 50px 1fr; gap: 0 12px; }
+.month-num { font-size: 9px; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Project Baymax — Build Roadmap</div>
+  <h1>6 <span>Months.</span><br>Zero to Robot.</h1>
+  <p class="hero-sub">Stationary • Voice-Responsive • Arm Movement • Full Exterior</p>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Months</div></div>
+    <div class="stat"><div class="stat-num">~$1.5K</div><div class="stat-label">Budget</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">Core Skills</div></div>
+    <div class="stat"><div class="stat-num">1</div><div class="stat-label">Baymax</div></div>
+  </div>
+</div>
+
+<div class="timeline">
+
+  <!-- MONTH 1 -->
+
+  <div class="month m1">
+    <div class="month-left">
+      <div class="month-num">M 01</div>
+      <div class="month-dot"></div>
+      <div class="month-line"></div>
+    </div>
+    <div class="month-card">
+      <div class="month-header">
+        <div class="month-title">Foundation</div>
+        <div class="month-badge">Learn + Plan</div>
+      </div>
+      <div class="month-desc">You start from zero. This month is pure learning — no building yet. Rushing into hardware without knowing CAD is the #1 mistake beginners make.</div>
+      <div class="tasks">
+        <div class="task"><div class="task-dot"></div><span>Learn Fusion 360 — complete a beginner course (YouTube: Product Design Online)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Watch Arduino crash course (freeCodeCamp full tutorial)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Buy your tools: 3D printer (Bambu Lab A1 Mini ~$300), Arduino Mega, basic servo kit</span></div>
+        <div class="task"><div class="task-dot"></div><span>Study the concept art sketches — measure proportions, decide final scale (life-size vs 60%)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Print 3–5 small test parts to understand your printer's tolerances</span></div>
+      </div>
+      <div class="deliverable">
+        <span class="deliverable-label">Month End →</span>
+        <span>Full CAD plan of skeleton. Printer calibrated. Arduino blinking LEDs.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTH 2 -->
+
+  <div class="month m2">
+    <div class="month-left">
+      <div class="month-num">M 02</div>
+      <div class="month-dot"></div>
+      <div class="month-line"></div>
+    </div>
+    <div class="month-card">
+      <div class="month-header">
+        <div class="month-title">Skeleton</div>
+        <div class="month-badge">Mechanical</div>
+      </div>
+      <div class="month-desc">Design and print the internal rigid skeleton. This is the spine, ribcage frame, shoulder mounts, hip joint, and leg supports. It carries all the weight.</div>
+      <div class="tasks">
+        <div class="task"><div class="task-dot"></div><span>Model torso frame in Fusion 360 — ribcage structure with servo mounting points</span></div>
+        <div class="task"><div class="task-dot"></div><span>Print and assemble torso skeleton — use M3/M4 bolts, not glue</span></div>
+        <div class="task"><div class="task-dot"></div><span>Design telescoping arm structure (3 nested sections, spring-loaded or servo-driven)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Print arm segments — test range of motion manually first</span></div>
+        <div class="task"><div class="task-dot"></div><span>Build hip/pelvis mount that keeps low center of gravity (reference your sketches)</span></div>
+      </div>
+      <div class="deliverable">
+        <span class="deliverable-label">Month End →</span>
+        <span>Full printable skeleton assembled and standing on its own.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTH 3 -->
+
+  <div class="month m3">
+    <div class="month-left">
+      <div class="month-num">M 03</div>
+      <div class="month-dot"></div>
+      <div class="month-line"></div>
+    </div>
+    <div class="month-card">
+      <div class="month-header">
+        <div class="month-title">Electronics</div>
+        <div class="month-badge">Arduino + Servos</div>
+      </div>
+      <div class="month-desc">Wire the skeleton to life. Servo motors in shoulders, elbows, and head. Power distribution. This is where Baymax starts actually moving.</div>
+      <div class="tasks">
+        <div class="task"><div class="task-dot"></div><span>Mount MG996R servos at shoulder joints (strong enough to hold arm weight)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Wire Arduino Mega → PCA9685 servo driver board (controls 16 servos at once)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Program basic arm raise/lower sequence — test range, avoid stripping gears</span></div>
+        <div class="task"><div class="task-dot"></div><span>Add neck servo for head turning (±45 degrees)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Build power system: 12V LiPo battery + buck converters for 5V/6V servo rails</span></div>
+        <div class="task"><div class="task-dot"></div><span>Add LED strip inside chest for glow effect</span></div>
+      </div>
+      <div class="deliverable">
+        <span class="deliverable-label">Month End →</span>
+        <span>Skeleton moves arms and head. Lights on. Powered by battery.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTH 4 -->
+
+  <div class="month m4">
+    <div class="month-left">
+      <div class="month-num">M 04</div>
+      <div class="month-dot"></div>
+      <div class="month-line"></div>
+    </div>
+    <div class="month-card">
+      <div class="month-header">
+        <div class="month-title">Head + Eyes</div>
+        <div class="month-badge">Character</div>
+      </div>
+      <div class="month-desc">The head is what makes it Baymax. The oval eyes, the rounded dome, the small nose. Get this right and people will instantly recognize it.</div>
+      <div class="tasks">
+        <div class="task"><div class="task-dot"></div><span>Model head dome in Fusion 360 — smooth hemisphere, exact proportions from sketches</span></div>
+        <div class="task"><div class="task-dot"></div><span>Design oval eye housings with diffused acrylic lens covers</span></div>
+        <div class="task"><div class="task-dot"></div><span>Wire NeoPixel LED matrices behind each eye — controllable expressions</span></div>
+        <div class="task"><div class="task-dot"></div><span>Add Raspberry Pi inside head for voice + expression control (swap from Arduino)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Install small speaker + amp board inside chest cavity</span></div>
+        <div class="task"><div class="task-dot"></div><span>Program voice lines: "I am Baymax, your personal healthcare companion"</span></div>
+      </div>
+      <div class="deliverable">
+        <span class="deliverable-label">Month End →</span>
+        <span>Head complete with glowing eyes, speaks Baymax lines, neck turns.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTH 5 -->
+
+  <div class="month m5">
+    <div class="month-left">
+      <div class="month-num">M 05</div>
+      <div class="month-dot"></div>
+      <div class="month-line"></div>
+    </div>
+    <div class="month-card">
+      <div class="month-header">
+        <div class="month-title">Exterior Skin</div>
+        <div class="month-badge">Aesthetic</div>
+      </div>
+      <div class="month-desc">The inflatable vinyl look. You'll fake it with EVA foam panels shaped over the skeleton — painted white, smooth seams. This is where it goes from robot to Baymax.</div>
+      <div class="tasks">
+        <div class="task"><div class="task-dot"></div><span>Buy 10mm EVA foam sheets — heat-form them over printed skeleton guides</span></div>
+        <div class="task"><div class="task-dot"></div><span>Cut body panel segments: chest, abdomen, upper arms, forearms, hands</span></div>
+        <div class="task"><div class="task-dot"></div><span>Use contact cement + seam tape for clean joints between panels</span></div>
+        <div class="task"><div class="task-dot"></div><span>Apply Plasti-Dip base coat → sand smooth → white spray paint</span></div>
+        <div class="task"><div class="task-dot"></div><span>Attach panels to skeleton with hidden magnets (allows disassembly for repairs)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Make hands — foam fingers with slight curve, not fully articulated</span></div>
+      </div>
+      <div class="deliverable">
+        <span class="deliverable-label">Month End →</span>
+        <span>Full white exterior. Looks like Baymax. Unmistakably him.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTH 6 -->
+
+  <div class="month m6">
+    <div class="month-left">
+      <div class="month-num">M 06</div>
+      <div class="month-dot"></div>
+      <div class="month-line"></div>
+    </div>
+    <div class="month-card">
+      <div class="month-header">
+        <div class="month-title">Integration</div>
+        <div class="month-badge">Final Boss</div>
+      </div>
+      <div class="month-desc">Bring everything together. Voice control, automated sequences, polish. This month is also for fixing everything that broke in months 2–5.</div>
+      <div class="tasks">
+        <div class="task"><div class="task-dot"></div><span>Add wake-word detection (Raspberry Pi + Vosk offline speech recognition)</span></div>
+        <div class="task"><div class="task-dot"></div><span>Program interaction sequences: greet → scan → respond to simple commands</span></div>
+        <div class="task"><div class="task-dot"></div><span>Add ultrasonic distance sensor in chest — "scans" people who approach</span></div>
+        <div class="task"><div class="task-dot"></div><span>Fix all broken joints, reprinted parts, bad wiring from earlier months</span></div>
+        <div class="task"><div class="task-dot"></div><span>Final paint touch-up, seam refinement, clean cable management</span></div>
+        <div class="task"><div class="task-dot"></div><span>Film the reveal video</span></div>
+      </div>
+      <div class="deliverable">
+        <span class="deliverable-label">Month End →</span>
+        <span>Baymax is alive. Voice-responsive, arm-moving, eye-glowing. Done.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BUDGET -->
+
+<div class="budget-section">
+  <div class="section-title">// Budget Breakdown</div>
+  <div class="budget-grid">
+    <div class="budget-item"><div class="budget-item-name">3D Printer (Bambu A1 Mini)</div><div class="budget-item-price">~$300</div></div>
+    <div class="budget-item"><div class="budget-item-name">Filament (10+ spools white PLA)</div><div class="budget-item-price">~$150</div></div>
+    <div class="budget-item"><div class="budget-item-name">Servos (12x MG996R)</div><div class="budget-item-price">~$80</div></div>
+    <div class="budget-item"><div class="budget-item-name">Arduino Mega + PCA9685</div><div class="budget-item-price">~$30</div></div>
+    <div class="budget-item"><div class="budget-item-name">Raspberry Pi 4 (2GB)</div><div class="budget-item-price">~$50</div></div>
+    <div class="budget-item"><div class="budget-item-name">NeoPixel LEDs + Speaker</div><div class="budget-item-price">~$40</div></div>
+    <div class="budget-item"><div class="budget-item-name">LiPo Battery + Power System</div><div class="budget-item-price">~$60</div></div>
+    <div class="budget-item"><div class="budget-item-name">EVA Foam + Paint + Misc</div><div class="budget-item-price">~$80</div></div>
+    <div class="budget-item"><div class="budget-item-name">Bolts, Wires, Connectors</div><div class="budget-item-price">~$40</div></div>
+    <div class="budget-item"><div class="budget-item-name">Buffer (things will break)</div><div class="budget-item-price">~$200</div></div>
+  </div>
+  <div class="budget-total">
+    <div class="budget-total-label">Total Estimate</div>
+    <div class="budget-total-num">~$1,030 – $1,500</div>
+  </div>
+</div>
+
+<!-- RESULT -->
+
+<div class="result-section">
+  <div class="section-title">// What You'll Have at Month 6</div>
+  <div class="result-card">
+    <div class="result-title">Your Baymax — Honest Spec</div>
+    <div class="result-list">
+      <div class="result-item"><span class="check">✓</span> Stands ~120cm tall (or your chosen scale)</div>
+      <div class="result-item"><span class="check">✓</span> Moves both arms up/down/rotate</div>
+      <div class="result-item"><span class="check">✓</span> Head turns left/right</div>
+      <div class="result-item"><span class="check">✓</span> Glowing oval eyes with expressions</div>
+      <div class="result-item"><span class="check">✓</span> Speaks Baymax voice lines</div>
+      <div class="result-item"><span class="check">✓</span> Responds to wake word</div>
+      <div class="result-item"><span class="check">✓</span> Detects people approaching (ultrasonic)</div>
+      <div class="result-item"><span class="check">✓</span> White EVA foam exterior — looks like him</div>
+      <div class="result-item"><span class="cross">✗</span> Does not walk</div>
+      <div class="result-item"><span class="cross">✗</span> No real inflatable skin</div>
+      <div class="result-item"><span class="cross">✗</span> No true AI healthcare scanning</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const months = document.querySelectorAll('.month');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), 100);
+      }
+    });
+  }, { threshold: 0.1 });
+  months.forEach(m => observer.observe(m));
+</script>
+
+</body>
+</html>
