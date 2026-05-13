@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baymax — Month 1: Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a0f;
+    --bg2: #0d1117;
+    --bg3: #131920;
+    --blue: #4d9fff;
+    --blue2: #7bb8ff;
+    --green: #52e09c;
+    --yellow: #ffe14d;
+    --red: #ff6b6b;
+    --white: #eef2f7;
+    --muted: #4a5568;
+    --border: rgba(255,255,255,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Manrope', sans-serif;
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 50px 40px 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: 'M1';
+    position: absolute;
+    right: -10px;
+    top: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 280px;
+    color: rgba(77,159,255,0.04);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.5s 0.1s forwards;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 9vw, 100px);
+    line-height: 0.95;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 0.5s 0.2s forwards;
+  }
+
+  header h1 em { color: var(--blue); font-style: normal; }
+
+  .header-sub {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.5s 0.3s forwards;
+  }
+
+  .header-pills {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.5s 0.4s forwards;
+  }
+
+  .pill {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .pill-blue { background: rgba(77,159,255,0.12); color: var(--blue); border: 1px solid rgba(77,159,255,0.25); }
+  .pill-green { background: rgba(82,224,156,0.10); color: var(--green); border: 1px solid rgba(82,224,156,0.2); }
+  .pill-yellow { background: rgba(255,225,77,0.10); color: var(--yellow); border: 1px solid rgba(255,225,77,0.2); }
+
+  .main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 50px 24px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* WEEK TABS */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    background: var(--bg2);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    background: transparent;
+  }
+
+  .tab.active {
+    background: var(--blue);
+    color: var(--bg);
+    font-weight: 700;
+  }
+
+  .tab:not(.active):hover { color: var(--white); background: var(--bg3); }
+
+  .week-panel { display: none; }
+  .week-panel.active { display: block; }
+
+  /* DAY ROWS */
+  .days {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .day {
+    display: grid;
+    grid-template-columns: 60px 140px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .day.visible { opacity: 1; transform: translateY(0); }
+  .day:hover { background: var(--bg3); border-color: rgba(77,159,255,0.2); transform: translateX(3px); }
+
+  .day-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: rgba(77,159,255,0.25);
+    line-height: 1;
+  }
+
+  .day-focus {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue2);
+  }
+
+  .day-task {
+    font-size: 12px;
+    color: var(--white);
+    line-height: 1.5;
+  }
+
+  .day-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+
+  .type-learn { background: rgba(77,159,255,0.12); color: var(--blue); }
+  .type-build { background: rgba(82,224,156,0.12); color: var(--green); }
+  .type-order { background: rgba(255,225,77,0.12); color: var(--yellow); }
+  .type-design { background: rgba(167,139,250,0.12); color: #a78bfa; }
+  .type-test { background: rgba(255,107,107,0.12); color: var(--red); }
+
+  /* TOOLS SECTION */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .tool-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.4s, transform 0.4s, border-color 0.2s;
+  }
+
+  .tool-card.visible { opacity: 1; transform: translateY(0); }
+  .tool-card:hover { border-color: rgba(77,159,255,0.25); }
+
+  .tool-icon { font-size: 28px; margin-bottom: 10px; }
+
+  .tool-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--blue);
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .tool-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .tool-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--blue);
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(77,159,255,0.3);
+    padding-bottom: 1px;
+  }
+
+  /* RESOURCES */
+  .resources {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .resource {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.4s, transform 0.4s, border-color 0.2s;
+    transform: translateX(-10px);
+  }
+
+  .resource.visible { opacity: 1; transform: translateX(0); }
+  .resource:hover { border-color: rgba(77,159,255,0.2); }
+
+  .resource-icon { font-size: 20px; }
+
+  .resource-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 3px;
+  }
+
+  .resource-desc {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .resource-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 12px;
+  }
+
+  .tag-free { background: rgba(82,224,156,0.12); color: var(--green); }
+  .tag-buy { background: rgba(255,225,77,0.12); color: var(--yellow); }
+
+  /* GOALS */
+  .goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .goal-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+
+  .goal-card.visible { opacity: 1; transform: translateY(0); }
+
+  .goal-week {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .goal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+
+  .goal-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .goal-item {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    gap: 8px;
+    line-height: 1.5;
+  }
+
+  .goal-check { color: var(--green); flex-shrink: 0; }
+
+  /* DELIVERABLE */
+  .deliverable-box {
+    background: linear-gradient(135deg, rgba(77,159,255,0.08), rgba(77,159,255,0.02));
+    border: 1px solid rgba(77,159,255,0.3);
+    border-radius: 16px;
+    padding: 36px;
+    text-align: center;
+  }
+
+  .del-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .del-main {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 5vw, 52px);
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  .del-checks {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  .del-check {
+    font-size: 12px;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* MINDSET */
+  .mindset-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+  }
+
+  .mindset-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--yellow);
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+
+  .mindset-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mindset-item {
+    display: flex;
+    gap: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .mindset-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: rgba(255,225,77,0.3);
+    flex-shrink: 0;
+    line-height: 1.1;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 36px 20px 28px; }
+    .main { padding: 36px 16px 60px; }
+    .day { grid-template-columns: 44px 1fr; gap: 10px; }
+    .day-focus { display: none; }
+    .day-type { display: none; }
+    .tabs { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Project Baymax — Month 1 Deep Dive</div>
+  <h1>Foundation<br><em>Month.</em></h1>
+  <p class="header-sub">You build nothing physical this month. You learn everything. The quality of Month 1 determines whether Months 2–6 succeed or collapse into wasted parts and broken prints.</p>
+  <div class="header-pills">
+    <span class="pill pill-blue">Fusion 360</span>
+    <span class="pill pill-green">Arduino Basics</span>
+    <span class="pill pill-yellow">Order Hardware</span>
+    <span class="pill pill-blue">Baymax CAD Plan</span>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- WEEKLY GOALS OVERVIEW -->
+  <div>
+    <div class="section-label">// Month at a Glance</div>
+    <div class="goals-grid">
+      <div class="goal-card">
+        <div class="goal-week">Week 01</div>
+        <div class="goal-title">Setup + First Shapes</div>
+        <div class="goal-items">
+          <div class="goal-item"><span class="goal-check">✓</span>Install Fusion 360</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Learn basic sketch tools</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Model a simple cylinder + box</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Order printer + servos</div>
+        </div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-week">Week 02</div>
+        <div class="goal-title">Joints + Assembly</div>
+        <div class="goal-items">
+          <div class="goal-item"><span class="goal-check">✓</span>Learn joints and constraints</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Model a simple hinge</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Printer arrives — calibrate it</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Print first test part</div>
+        </div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-week">Week 03</div>
+        <div class="goal-title">Arduino + Servos</div>
+        <div class="goal-items">
+          <div class="goal-item"><span class="goal-check">✓</span>Arduino IDE installed</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Blink LED — Hello World</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Control one servo by code</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Sweep arm 0°→180°</div>
+        </div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-week">Week 04</div>
+        <div class="goal-title">Baymax CAD Draft</div>
+        <div class="goal-items">
+          <div class="goal-item"><span class="goal-check">✓</span>Full skeleton proportions in CAD</div>
+          <div class="goal-item"><span class="goal-check">✓</span>All joint positions defined</div>
+          <div class="goal-item"><span class="goal-check">✓</span>CF tube lengths calculated</div>
+          <div class="goal-item"><span class="goal-check">✓</span>Ready to order CF materials</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY BY DAY -->
+  <div>
+    <div class="section-label">// Day-by-Day Plan</div>
+    <div class="tabs">
+      <button class="tab active" onclick="showWeek(1, this)">Week 1</button>
+      <button class="tab" onclick="showWeek(2, this)">Week 2</button>
+      <button class="tab" onclick="showWeek(3, this)">Week 3</button>
+      <button class="tab" onclick="showWeek(4, this)">Week 4</button>
+    </div>
+
+    <!-- WEEK 1 -->
+    <div class="week-panel active" id="week1">
+      <div class="days">
+        <div class="day">
+          <div class="day-num">01</div>
+          <div class="day-focus">Install + Explore</div>
+          <div class="day-task">Download and install Fusion 360 (free personal license). Watch the UI overview video. Click every menu. Don't build anything yet — just get comfortable navigating.</div>
+          <div class="day-type type-learn">Learn</div>
+        </div>
+        <div class="day">
+          <div class="day-num">02</div>
+          <div class="day-focus">Sketching Basics</div>
+          <div class="day-task">Watch Kevin Kennedy "Fusion 360 for Beginners" Lesson 1–2. Learn: Line, Rectangle, Circle, Dimension, Constraint. Draw a 2D profile of Baymax's torso outline — just the shape, no depth.</div>
+          <div class="day-type type-learn">Learn</div>
+        </div>
+        <div class="day">
+          <div class="day-num">03</div>
+          <div class="day-focus">Extrusion + Bodies</div>
+          <div class="day-task">Lesson 3–4. Learn Extrude, Revolve, Fillet. Take your Day 2 torso sketch — extrude it into a 3D block. Add fillets to round the edges. Export as STL and look at it in a slicer.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">04</div>
+          <div class="day-focus">Order Day</div>
+          <div class="day-task">Order everything on the hardware list: Bambu A1 Mini, Arduino Mega starter kit, DS3225 servo pack (×6), PCA9685 servo driver, 12V LiPo battery + charger. Budget ~$600 today.</div>
+          <div class="day-type type-order">Order</div>
+        </div>
+        <div class="day">
+          <div class="day-num">05</div>
+          <div class="day-focus">Model a Tube</div>
+          <div class="day-task">Model a hollow cylinder in Fusion 360 matching your CF spine tube dimensions (30mm OD, 27mm ID, 100mm long). Practice Shell command. This is your first real Baymax part.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">06</div>
+          <div class="day-focus">Model a Joint</div>
+          <div class="day-task">Model a simple pivot bracket — a U-shaped aluminum clamp that would hold a CF tube. Add bolt holes. This is the logic of every joint in the skeleton. Learn: Hole tool, Mirror, Pattern.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">07</div>
+          <div class="day-focus">Rest + Review</div>
+          <div class="day-task">Look at your concept art sketches carefully. Measure proportions with a ruler on the page. Write down: torso height, arm length, head diameter, leg length — all as ratios to total height. These become your CAD dimensions.</div>
+          <div class="day-type type-learn">Learn</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 2 -->
+    <div class="week-panel" id="week2">
+      <div class="days">
+        <div class="day">
+          <div class="day-num">08</div>
+          <div class="day-focus">Printer Arrives</div>
+          <div class="day-task">Unbox Bambu A1 Mini. Follow setup guide exactly. Run the auto-calibration. Print the included test model. Don't skip calibration — a poorly calibrated printer wastes every part you make in Month 2.</div>
+          <div class="day-type type-build">Build</div>
+        </div>
+        <div class="day">
+          <div class="day-num">09</div>
+          <div class="day-focus">Tolerance Test</div>
+          <div class="day-task">Print a tolerance test: two cylinders designed to fit together. Print at 0.1mm, 0.2mm, 0.3mm clearance. Find which fits best. Your skeleton joints need this number — don't guess it.</div>
+          <div class="day-type type-test">Test</div>
+        </div>
+        <div class="day">
+          <div class="day-num">10</div>
+          <div class="day-focus">Assembly in Fusion</div>
+          <div class="day-task">Learn Fusion 360 Assembly workspace. Joints, constraints, degrees of freedom. Assemble your tube + bracket from Days 5–6 into a moving hinge. Verify it rotates correctly in simulation.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">11</div>
+          <div class="day-focus">Print Bracket v1</div>
+          <div class="day-task">Print the joint bracket you designed on Day 6. Test fit with a pen or dowel the same diameter as your CF tube. Almost certainly won't fit perfectly — adjust tolerance by +0.2mm and reprint.</div>
+          <div class="day-type type-test">Test</div>
+        </div>
+        <div class="day">
+          <div class="day-num">12</div>
+          <div class="day-focus">Shoulder Joint CAD</div>
+          <div class="day-task">Design the Baymax shoulder joint specifically. This is the most complex joint — it needs to hold a DS3225 servo AND a CF arm tube AND rotate smoothly. Spend the full day on this. It's worth it.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">13</div>
+          <div class="day-focus">Print Shoulder v1</div>
+          <div class="day-task">Print the shoulder joint. Test with servo. Test with tube. Document every problem. The goal isn't a perfect part — the goal is a list of what needs changing. Expect 2–3 iterations this month.</div>
+          <div class="day-type type-test">Test</div>
+        </div>
+        <div class="day">
+          <div class="day-num">14</div>
+          <div class="day-focus">Revise + Reprint</div>
+          <div class="day-task">Fix every problem from Day 13. Reprint shoulder joint. Test again. This cycle — design, print, test, fix — is the entire skill of hardware engineering. You're learning it right now.</div>
+          <div class="day-type type-build">Build</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 3 -->
+    <div class="week-panel" id="week3">
+      <div class="days">
+        <div class="day">
+          <div class="day-num">15</div>
+          <div class="day-focus">Arduino Hello World</div>
+          <div class="day-task">Install Arduino IDE. Connect Arduino Mega via USB. Open the Blink example sketch. Upload it. Watch the LED blink. This is your first embedded program. Understand every line of that 10-line sketch.</div>
+          <div class="day-type type-learn">Learn</div>
+        </div>
+        <div class="day">
+          <div class="day-num">16</div>
+          <div class="day-focus">Servo Basics</div>
+          <div class="day-task">Wire one MG996R servo to Arduino (signal pin 9, 5V, GND). Load Servo library example "Sweep". Watch it move. Change the delay. Change the degrees. Understand what each number does.</div>
+          <div class="day-type type-learn">Learn</div>
+        </div>
+        <div class="day">
+          <div class="day-num">17</div>
+          <div class="day-focus">Multiple Servos</div>
+          <div class="day-task">Wire PCA9685 board to Arduino via I2C. Install Adafruit PCA9685 library. Control 3 servos simultaneously from one board. This is the system that will run all of Baymax's joints.</div>
+          <div class="day-type type-build">Build</div>
+        </div>
+        <div class="day">
+          <div class="day-num">18</div>
+          <div class="day-focus">Arm Sequence</div>
+          <div class="day-task">Program a "Baymax arm raise" sequence: both shoulders move from 0° to 90° simultaneously, pause 1 second, return. Use arrays to store positions. Add easing (slow start, slow end) for natural movement.</div>
+          <div class="day-type type-build">Build</div>
+        </div>
+        <div class="day">
+          <div class="day-num">19</div>
+          <div class="day-focus">Serial Monitor</div>
+          <div class="day-task">Learn to use Serial Monitor for debugging. Print servo positions as they move. Send commands from keyboard to control servos ("L" = left arm up, "R" = right arm up). This is your first remote control.</div>
+          <div class="day-type type-learn">Learn</div>
+        </div>
+        <div class="day">
+          <div class="day-num">20</div>
+          <div class="day-focus">LED Eyes Preview</div>
+          <div class="day-task">Wire a NeoPixel ring (or strip) to Arduino. Install FastLED library. Make it glow Baymax eye color (soft warm white). Program a slow breathing pulse. This is a preview of Month 4's eye system.</div>
+          <div class="day-type type-build">Build</div>
+        </div>
+        <div class="day">
+          <div class="day-num">21</div>
+          <div class="day-focus">Electronics Plan</div>
+          <div class="day-task">Draw the complete wiring diagram for the final Baymax on paper. Every servo labeled, every sensor, Arduino Mega, PCA9685, Raspberry Pi, speaker, battery. This is your electrical blueprint for Month 3.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEK 4 -->
+    <div class="week-panel" id="week4">
+      <div class="days">
+        <div class="day">
+          <div class="day-num">22</div>
+          <div class="day-focus">Full Skeleton CAD</div>
+          <div class="day-task">Start the full skeleton assembly in Fusion 360. Begin with spine — a single 30mm CF tube, 100cm. Add hip collar and pelvis platform. Every dimension must match your Day 7 proportions exactly.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">23</div>
+          <div class="day-focus">Chest + Shoulders CAD</div>
+          <div class="day-task">Add ribcage frame to skeleton assembly. Position shoulder pivot blocks at correct height. Verify left-right symmetry using Mirror in Fusion 360. Add arm tubes — both upper and lower sections.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">24</div>
+          <div class="day-focus">Legs + Head CAD</div>
+          <div class="day-task">Add leg tubes to hip platform. Add neck tube to spine top. Add a placeholder head sphere. Now step back — does it look like Baymax? Compare to your reference sketches and adjust proportions.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">25</div>
+          <div class="day-focus">Measure + BOM</div>
+          <div class="day-task">Use Fusion 360 to measure every CF tube length in your assembly. Export a Bill of Materials — every part, every dimension, every quantity. This becomes your Month 2 shopping list for RockWest Composites.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">26</div>
+          <div class="day-focus">Joint Details</div>
+          <div class="day-task">Go back into every joint in the assembly and add detail — bolt hole positions, collar depths, servo pocket dimensions. The skeleton CAD needs to be buildable, not just visual. Every joint must make physical sense.</div>
+          <div class="day-type type-design">Design</div>
+        </div>
+        <div class="day">
+          <div class="day-num">27</div>
+          <div class="day-focus">Order CF Materials</div>
+          <div class="day-task">Place the RockWest Composites order using your BOM from Day 25. Order McMaster-Carr aluminum collars and brackets. Allow 1 week shipping. Everything needs to arrive before Day 35.</div>
+          <div class="day-type type-order">Order</div>
+        </div>
+        <div class="day">
+          <div class="day-num">28–30</div>
+          <div class="day-focus">Buffer + Polish</div>
+          <div class="day-task">Three days to fix everything you're behind on. Reprint shoulder joints. Finish wiring diagram. Finalize CAD. Watch ahead on Month 2 CF cutting techniques. If you're fully caught up — start printing PETG joint housings early.</div>
+          <div class="day-type type-build">Build</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOLS + SOFTWARE -->
+  <div>
+    <div class="section-label">// Tools + Software You Need</div>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-icon">🧊</div>
+        <div class="tool-name">Fusion 360</div>
+        <div class="tool-desc">Free for personal use. Industry-standard CAD and CAM. Everything you design for Baymax lives here. Download the personal license — it has everything you need.</div>
+        <a class="tool-link" href="#">autodesk.com/fusion360</a>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🔵</div>
+        <div class="tool-name">Arduino IDE 2</div>
+        <div class="tool-desc">Free. Write, compile, and upload code to your Arduino Mega. Version 2 has autocomplete and a much better debugger than version 1. Essential from Day 15.</div>
+        <a class="tool-link" href="#">arduino.cc/software</a>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🐼</div>
+        <div class="tool-name">Bambu Studio</div>
+        <div class="tool-desc">Free slicer for your Bambu printer. Converts Fusion 360 STL exports into printer instructions. Comes pre-configured for A1 Mini — barely needs setup.</div>
+        <a class="tool-link" href="#">bambulab.com/software</a>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">📐</div>
+        <div class="tool-name">Digital Calipers</div>
+        <div class="tool-desc">Buy a 150mm digital caliper (~$15 on Amazon). You will use this every single day. Measure printed parts, CF tubes, servo housings. The difference between 19.8mm and 20mm matters.</div>
+        <a class="tool-link" href="#">amazon — "digital caliper 150mm"</a>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">▶️</div>
+        <div class="tool-name">Product Design Online</div>
+        <div class="tool-desc">YouTube channel by Kevin Kennedy. Best Fusion 360 beginner series available. Free. Watch in order, do every exercise. 6 hours total — spread over Weeks 1–2.</div>
+        <a class="tool-link" href="#">YouTube — "Product Design Online"</a>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">⚡</div>
+        <div class="tool-name">Paul McWhorter Arduino</div>
+        <div class="tool-desc">YouTube series "Arduino for Beginners" — 70+ videos, incredibly patient and thorough. Start at Lesson 1. By Week 3 you'll be at Lesson 10–15. Free.</div>
+        <a class="tool-link" href="#">YouTube — "Paul McWhorter Arduino"</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MINDSET -->
+  <div class="mindset-box">
+    <div class="mindset-title">⚡ Month 1 Rules</div>
+    <div class="mindset-items">
+      <div class="mindset-item">
+        <div class="mindset-num">01</div>
+        <div>Never skip the test prints. A joint that looks right in CAD fails in real life constantly. Print, test, fix. That loop is the job.</div>
+      </div>
+      <div class="mindset-item">
+        <div class="mindset-num">02</div>
+        <div>Don't buy random parts. Every purchase this month is on the list. Off-list buying wastes money and creates clutter that slows you down in Month 2.</div>
+      </div>
+      <div class="mindset-item">
+        <div class="mindset-num">03</div>
+        <div>The CAD skeleton on Day 25 doesn't need to be perfect. It needs to be complete enough to generate real dimensions. You will revise it in Month 2.</div>
+      </div>
+      <div class="mindset-item">
+        <div class="mindset-num">04</div>
+        <div>If you fall behind — skip Day 7, 14, or 21 rest days. They're buffers, not mandatory breaks. The hard deadline is placing the CF order on Day 27.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELIVERABLE -->
+  <div class="deliverable-box">
+    <div class="del-title">End of Month 1 — You Have</div>
+    <div class="del-main">Complete CAD Plan.<br>Printer Running.<br>Servos Moving.</div>
+    <div class="del-checks">
+      <div class="del-check">✓ Fusion 360 skeleton draft done</div>
+      <div class="del-check">✓ CF order placed</div>
+      <div class="del-check">✓ Shoulder joint printed + tested</div>
+      <div class="del-check">✓ 3 servos moving in sync</div>
+      <div class="del-check">✓ Wiring diagram complete</div>
+      <div class="del-check">✓ Ready for Month 2</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showWeek(num, btn) {
+    document.querySelectorAll('.week-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('week' + num).classList.add('active');
+    btn.classList.add('active');
+    // re-trigger animations
+    document.querySelectorAll('#week' + num + ' .day').forEach((el, i) => {
+      el.classList.remove('visible');
+      setTimeout(() => el.classList.add('visible'), i * 50);
+    });
+  }
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 60);
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.tool-card, .goal-card, .resource').forEach(el => obs.observe(el));
+
+  // Trigger week 1 days on load
+  setTimeout(() => {
+    document.querySelectorAll('#week1 .day').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), 300 + i * 60);
+    });
+  }, 100);
+</script>
+</body>
+</html>
