@@ -1,0 +1,3298 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<title>آموزشگاه موسیقی پارس</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PARS MUSIC — quiet
+   White, blue, grey. The bubbles do the talking. Nothing else.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root{
+  --bg:        #ffffff;
+  --bg-2:      #f7f7f7;
+
+  --ink:       #000000;
+  --ink-2:     #6a6a6e;
+  --ink-3:     #8e8e93;
+  --ink-4:     #c7c7cc;
+
+  --hair:      #e5e5ea;
+
+  /* user-specified exact RGB values */
+  --blue:      rgb(0,136,255);
+  --blue-2:    rgb(0,136,255);
+  --blue-hi:   rgb(38,158,255);   /* lighter top for bubble gradient */
+  --grey:      rgb(233,233,234);
+
+  --tap:       rgba(0,0,0,0.04);
+  --tap-2:     rgba(0,0,0,0.08);
+
+  --fa:        'Vazirmatn', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  --ease:      cubic-bezier(0.32, 0.72, 0, 1);
+  --quick:     140ms;
+}
+
+[data-dark]{
+  --bg:        #000000;
+  --bg-2:      #1c1c1e;
+  --ink:       #ffffff;
+  --ink-2:     #98989f;
+  --ink-3:     #8e8e93;
+  --ink-4:     #48484a;
+  --hair:      #38383a;
+  --blue:      rgb(0,145,255);
+  --blue-2:    rgb(0,145,255);
+  --blue-hi:   rgb(38,165,255);
+  --grey:      rgb(59,59,61);
+  --tap:       rgba(255,255,255,0.06);
+  --tap-2:     rgba(255,255,255,0.10);
+}
+
+*,*::before,*::after{
+  box-sizing:border-box;margin:0;padding:0;
+  -webkit-tap-highlight-color:transparent;
+  /* PWA polish: nothing is selectable by default. Only inputs (below) opt in. */
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;     /* no iOS "Copy / Look Up" callout menu */
+  -webkit-user-drag:none;          /* no drag-to-save on images */
+}
+html,body{
+  height:100%;overflow:hidden;
+  /* No rubber-band on the page itself. Scrollable lists handle their own. */
+  overscroll-behavior:none;
+  /* No pinch-zoom, no double-tap zoom. Only allow vertical scroll. */
+  touch-action:pan-y;
+  overflow-x:hidden;
+}
+body{
+  font-family:var(--fa);
+  background:transparent;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  /* iOS PWA: position:fixed prevents the body from rubber-banding when keyboard opens */
+  position:fixed;inset:0;
+  /* No double-tap zoom delay */
+  touch-action:manipulation;
+  transition:color 380ms var(--ease);
+}
+
+/* Background canvas — lives behind everything so the sidebar/header/bubbles
+   all have something to blur against. When the user picks a custom theme
+   background, its gradient lands here. */
+.bg-canvas{
+  position:fixed;inset:0;z-index:-1;
+  background:var(--bg);
+  transition:background 380ms var(--ease);
+}
+.bg-canvas.l-paper    { background:linear-gradient(180deg,#fbfaf7,#f3efe8); }
+.bg-canvas.l-linen    { background:linear-gradient(180deg,#f5ecde,#e6d8be); }
+.bg-canvas.l-mist     { background:linear-gradient(160deg,#e8eef4,#cfd9e4); }
+.bg-canvas.l-sand     { background:linear-gradient(160deg,#f3ead8,#dfcfae); }
+.bg-canvas.d-graphite { background:linear-gradient(180deg,#16171a,#0a0a0c); }
+.bg-canvas.d-midnight { background:linear-gradient(180deg,#0a1730,#040818); }
+.bg-canvas.d-velvet   { background:linear-gradient(160deg,#1f0e26,#10060f); }
+.bg-canvas.d-forest   { background:linear-gradient(160deg,#0b1f1a,#04100c); }
+button,textarea,input{font-family:inherit;background:none;border:none;cursor:pointer;color:inherit;}
+
+/* iOS Safari auto-zooms on focus into ANY input with font-size < 16px.
+   The textarea + search input MUST be 16px to prevent the zoom-on-focus jump. */
+.ibox,.search input,.sh-ta{font-size:16px;}
+
+/* The ONLY places text is selectable are real input fields.
+   Everything else stays unselectable so the app feels native, not like a webpage.
+   When we add long-press-to-copy on bubbles later, we'll re-enable selectively. */
+.ibox,
+.search input,
+.sh-ta{
+  -webkit-user-select:text;
+  user-select:text;
+  -webkit-touch-callout:default;
+}
+
+.app{display:flex;height:100vh;height:100dvh;overflow:hidden;direction:ltr;}
+
+/* ━━━ SIDEBAR ━━━ */
+.sidebar{
+  width:340px;flex-shrink:0;
+  background:color-mix(in srgb, var(--bg-2) 78%, transparent);
+  backdrop-filter:blur(30px) saturate(180%);
+  -webkit-backdrop-filter:blur(30px) saturate(180%);
+  border-right:1px solid var(--hair);
+  display:flex;flex-direction:column;
+  direction:rtl;
+}
+@media(max-width:760px){
+  .sidebar{
+    width:100%;
+    border-right:none;
+    background:color-mix(in srgb, var(--bg) 92%, transparent);
+  }
+  .sidebar.off{display:none;}
+  .chat{display:none;}
+  .sidebar.off ~ .chat{display:flex;}
+}
+
+.sb-top{
+  padding:48px 20px 12px;
+  display:flex;flex-direction:column;gap:14px;
+}
+@supports(padding-top:env(safe-area-inset-top)){
+  .sb-top{padding-top:calc(40px + env(safe-area-inset-top));}
+}
+
+.sb-row{display:flex;align-items:center;justify-content:space-between;}
+.sb-title{font-size:28px;font-weight:700;letter-spacing:-0.6px;color:var(--ink);}
+
+.ib{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--blue);
+  transition:background var(--quick) var(--ease);
+}
+.ib:hover{background:var(--tap);}
+.ib:active{background:var(--tap-2);}
+
+.search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--grey);
+  border-radius:10px;
+  padding:8px 12px;
+}
+.search svg{color:var(--ink-3);flex-shrink:0;}
+.search input{
+  background:none;border:none;outline:none;
+  font-size:16px;color:var(--ink);width:100%;direction:rtl;
+}
+.search input::placeholder{color:var(--ink-3);}
+
+.clist{flex:1;overflow-y:auto;padding-bottom:16px;}
+.clist::-webkit-scrollbar{width:0;}
+
+.crow{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 20px;
+  cursor:pointer;
+  transition:background var(--quick) var(--ease);
+  -webkit-user-select:none;user-select:none;
+}
+.crow:hover{background:var(--tap);}
+.crow:active{background:var(--tap-2);}
+.crow.active{background:var(--tap);}
+
+.av{
+  width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:500;
+  flex-shrink:0;position:relative;
+  background:var(--grey);
+  color:var(--ink-2);
+}
+.av.on::after{
+  content:'';position:absolute;bottom:1px;right:1px;
+  width:11px;height:11px;border-radius:50%;
+  background:#34C759;
+  border:2px solid var(--bg-2);
+}
+@media(max-width:760px){.av.on::after{border-color:var(--bg);}}
+
+.cmeta{flex:1;min-width:0;}
+.cr1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;}
+.cn{
+  font-size:15.5px;font-weight:500;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:-0.1px;
+}
+.crow.unread .cn{font-weight:600;}
+.ct{font-size:13px;color:var(--ink-3);flex-shrink:0;margin-right:8px;}
+.cp{
+  font-size:14px;color:var(--ink-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  line-height:1.35;
+}
+.crow.unread .cp{color:var(--ink-2);}
+
+.badge{
+  min-width:20px;height:20px;border-radius:99px;
+  background:var(--blue);color:#fff;
+  font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 6px;flex-shrink:0;
+}
+
+/* ━━━ CHAT PANEL ━━━ */
+.chat{
+  flex:1;display:flex;flex-direction:column;
+  background:transparent;overflow:hidden;min-width:0;
+  direction:ltr;
+  position:relative;
+  transition:opacity var(--quick) var(--ease);
+}
+.chat.switching{opacity:0;}
+
+/* chat header — NO border. Pure float. */
+/* chat header — frosted glass, FLOATING above the chat. Chat scrolls behind it. */
+.ch{
+  display:flex;align-items:center;
+  padding:8px 16px;
+  flex-shrink:0;min-height:56px;
+  direction:rtl;
+  position:absolute;top:0;left:0;right:0;
+  z-index:5;
+  /* frosted glass — light tint of bg color so the white chrome is just felt, not hard */
+  background:color-mix(in srgb, var(--bg) 70%, transparent);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+}
+/* soft fade below the header so the bubbles ghost into it, not slam into a hard edge */
+.ch::after{
+  content:'';
+  position:absolute;left:0;right:0;top:100%;
+  height:14px;
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--bg) 60%, transparent) 0%,
+    transparent 100%);
+  pointer-events:none;
+}
+@supports(padding-top:env(safe-area-inset-top)){
+  .ch{padding-top:calc(8px + env(safe-area-inset-top));min-height:calc(56px + env(safe-area-inset-top));}
+}
+
+.ch-actions{
+  display:flex;align-items:center;gap:4px;
+  margin-right:auto;          /* push to LTR end (visually left in RTL) */
+  flex-shrink:0;
+}
+
+.back-btn{
+  display:none;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;
+  color:var(--blue);padding:0;
+  margin-left:4px;
+  transition:background var(--quick) var(--ease);
+}
+.back-btn:hover{background:var(--tap);}
+.back-btn:active{background:var(--tap-2);}
+@media(max-width:760px){.back-btn{display:flex;}}
+
+.ch > .av{
+  width:38px;height:38px;font-size:14px;
+  margin-left:12px;
+}
+
+.ch-info{flex:1;min-width:0;}
+.ch-name{font-size:16px;font-weight:600;letter-spacing:-0.2px;color:var(--ink);}
+.ch-sub{font-size:13px;color:var(--ink-2);margin-top:1px;}
+
+/* mobile: stacked centered title with avatar above, like the iMessage reference */
+@media(max-width:760px){
+  .ch{padding:8px 12px 12px;min-height:64px;}
+  .ch > .av{display:none;}
+  .ch-info{
+    position:absolute;left:50%;top:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;flex:0;
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    pointer-events:none;
+  }
+  .ch-mob-av{
+    display:flex!important;
+    width:32px;height:32px;border-radius:50%;
+    align-items:center;justify-content:center;
+    font-size:13px;font-weight:500;
+    background:var(--grey);color:var(--ink-2);
+    margin-bottom:2px;
+  }
+  .ch-name{font-size:11px;font-weight:500;color:var(--ink-2);letter-spacing:0;}
+  .ch-sub{display:none;}
+}
+.ch-mob-av{display:none;}
+
+/* ━━━ MESSAGES ━━━ */
+.msgs{
+  flex:1;overflow-y:auto;
+  padding:72px 14px 84px;     /* top: header (56) + breathing room. bottom: input area + breath */
+  display:flex;flex-direction:column;
+  direction:ltr;
+  overscroll-behavior:contain;
+}
+@supports(padding-top:env(safe-area-inset-top)){
+  .msgs{padding-top:calc(64px + env(safe-area-inset-top));}
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  .msgs{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
+}
+.msgs::-webkit-scrollbar{width:0;}
+
+/* day stamp — "Today 2:51 PM" — frosted glass capsule
+   Single pill that holds the day word + time. Translucent so it sits
+   inside the message stream without feeling like a band, blurry so the
+   chat bg gives it depth. Works the same way in light & dark — only
+   the tint changes. */
+.day-sep{
+  display:flex;align-items:center;justify-content:center;
+  margin:14px 0 16px;
+}
+.day-sep-cap{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;
+  border-radius:99px;
+  /* translucent surface + heavy blur = real frosted glass, not a flat pill */
+  background:rgba(245,245,247,0.72);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  backdrop-filter:blur(18px) saturate(160%);
+  border:.5px solid rgba(0,0,0,0.06);
+  box-shadow:0 1px 2px rgba(0,0,0,0.03);
+}
+[data-dark] .day-sep-cap{
+  background:rgba(44,44,46,0.62);
+  border-color:rgba(255,255,255,0.08);
+  box-shadow:0 1px 2px rgba(0,0,0,0.30);
+}
+.day-sep .when{font-size:11.5px;font-weight:600;color:var(--ink-2);letter-spacing:.1px;}
+.day-sep .at  {font-size:11.5px;font-weight:400;color:var(--ink-3);letter-spacing:.1px;}
+
+/* ━━━ CLUSTERS ━━━ */
+.cluster{
+  display:flex;flex-direction:column;
+  margin-bottom:8px;
+  gap:2px;
+}
+.cluster.out{align-items:flex-end;padding-left:48px;}
+.cluster.in {align-items:flex-start;padding-right:48px;padding-left:38px;position:relative;}
+
+.sender-lbl{
+  font-size:11px;color:var(--ink-2);
+  margin-right:4px;margin-bottom:2px;
+  direction:rtl;
+}
+
+.cl-av{
+  position:absolute;left:0;bottom:0;
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:500;
+  background:var(--grey);color:var(--ink-2);
+}
+
+/* ━━━ BUBBLES ━━━ */
+.bubble{
+  display:inline-block;
+  padding:8px 14px;
+  font-size:16px;line-height:1.35;
+  max-width:min(74vw,560px);
+  word-break:break-word;
+  direction:rtl;
+  cursor:default;
+  position:relative;
+  letter-spacing:-0.1px;
+  animation:bub 160ms var(--ease) both;
+}
+@keyframes bub{
+  from{opacity:0;transform:translateY(3px);}
+  to  {opacity:1;transform:translateY(0);}
+}
+.bubble:active{opacity:.78;transition:opacity 80ms;}
+
+.cluster.out .bubble{
+  background:linear-gradient(180deg,var(--blue-hi) 0%, var(--blue) 100%);
+  color:#fff;
+  border-radius:18px;
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.cluster.out > div:last-child .bubble:not(.pill){
+  border-radius:18px 18px 4px 18px;
+}
+
+.cluster.in .bubble{
+  background:color-mix(in srgb, var(--grey) 88%, transparent);
+  color:var(--ink);
+  border-radius:18px;
+  backdrop-filter:blur(10px) saturate(140%);
+  -webkit-backdrop-filter:blur(10px) saturate(140%);
+}
+.cluster.in > div:last-child .bubble:not(.pill){
+  border-radius:18px 18px 18px 4px;
+}
+
+.bubble.pill{border-radius:999px!important;padding:9px 18px;}
+
+/* meta — basically invisible, ticks only on the very last out bubble */
+.bmeta{
+  font-size:11px;color:var(--ink-3);
+  margin-top:3px;padding:0 4px;
+  display:flex;align-items:center;gap:5px;
+  direction:ltr;
+}
+.cluster.out .bmeta{justify-content:flex-end;}
+.cluster.in  .bmeta{display:none;}
+/* When an incoming bubble is edited, the meta gets force-shown via inline style;
+   align it to the start so it sits right beneath the bubble on the left. */
+.cluster.in [data-msgid] > .bmeta{justify-content:flex-start;}
+.btime{display:none;}    /* no per-bubble timestamps. ever. */
+
+/* ━━━ TICKS ━━━ */
+.tick-wrap{
+  display:inline-flex;align-items:center;
+  width:14px;height:9px;
+  position:relative;flex-shrink:0;
+}
+.tick-wrap svg{position:absolute;overflow:visible;}
+.tick1{left:0;transition:left var(--quick) var(--ease);}
+.tick-wrap.delivered .tick1,.tick-wrap.seen .tick1{left:-3px;}
+.tick2{
+  left:5px;opacity:0;transform:scale(.5);
+  transition:opacity 160ms var(--ease) 30ms,transform 200ms var(--ease) 30ms;
+}
+.tick-wrap.delivered .tick2,.tick-wrap.seen .tick2{opacity:1;transform:scale(1);}
+.tick-path{
+  stroke:var(--ink-4);stroke-width:1.4;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.tick-wrap.seen .tick-path{stroke:var(--blue);}
+
+/* ━━━ VOICE BUBBLE ━━━ */
+.vbub{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 14px;
+  direction:ltr;
+  max-width:min(74vw,300px);
+  cursor:pointer;
+  animation:bub 160ms var(--ease) both;
+}
+.cluster.out .vbub{
+  background:linear-gradient(180deg,var(--blue-hi) 0%, var(--blue) 100%);
+  border-radius:18px 18px 4px 18px;
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.cluster.in .vbub{
+  background:color-mix(in srgb, var(--grey) 88%, transparent);
+  border-radius:18px 18px 18px 4px;
+  backdrop-filter:blur(10px) saturate(140%);
+  -webkit-backdrop-filter:blur(10px) saturate(140%);
+}
+
+.vplay{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:opacity var(--quick) var(--ease);
+}
+.vplay:active{opacity:.7;}
+.cluster.out .vplay{background:rgba(255,255,255,.22);}
+.cluster.in  .vplay{background:rgba(0,0,0,.08);}
+[data-dark] .cluster.in .vplay{background:rgba(255,255,255,.10);}
+
+.ptri{width:0;height:0;border-style:solid;border-width:5px 0 5px 8px;margin-left:2px;}
+.cluster.out .ptri{border-color:transparent transparent transparent #fff;}
+.cluster.in  .ptri{border-color:transparent transparent transparent var(--ink);}
+
+.wv{
+  display:flex;align-items:center;gap:2.5px;
+  height:28px;flex:1;position:relative;cursor:pointer;
+}
+.wbar{width:2.5px;border-radius:99px;flex-shrink:0;transition:background var(--quick);}
+.cluster.out .wbar  {background:rgba(255,255,255,.32);}
+.cluster.out .wbar.p{background:rgba(255,255,255,.95);}
+.cluster.in  .wbar  {background:var(--ink-4);}
+.cluster.in  .wbar.p{background:var(--ink-2);}
+
+.vdur{font-size:12px;white-space:nowrap;flex-shrink:0;}
+.cluster.out .vdur{color:rgba(255,255,255,.75);}
+.cluster.in  .vdur{color:var(--ink-2);}
+
+/* ━━━ BREAKPOINT — quiet ━━━ */
+.bpin{
+  position:absolute;top:-3px;bottom:-3px;width:1.5px;
+  background:rgba(255,255,255,0.85);
+  cursor:pointer;z-index:4;
+  transition:transform var(--quick) var(--ease);
+}
+.cluster.in .bpin{background:var(--ink);}
+.bpin::before{
+  content:'';position:absolute;top:-4px;left:-3px;
+  width:7px;height:7px;border-radius:50%;
+  background:inherit;
+}
+.bpin:hover{transform:scaleX(2);}
+
+/* Long-press ghost — appears on touch, grows over 500ms.
+   While growing it shows the user "you're placing a marker here". */
+.bpin.lp-ghost{
+  pointer-events:none;
+  z-index:5;
+  animation:lp-grow 500ms var(--ease) forwards;
+}
+.bpin.lp-ghost::before{
+  animation:lp-grow-dot 500ms var(--ease) forwards;
+}
+@keyframes lp-grow{
+  from{opacity:0;transform:scaleX(0.5);}
+  to  {opacity:1;transform:scaleX(2);}
+}
+@keyframes lp-grow-dot{
+  from{transform:scale(0.3);}
+  to  {transform:scale(1.4);}
+}
+/* Once the sheet opens, the ghost stays planted at full size */
+.bpin.lp-ghost.lp-committed{
+  animation:none;
+  opacity:1;
+  transform:scaleX(2);
+}
+.bpin.lp-ghost.lp-committed::before{
+  transform:scale(1.4);
+}
+
+.btip{
+  position:absolute;bottom:calc(100% + 8px);
+  left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--bg);
+  border-radius:10px;padding:8px 12px;
+  width:200px;font-size:12px;line-height:1.5;
+  display:none;z-index:20;
+  white-space:normal;direction:rtl;pointer-events:none;
+  animation:bub 160ms var(--ease) both;
+  box-shadow:0 8px 24px rgba(0,0,0,0.18);
+}
+[data-dark] .btip{background:var(--grey);color:var(--ink);}
+.btip.on{display:block;}
+.btip-lbl{font-size:10px;font-weight:500;opacity:.6;margin-bottom:3px;}
+
+.bpc{
+  max-width:min(74vw,300px);
+  padding:10px 14px;direction:rtl;
+  border-radius:14px;
+  position:relative;
+  background:var(--grey);
+  color:var(--ink);
+  animation:bub 160ms var(--ease) both;
+  transition:transform var(--quick) var(--ease),background var(--quick) var(--ease);
+}
+.bpc-clickable{cursor:pointer;}
+.bpc-clickable:hover{
+  background:color-mix(in srgb, var(--grey) 88%, var(--ink) 12%);
+}
+.bpc-clickable:active{transform:scale(0.98);}
+
+/* When a jump-to lands, the source voice bubble flashes briefly so the user
+   sees which voice the breakpoint belongs to. */
+.vbub-flash{
+  animation:vbub-flash 1200ms var(--ease);
+}
+@keyframes vbub-flash{
+  0%   {box-shadow:0 0 0 0 rgba(0,122,255,0);}
+  20%  {box-shadow:0 0 0 6px rgba(0,122,255,0.18);}
+  100% {box-shadow:0 0 0 0 rgba(0,122,255,0);}
+}
+.cluster.out .bpc{
+  border-radius:14px 14px 4px 14px;
+}
+.cluster.in .bpc{
+  border-radius:14px 14px 14px 4px;
+}
+.bpc-lbl{
+  font-size:11px;font-weight:500;
+  margin-bottom:4px;
+  display:flex;align-items:center;gap:5px;
+  color:var(--ink-2);
+}
+.bpc-txt{font-size:15px;line-height:1.45;letter-spacing:-0.1px;color:var(--ink);}
+
+.bpc-ref{
+  display:flex;align-items:center;gap:8px;
+  margin-top:8px;padding-top:8px;
+  border-top:1px solid rgba(0,0,0,0.10);
+  direction:ltr;
+}
+[data-dark] .bpc-ref{border-top-color:rgba(255,255,255,0.10);}
+
+.bpc-ref-bars{display:flex;align-items:center;gap:1.5px;height:14px;flex:1;}
+.bpc-ref-bar{width:2px;border-radius:99px;background:var(--ink-4);}
+.bpc-ref-bar.hi{background:var(--ink-2);}
+.bpc-ref-ts{font-size:11px;font-weight:500;white-space:nowrap;color:var(--ink-2);}
+
+/* ━━━ TYPING ━━━ */
+.typing-row{
+  display:flex;align-items:flex-end;gap:0;
+  padding-right:48px;padding-left:38px;
+  margin-bottom:8px;position:relative;
+}
+.t-av{
+  position:absolute;left:0;bottom:0;
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:500;
+  background:var(--grey);color:var(--ink-2);
+}
+.tbub{
+  background:var(--grey);
+  border-radius:18px 18px 18px 4px;
+  padding:14px 18px;
+  display:flex;gap:5px;align-items:center;
+  animation:bub 160ms var(--ease) both;
+}
+.dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--ink-3);
+  animation:dotup 1.4s ease-in-out infinite;
+}
+.dot:nth-child(2){animation-delay:.18s;}
+.dot:nth-child(3){animation-delay:.36s;}
+@keyframes dotup{
+  0%,55%,100%{transform:translateY(0);opacity:.4;}
+  27%{transform:translateY(-4px);opacity:1;}
+}
+
+/* ━━━ EMPTY STATES ━━━ */
+.conv-empty{
+  flex:1;
+}
+
+.empty{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;
+  color:var(--ink-3);text-align:center;padding:80px 2rem 90px;direction:rtl;
+}
+.e-ico{
+  width:60px;height:60px;border-radius:50%;
+  background:var(--grey);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:6px;
+  color:var(--ink-3);
+}
+.e-ttl{font-size:17px;font-weight:600;color:var(--ink-2);}
+.e-sub{font-size:14px;max-width:240px;line-height:1.5;color:var(--ink-3);}
+
+/* ━━━ INPUT BAR ━━━ */
+/* ━━━ INPUT BAR — floating, no background ━━━ */
+.ibar{
+  display:flex;align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  padding-bottom:calc(8px + env(safe-area-inset-bottom));
+  flex-shrink:0;direction:rtl;
+  /* float at the bottom of the chat panel */
+  position:absolute;left:0;right:0;bottom:0;
+  z-index:6;
+  background:transparent;
+}
+
+/* progressive blur backdrop — stack of 4 layers, each with stronger blur,
+   each masked to fade in from top. Result: sharp at top edge, heavy frost at bottom.
+   This sits BEHIND the input, capturing the chat that scrolls under it. */
+.ibar-bg{
+  position:absolute;left:0;right:0;bottom:0;
+  height:calc(86px + env(safe-area-inset-bottom));
+  z-index:5;
+  pointer-events:none;
+}
+.ibar-bg > div{
+  position:absolute;inset:0;
+}
+/* Layer 1: lightest blur, full coverage, just a hint */
+.ibar-bg .l1{
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  mask-image:linear-gradient(180deg, transparent 0%, #000 35%);
+  -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 35%);
+}
+/* Layer 2: medium */
+.ibar-bg .l2{
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  mask-image:linear-gradient(180deg, transparent 25%, #000 60%);
+  -webkit-mask-image:linear-gradient(180deg, transparent 25%, #000 60%);
+}
+/* Layer 3: stronger */
+.ibar-bg .l3{
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  mask-image:linear-gradient(180deg, transparent 50%, #000 80%);
+  -webkit-mask-image:linear-gradient(180deg, transparent 50%, #000 80%);
+}
+/* Layer 4: heaviest, only at the very bottom — combined with a soft tint of bg */
+.ibar-bg .l4{
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  background:color-mix(in srgb, var(--bg) 35%, transparent);
+  mask-image:linear-gradient(180deg, transparent 70%, #000 100%);
+  -webkit-mask-image:linear-gradient(180deg, transparent 70%, #000 100%);
+}
+
+.plus-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:color-mix(in srgb, var(--grey) 90%, transparent);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  color:var(--ink-2);
+  transition:background var(--quick) var(--ease);
+}
+.plus-btn:hover{background:var(--grey);}
+
+.ishell{
+  flex:1;display:flex;align-items:center;
+  background:color-mix(in srgb, var(--bg) 75%, transparent);
+  border:1px solid var(--hair);
+  border-radius:22px;
+  padding:6px 14px 6px 6px;
+  gap:6px;
+  direction:rtl;
+  min-height:38px;
+  position:relative;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:border-color var(--quick) var(--ease),background var(--quick) var(--ease);
+}
+.ishell:focus-within{
+  background:var(--bg);
+  border-color:var(--ink-4);
+}
+.ibox{
+  flex:1;background:none;border:none;outline:none;
+  font-size:16px;color:var(--ink);resize:none;
+  max-height:120px;line-height:1.4;direction:rtl;padding:3px 0;
+}
+.ibox::placeholder{color:var(--ink-3);}
+
+.mic-inline{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-3);flex-shrink:0;
+  transition:opacity var(--quick) var(--ease),width var(--quick) var(--ease);
+  overflow:hidden;
+}
+.ishell.has-text .mic-inline{
+  opacity:0;
+  width:0;
+  pointer-events:none;
+}
+
+/* send button — only when text. blue circle. */
+.send-btn{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--blue);
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;
+  transition:transform var(--quick) var(--ease),opacity var(--quick) var(--ease);
+  opacity:0;transform:scale(.6);pointer-events:none;
+  position:absolute;
+  left:6px;
+}
+.ishell.has-text .send-btn{
+  opacity:1;transform:scale(1);pointer-events:auto;
+}
+.send-btn:active{transform:scale(.88);}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   VOICE RECORDING UI
+   When .ishell.recording is set, the input pill transforms into a
+   recording surface. When .ishell.locked is set, the gestures swap to
+   hands-free controls. .cancelling adds a discard preview.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* While recording, hide the textarea + mic + plus button.
+   The recording surface paints over the pill. */
+.ishell.recording .ibox,
+.ishell.recording .mic-inline,
+.ishell.recording .send-btn{
+  visibility:hidden;
+}
+.ibar.recording-active .plus-btn{
+  opacity:0.4;pointer-events:none;
+}
+
+/* The recording surface — sits absolutely inside the pill */
+.rec-surface{
+  position:absolute;inset:0;
+  border-radius:inherit;
+  display:none;
+  align-items:center;
+  padding:0 14px 0 6px;
+  direction:rtl;
+  pointer-events:none;
+  overflow:hidden;
+}
+.ishell.recording .rec-surface{display:flex;}
+
+/* Red "live" pulsing dot */
+.rec-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:#FF3B30;
+  flex-shrink:0;margin-left:8px;
+  animation:rec-pulse 1.2s ease-in-out infinite;
+}
+@keyframes rec-pulse{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%    {opacity:0.45;transform:scale(0.85);}
+}
+
+/* Live duration counter */
+.rec-time{
+  font-size:14px;color:var(--ink);
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum";
+  flex-shrink:0;
+  margin-left:10px;
+  min-width:34px;
+}
+
+/* Live waveform — bars scrolling in from RTL-end */
+.rec-wave{
+  flex:1;
+  display:flex;align-items:center;
+  height:22px;
+  overflow:hidden;
+  gap:2px;
+  /* fade out on the LTR-end so older bars dissolve */
+  mask-image:linear-gradient(to right, transparent 0%, #000 12%);
+  -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 12%);
+}
+.rec-bar{
+  width:2.5px;
+  background:var(--ink-2);
+  border-radius:99px;
+  flex-shrink:0;
+  animation:rec-bar-in 200ms var(--ease) both;
+}
+@keyframes rec-bar-in{
+  from{transform:scaleY(0.2);opacity:0.4;}
+  to  {transform:scaleY(1);opacity:1;}
+}
+
+/* Slide-to-cancel hint — sits on LTR-end of pill */
+.rec-cancel{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--ink-3);
+  flex-shrink:0;
+  transition:transform var(--quick) var(--ease);
+}
+.rec-cancel-arrow{
+  display:inline-flex;
+  animation:rec-arrow 1.4s ease-in-out infinite;
+}
+@keyframes rec-arrow{
+  0%,100%{transform:translateX(0);opacity:0.5;}
+  50%    {transform:translateX(-4px);opacity:1;}
+}
+
+/* Cancelling state: the entire surface dims, hint says "release to cancel" */
+.ishell.cancelling .rec-surface{
+  background:rgba(255,59,48,0.08);
+}
+.ishell.cancelling .rec-bar{background:#FF3B30;}
+.ishell.cancelling .rec-cancel{color:#FF3B30;font-weight:600;}
+
+/* Mic button while recording — turns red, scales up */
+.mic-inline.recording-mic{
+  position:absolute;
+  bottom:7px;left:7px;
+  width:42px;height:42px;
+  background:var(--blue);
+  color:#fff;
+  z-index:10;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 200ms var(--ease),background 200ms var(--ease);
+  pointer-events:none;
+  /* finger position can offset this via JS (--lift, --slide) */
+  transform:translate(var(--rec-slide,0),var(--rec-lift,0)) scale(1.4);
+  box-shadow:0 4px 14px rgba(0,122,255,0.35);
+}
+.ishell.cancelling .mic-inline.recording-mic{
+  background:#FF3B30;
+  box-shadow:0 4px 14px rgba(255,59,48,0.35);
+}
+
+/* Lock indicator — appears above the mic when slide-up active */
+.rec-lock{
+  position:absolute;
+  bottom:62px;left:13px;
+  width:30px;
+  background:var(--bg);
+  border:1px solid var(--hair);
+  border-radius:18px;
+  padding:6px 0 4px;
+  display:none;flex-direction:column;align-items:center;gap:4px;
+  z-index:9;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  pointer-events:none;
+  animation:rec-lock-in 200ms var(--ease) both;
+}
+@keyframes rec-lock-in{
+  from{opacity:0;transform:translateY(8px);}
+  to  {opacity:1;transform:translateY(0);}
+}
+.ibar.recording-active .rec-lock{display:flex;}
+.ibar.recording-active.locked .rec-lock{display:none;}
+.ibar.recording-active.locking .rec-lock{
+  /* stronger when in lock zone */
+  background:var(--blue);border-color:var(--blue);color:#fff;
+  transform:scale(1.1) translateY(-4px);
+}
+.rec-lock-arrow{
+  font-size:11px;color:var(--ink-3);
+  animation:rec-arrow-up 1.4s ease-in-out infinite;
+}
+.ibar.recording-active.locking .rec-lock-arrow{color:#fff;}
+@keyframes rec-arrow-up{
+  0%,100%{transform:translateY(0);opacity:0.5;}
+  50%    {transform:translateY(-3px);opacity:1;}
+}
+
+/* LOCKED STATE — hands-free recording.
+   Replaces the input bar entirely with delete + waveform + send. */
+.ishell.locked .rec-surface{
+  /* re-style for locked: still shows time + waveform, no cancel hint */
+  padding:0 14px;
+}
+.ishell.locked .rec-cancel{display:none;}
+
+.rec-locked-controls{
+  display:none;
+}
+.ibar.recording-active.locked .rec-locked-controls{
+  display:flex;align-items:center;gap:8px;
+}
+.ibar.recording-active.locked .plus-btn{display:none;}
+.rec-trash,.rec-stop,.rec-send{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:transform var(--quick) var(--ease),background var(--quick) var(--ease);
+}
+.rec-trash{background:transparent;color:#FF3B30;}
+.rec-trash:hover{background:rgba(255,59,48,0.10);}
+.rec-trash:active{transform:scale(0.9);}
+.rec-stop{
+  background:var(--ink);color:var(--bg);
+}
+.rec-stop:active{transform:scale(0.9);}
+.rec-send{
+  background:var(--blue);color:#fff;
+  box-shadow:0 4px 12px rgba(0,122,255,0.3);
+}
+.rec-send:active{transform:scale(0.9);}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   REACTIONS (TAPBACK)
+   Long-press a text bubble or bpc card → popover with reaction picker.
+   Tap a reaction → it attaches to the bubble's corner.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* The picker — appended to body, absolutely positioned above the target */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   UNIFIED REACTION + ACTION POPOVER
+   One frosted card. Reactions row on top. Hairline divider.
+   Action list below. iMessage / WhatsApp pattern.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.rxn-popover{
+  position:fixed;
+  display:flex;flex-direction:column;
+  min-width:240px;
+  background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  border:1px solid var(--hair);
+  border-radius:18px;
+  box-shadow:0 10px 32px rgba(0,0,0,0.18),
+             0 1px 0 rgba(255,255,255,0.6) inset;
+  z-index:300;
+  opacity:0;
+  transform:translateY(6px) scale(0.92);
+  transition:opacity 180ms var(--ease),transform 220ms var(--ease);
+  pointer-events:none;
+  overflow:hidden;
+  direction:rtl;
+}
+[data-dark] .rxn-popover{
+  box-shadow:0 10px 32px rgba(0,0,0,0.55),
+             0 1px 0 rgba(255,255,255,0.06) inset;
+}
+.rxn-popover.on{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+
+/* Top zone — reactions row */
+.rxn-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:2px;
+  padding:6px 8px;
+  /* hairline below to separate from action list */
+}
+.rxn-row.has-actions{
+  border-bottom:0.5px solid var(--hair);
+}
+
+.rxn-btn{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;line-height:1;
+  transition:transform 160ms var(--ease),background 120ms var(--ease);
+  padding-bottom:1px;
+  flex-shrink:0;
+}
+.rxn-btn:hover{transform:scale(1.18);background:var(--tap);}
+.rxn-btn:active{transform:scale(0.92);}
+.rxn-btn.selected{background:color-mix(in srgb, var(--blue) 16%, transparent);}
+
+/* Bottom zone — action list */
+.rxn-actions{
+  display:flex;flex-direction:column;
+  /* row-by-row hairlines via item border-top */
+}
+
+.rxn-menu-item{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  width:100%;
+  padding:11px 16px;
+  font-size:15px;
+  color:var(--ink);
+  background:transparent;
+  text-align:right;
+  transition:background 80ms var(--ease);
+  letter-spacing:-0.1px;
+}
+.rxn-menu-item + .rxn-menu-item{
+  border-top:0.5px solid var(--hair);
+}
+.rxn-menu-item:hover{background:var(--tap);}
+.rxn-menu-item:active{background:var(--tap-2);}
+.rxn-menu-item.destructive{color:#FF3B30;}
+.rxn-menu-item-icon{
+  display:flex;align-items:center;justify-content:center;
+  width:18px;height:18px;
+  flex-shrink:0;color:inherit;
+  opacity:0.85;
+}
+
+/* "ویرایش شده" indicator — same frosted-glass language as the day-sep capsule,
+   just smaller. Sits next to the timestamp on outgoing bubbles, or as its own
+   tiny pill below incoming bubbles. Works in both light and dark. */
+.bubble-edited{
+  display:inline-flex;align-items:center;
+  font-size:10px;font-weight:500;
+  color:var(--ink-2);
+  padding:2px 8px;
+  border-radius:99px;
+  background:rgba(245,245,247,0.72);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  backdrop-filter:blur(14px) saturate(160%);
+  border:.5px solid rgba(0,0,0,0.05);
+  letter-spacing:.1px;
+  margin-right:2px;
+  /* tighten line-height so it doesn't push the meta row taller */
+  line-height:1.4;
+}
+[data-dark] .bubble-edited{
+  background:rgba(44,44,46,0.62);
+  border-color:rgba(255,255,255,0.08);
+  color:var(--ink-2);
+}
+
+/* ━━━ EDIT MODE — banner is part of the input bar, fused with the pill ━━━
+   When editing, the .ibar becomes a vertical stack:
+     1) a banner row (accent stripe • label • preview • close X)
+     2) the existing input pill, with its top edge shared with the banner
+   Together they read as ONE component. */
+.ibar.editing-mode{
+  flex-direction:column;
+  align-items:stretch;
+  gap:0;
+  padding:8px 12px;
+  padding-bottom:calc(8px + env(safe-area-inset-bottom));
+}
+.ibar.editing-mode .edit-row{
+  display:flex;align-items:stretch;gap:8px;
+}
+.ibar:not(.editing-mode) .edit-row{display:contents;}
+
+/* The banner — a slim panel sitting above the input pill, fused with it */
+.edit-banner{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px 8px 12px;
+  margin-bottom:6px;
+  background:color-mix(in srgb, var(--blue) 10%, var(--bg));
+  border:1px solid color-mix(in srgb, var(--blue) 26%, var(--hair));
+  border-radius:14px;
+  direction:rtl;
+  position:relative;overflow:hidden;
+  animation:edit-banner-in 220ms cubic-bezier(0.34,1.56,0.64,1) both;
+  /* The banner shares the bottom edge with the pill below — flatten the
+     bottom corners and overlap by 1px so the borders kiss seamlessly. */
+  border-bottom-left-radius:6px;
+  border-bottom-right-radius:6px;
+  margin-bottom:-1px;
+}
+.ibar.editing-mode .ishell{
+  border-top-left-radius:6px;
+  border-top-right-radius:6px;
+  border-color:color-mix(in srgb, var(--blue) 26%, var(--hair));
+}
+.ibar.editing-mode .ishell:focus-within{
+  border-color:var(--blue);
+}
+[data-dark] .edit-banner{
+  background:color-mix(in srgb, var(--blue) 16%, var(--bg-2));
+  border-color:color-mix(in srgb, var(--blue) 32%, var(--hair));
+}
+@keyframes edit-banner-in{
+  from{opacity:0;transform:translateY(6px) scaleY(.85);transform-origin:bottom center;}
+  to  {opacity:1;transform:translateY(0)   scaleY(1);}
+}
+
+/* Accent stripe on the right (RTL leading) edge — communicates "edit" mode */
+.edit-banner::before{
+  content:'';position:absolute;
+  top:8px;bottom:8px;right:0;
+  width:3px;border-radius:0 99px 99px 0;
+  background:var(--blue);
+}
+
+.edit-banner-ico{
+  width:28px;height:28px;border-radius:50%;
+  background:color-mix(in srgb, var(--blue) 14%, transparent);
+  color:var(--blue);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+[data-dark] .edit-banner-ico{
+  background:color-mix(in srgb, var(--blue) 22%, transparent);
+}
+.edit-banner-meta{
+  flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;
+}
+.edit-banner-lbl{
+  font-size:11.5px;font-weight:600;color:var(--blue);
+  letter-spacing:.1px;line-height:1.15;
+  display:flex;align-items:center;gap:4px;
+}
+.edit-banner-prev{
+  font-size:13px;color:var(--ink-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-top:2px;line-height:1.3;direction:rtl;
+}
+.edit-banner-cancel{
+  width:28px;height:28px;border-radius:50%;
+  background:color-mix(in srgb, var(--ink) 6%, transparent);
+  color:var(--ink-2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:background var(--quick) var(--ease),color var(--quick) var(--ease),transform var(--quick) var(--ease);
+}
+.edit-banner-cancel:hover{
+  background:color-mix(in srgb, var(--ink) 10%, transparent);
+  color:var(--ink);
+}
+.edit-banner-cancel:active{transform:scale(.9);}
+[data-dark] .edit-banner-cancel{
+  background:color-mix(in srgb, var(--ink) 10%, transparent);
+}
+[data-dark] .edit-banner-cancel:hover{
+  background:color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+/* Faint blue tint on the input pill while editing — subtle, just enough
+   to signal "your edits go here" without screaming */
+.ishell.editing{
+  background:color-mix(in srgb, var(--blue) 4%, var(--bg));
+}
+
+/* Undo-delete toast — slides up from the bottom */
+.undo-toast{
+  position:fixed;
+  bottom:90px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--bg);
+  border-radius:99px;
+  padding:10px 8px 10px 18px;
+  display:flex;align-items:center;gap:12px;
+  font-size:14px;
+  z-index:250;
+  box-shadow:0 8px 24px rgba(0,0,0,0.25);
+  opacity:0;
+  transition:opacity 200ms var(--ease),transform 280ms var(--ease);
+  pointer-events:none;
+  direction:rtl;
+}
+.undo-toast.on{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+  pointer-events:auto;
+}
+.undo-toast-action{
+  background:rgba(255,255,255,0.18);
+  color:#fff;
+  border-radius:99px;
+  padding:5px 14px;
+  font-size:13px;font-weight:600;
+}
+.undo-toast-action:hover{background:rgba(255,255,255,0.28);}
+[data-dark] .undo-toast{background:var(--grey);color:var(--ink);}
+[data-dark] .undo-toast-action{background:rgba(255,255,255,0.10);color:var(--ink);}
+
+/* Applied reaction — sits on the bubble's outer corner.
+   Sized to feel like a real chip (not a tiny dot). The chip uses the
+   bubble's color family — blue for outgoing, grey for incoming —
+   so it reads as "from that bubble". A ring in the chat-bg color
+   cuts it cleanly off the bubble edge. */
+.rxn-applied{
+  position:absolute;
+  /* sit higher above the bubble so it doesn't cover any text */
+  top:-16px;
+  min-width:32px;height:32px;
+  padding:0 8px;
+  border-radius:99px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:18px;line-height:1;       /* up from 14px — emoji reads at a glance */
+  z-index:3;
+  /* 2.5px ring of chat-bg between bubble and chip = clean cut-out */
+  box-shadow:
+    0 0 0 2.5px var(--bg),
+    0 1px 4px rgba(0,0,0,0.10);
+  /* enter animation — pops in from scale 0 with a slight overshoot */
+  animation:rxn-pop 280ms cubic-bezier(0.34,1.56,0.64,1) both;
+  cursor:pointer;
+  -webkit-user-select:none;user-select:none;
+  transition:transform 140ms var(--ease);
+}
+.rxn-applied:active{transform:scale(0.92);}
+@keyframes rxn-pop{
+  0%   {transform:scale(0);}
+  60%  {transform:scale(1.18);}
+  100% {transform:scale(1);}
+}
+
+/* OUT bubble (blue) → chip on the LEFT corner, blue tinted */
+.cluster.out .rxn-applied{
+  left:-12px;
+  background:linear-gradient(180deg,var(--blue-hi) 0%, var(--blue) 100%);
+}
+/* IN bubble (grey) → chip on the RIGHT corner, grey tinted */
+.cluster.in .rxn-applied{
+  right:-12px;
+  background:var(--grey);
+}
+/* dark mode: lift the in-chip slightly off the bubble grey for contrast */
+[data-dark] .cluster.in .rxn-applied{background:#3a3a3d;}
+
+/* When a bubble has a reaction, give the cluster a bit of extra top margin
+   so the chip doesn't bump into the previous bubble */
+.cluster.out .bubble:has(> .rxn-applied),
+.cluster.in  .bubble:has(> .rxn-applied){
+  margin-top:10px;
+}
+
+/* Bubble dimming when picker is active for a different bubble.
+   Visually the focused bubble pops, others recede. */
+.msgs.rxn-active .bubble:not(.rxn-target),
+.msgs.rxn-active .bpc:not(.rxn-target),
+.msgs.rxn-active .vbub{
+  opacity:0.55;
+  transition:opacity 200ms var(--ease);
+}
+
+/* Pulse glow on the targeted bubble */
+.bubble.rxn-target,
+.bpc.rxn-target{
+  position:relative;z-index:2;
+}
+
+
+/* ━━━ BOTTOM SHEET ━━━ */
+.scrim{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.4);
+  z-index:200;
+  display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;
+  transition:opacity 280ms var(--ease);
+}
+.scrim.on{opacity:1;pointer-events:all;}
+
+.sheet{
+  width:100%;max-width:540px;margin:0 auto;
+  background:var(--bg);
+  border-radius:18px 18px 0 0;
+  padding:0 16px calc(16px + env(safe-area-inset-bottom));
+  transform:translateY(110%);
+  transition:transform 360ms var(--ease);
+  direction:rtl;
+}
+.scrim.on .sheet{transform:translateY(0);}
+
+.sh-handle{
+  width:36px;height:5px;border-radius:99px;background:var(--ink-4);
+  margin:8px auto 16px;
+}
+.sh-ttl{
+  font-size:17px;font-weight:600;text-align:center;
+  margin-bottom:3px;letter-spacing:-0.2px;
+}
+.sh-sub{
+  font-size:13px;color:var(--ink-2);text-align:center;
+  margin-bottom:16px;
+}
+.sh-prev{
+  display:flex;align-items:center;gap:10px;direction:ltr;
+  background:var(--grey);
+  border-radius:12px;padding:10px 14px;margin-bottom:12px;
+}
+.sh-wv{display:flex;align-items:center;gap:2.5px;height:22px;flex:1;}
+.sbar{width:2px;border-radius:99px;background:var(--ink-4);}
+.sbar.hi{background:var(--ink);}
+
+.sh-ta{
+  width:100%;
+  background:var(--grey);
+  border:none;
+  border-radius:12px;padding:12px 14px;
+  font-size:16px;color:var(--ink);resize:none;outline:none;
+  direction:rtl;line-height:1.55;min-height:90px;
+  font-family:var(--fa);
+}
+.sh-ta::placeholder{color:var(--ink-3);}
+
+.sh-acts{display:flex;gap:8px;margin-top:14px;direction:rtl;}
+.sact{
+  flex:1;padding:13px;border-radius:12px;
+  font-size:16px;font-weight:600;
+  transition:opacity var(--quick),background var(--quick);
+}
+.sact:active{opacity:.7;}
+.sact.cancel{background:var(--grey);color:var(--ink);}
+.sact.confirm{background:var(--blue);color:#fff;}
+
+.sh-play{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;cursor:pointer;
+}
+.sh-play .ptri{
+  border-color:transparent transparent transparent var(--ink);
+  margin-left:1px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms!important;
+    transition-duration:0.01ms!important;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ADDITIONS — role-aware UI, layered on without disturbing the
+   original aesthetic. Every component below follows the existing
+   pattern (radii, hairlines, .crow row anatomy, .sh sheet, etc).
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* DND pip on avatars — same geometry as the .av.on dot, amber, with a tiny
+   minus-line glyph to read as "do not disturb" at small sizes. */
+.av.dnd::after{
+  content:'';position:absolute;bottom:1px;right:1px;
+  width:11px;height:11px;border-radius:50%;
+  background:#FF9F0A;
+  border:2px solid var(--bg-2);
+  background-image:linear-gradient(0deg, transparent 40%, #fff 40%, #fff 60%, transparent 60%);
+}
+@media(max-width:760px){.av.dnd::after{border-color:var(--bg);}}
+
+/* Same pip on the mobile small avatar inside the chat header */
+.ch-mob-av.dnd::after,.ch-mob-av.on::after{
+  content:'';position:absolute;bottom:-1px;right:-1px;
+  width:9px;height:9px;border-radius:50%;
+  border:2px solid var(--bg);
+}
+.ch-mob-av.on::after{background:#34C759;}
+.ch-mob-av.dnd::after{background:#FF9F0A;background-image:linear-gradient(0deg, transparent 40%, #fff 40%, #fff 60%, transparent 60%);}
+
+/* DND inline chip used in the chat subtitle */
+.dnd-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12.5px;font-weight:500;
+  color:#C97500;
+}
+[data-dark] .dnd-chip{color:#FFB546;}
+.dnd-chip::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* ───── Sidebar bottom: the current user strip ─────
+   Same row anatomy as a .crow so the eye doesn't have to learn a new
+   component. Sits below the conv list, with a hairline above it. */
+.sb-me{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 20px;
+  border-top:1px solid var(--hair);
+  cursor:pointer;flex-shrink:0;
+  transition:background var(--quick) var(--ease);
+}
+.sb-me:hover{background:var(--tap);}
+.sb-me .av{width:38px;height:38px;font-size:14px;}
+.me-meta{flex:1;min-width:0;}
+.me-name{
+  font-size:14.5px;font-weight:500;color:var(--ink);letter-spacing:-0.1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.me-role{font-size:12px;color:var(--ink-3);margin-top:1px;}
+.sb-me .ib{width:32px;height:32px;color:var(--ink-3);}
+.sb-me .ib:hover{color:var(--ink);}
+
+/* ───── Sender label above first incoming bubble in groups/channels ───── */
+.sender-lbl{
+  font-size:11.5px;color:var(--ink-2);
+  margin-right:4px;margin-bottom:2px;
+  direction:rtl;
+}
+
+/* ───── Reply preview inside bubble ─────
+   Tiny quoted block before the body, with a coloured leading edge. */
+.reply-prev{
+  margin:-2px -6px 6px;
+  padding:6px 10px;
+  border-inline-start:3px solid;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:13px;
+  line-height:1.3;
+}
+.cluster.out .reply-prev{
+  border-color:rgba(255,255,255,0.75);
+  background:rgba(255,255,255,0.16);
+}
+.cluster.in .reply-prev{
+  border-color:var(--blue);
+  background:color-mix(in srgb, var(--blue) 10%, transparent);
+}
+.reply-author{font-weight:600;font-size:12px;}
+.cluster.out .reply-author{color:#fff;opacity:.95;}
+.cluster.in  .reply-author{color:var(--blue);}
+.reply-snippet{
+  font-size:12.5px;opacity:.85;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:260px;margin-top:1px;
+}
+
+/* Reply context bar above the composer */
+.reply-ctx{
+  position:absolute;left:12px;right:12px;
+  bottom:calc(58px + env(safe-area-inset-bottom));
+  z-index:6;direction:rtl;
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--hair);
+  border-radius:12px;
+}
+.rc-bar{width:3px;align-self:stretch;background:var(--blue);border-radius:99px;}
+.rc-text{flex:1;min-width:0;}
+.rc-author{font-size:12px;font-weight:600;color:var(--blue);}
+.rc-snippet{font-size:12.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rc-close{
+  width:24px;height:24px;border-radius:99px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-3);transition:background var(--quick);
+}
+.rc-close:hover{background:var(--tap);}
+
+/* ───── Media bubble (image / video) ─────
+   The bubble IS the media. No padding. Caption goes as a separate
+   text bubble below in the same cluster. */
+.media-bub{
+  display:block;overflow:hidden;
+  border-radius:18px;
+  max-width:min(74vw,300px);
+  cursor:pointer;
+  position:relative;
+  animation:bub 160ms var(--ease) both;
+  background:var(--grey);
+  line-height:0;
+}
+.cluster.out > div:last-child .media-bub{border-radius:18px 18px 4px 18px;}
+.cluster.in  > div:last-child .media-bub{border-radius:18px 18px 18px 4px;}
+.media-bub img,.media-bub video{
+  display:block;width:100%;height:auto;
+  max-height:360px;object-fit:cover;
+}
+/* Placeholder for the prototype — soft photographic gradient with NO text */
+.media-bub .ph{width:240px;height:300px;}
+/* The .ph gradient classes work anywhere; sizing is per-context */
+.ph.ph-sheet{background:linear-gradient(135deg,#9CB5C9 0%, #5E7B92 100%);}
+.ph.ph-photo{background:linear-gradient(135deg,#D8B496 0%, #946A4E 100%);}
+.ph.ph-video{background:linear-gradient(135deg,#2a2a2c 0%, #0e0e10 100%);}
+.media-bub .vid-play{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:54px;height:54px;border-radius:50%;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+}
+.media-bub .vid-dur{
+  position:absolute;bottom:8px;inset-inline-start:10px;
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11.5px;color:#fff;font-weight:500;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  padding:3px 8px;border-radius:99px;line-height:1;
+}
+.media-bub .vid-dur svg{width:11px;height:11px;}
+
+/* ───── Document bubble ─────
+   Same shape language as the regular bubble but content is a row:
+   small icon + name/size. Caption (if any) is a separate text bubble. */
+.filebub{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;
+  border-radius:18px;
+  direction:rtl;
+  min-width:200px;max-width:min(74vw,320px);
+  cursor:pointer;
+  animation:bub 160ms var(--ease) both;
+}
+.cluster.out .filebub{
+  background:linear-gradient(180deg,var(--blue-hi) 0%, var(--blue) 100%);
+  color:#fff;
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+}
+.cluster.out > div:last-child .filebub{border-radius:18px 18px 4px 18px;}
+.cluster.in .filebub{
+  background:color-mix(in srgb, var(--grey) 88%, transparent);
+  color:var(--ink);
+  backdrop-filter:blur(10px) saturate(140%);
+  -webkit-backdrop-filter:blur(10px) saturate(140%);
+}
+.cluster.in > div:last-child .filebub{border-radius:18px 18px 18px 4px;}
+.file-ico{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.cluster.out .file-ico{background:rgba(255,255,255,0.22);}
+.cluster.in  .file-ico{background:rgba(0,0,0,0.06);}
+[data-dark] .cluster.in .file-ico{background:rgba(255,255,255,0.08);}
+.file-meta{display:flex;flex-direction:column;min-width:0;gap:1px;}
+.file-name{
+  font-size:14.5px;font-weight:500;line-height:1.3;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;
+  letter-spacing:-0.1px;
+}
+.file-size{font-size:12px;line-height:1.3;direction:ltr;text-align:end;unicode-bidi:isolate;}
+.cluster.out .file-size{color:rgba(255,255,255,0.75);}
+.cluster.in  .file-size{color:var(--ink-2);}
+
+/* ───── Contact card bubble ─────
+   Vertical layout: avatar + name on top, hairline, "شروع گفتگو" CTA.
+   Same bubble shape language as everything else. */
+.cc-bub{
+  display:flex;flex-direction:column;
+  border-radius:18px;
+  direction:rtl;
+  min-width:240px;max-width:min(74vw,300px);
+  cursor:pointer;
+  overflow:hidden;
+  animation:bub 160ms var(--ease) both;
+}
+.cluster.out .cc-bub{
+  background:linear-gradient(180deg,var(--blue-hi) 0%, var(--blue) 100%);
+  color:#fff;
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+}
+.cluster.out > div:last-child .cc-bub{border-radius:18px 18px 4px 18px;}
+.cluster.in .cc-bub{
+  background:color-mix(in srgb, var(--grey) 88%, transparent);
+  color:var(--ink);
+  backdrop-filter:blur(10px) saturate(140%);
+  -webkit-backdrop-filter:blur(10px) saturate(140%);
+}
+.cluster.in > div:last-child .cc-bub{border-radius:18px 18px 18px 4px;}
+.cc-row{display:flex;align-items:center;gap:12px;padding:12px 14px 10px;}
+.cc-row .av{
+  width:42px;height:42px;font-size:15px;
+  background:rgba(0,0,0,0.06);color:var(--ink-2);
+}
+.cluster.out .cc-row .av{background:rgba(255,255,255,0.18);color:#fff;}
+[data-dark] .cluster.in .cc-row .av{background:rgba(255,255,255,0.08);}
+.cc-name{font-size:15px;font-weight:600;line-height:1.3;letter-spacing:-0.1px;}
+.cc-sub{font-size:12px;line-height:1.3;margin-top:1px;opacity:.75;}
+.cc-sep{height:.5px;background:rgba(255,255,255,0.2);}
+.cluster.in .cc-sep{background:rgba(0,0,0,0.08);}
+[data-dark] .cluster.in .cc-sep{background:rgba(255,255,255,0.08);}
+.cc-cta{
+  padding:9px 14px;text-align:center;
+  font-size:14px;font-weight:600;letter-spacing:-0.1px;
+}
+.cluster.out .cc-cta{color:#fff;}
+.cluster.in  .cc-cta{color:var(--blue);}
+
+/* ───── Channel read-only footer ─────
+   Replaces the input bar when current user can't post here. */
+.ch-readonly{
+  position:absolute;left:0;right:0;bottom:0;z-index:6;
+  text-align:center;
+  font-size:13px;color:var(--ink-3);
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb, var(--bg) 75%, transparent);
+  backdrop-filter:blur(18px) saturate(180%);
+  -webkit-backdrop-filter:blur(18px) saturate(180%);
+  border-top:.5px solid var(--hair);
+  display:flex;align-items:center;justify-content:center;gap:8px;direction:rtl;
+}
+.ch-readonly svg{width:14px;height:14px;flex-shrink:0;}
+
+/* ───── Reaction chip refinements ─────
+   Original only ever showed ONE reaction. We now aggregate up to two
+   distinct emoji + a count. Tighten the padding and font so multi-chip
+   still feels svelte. */
+.rxn-applied{font-size:15px;min-width:30px;height:28px;padding:0 8px;gap:3px;}
+.rxn-applied .rc{font-size:11.5px;font-weight:600;}
+.cluster.out .rxn-applied{color:#fff;}
+.cluster.out .rxn-applied .rc{color:rgba(255,255,255,0.92);}
+.cluster.in  .rxn-applied{color:var(--ink);}
+.cluster.in  .rxn-applied .rc{color:var(--ink-2);}
+.rxn-applied.mine{box-shadow:0 0 0 2.5px var(--bg), 0 0 0 4px var(--blue), 0 1px 4px rgba(0,0,0,0.10);}
+
+/* Apply margin-top when these other bubble types have a reaction too */
+.cluster.out .vbub:has(> .rxn-applied),
+.cluster.out .filebub:has(> .rxn-applied),
+.cluster.out .media-bub:has(> .rxn-applied),
+.cluster.out .cc-bub:has(> .rxn-applied),
+.cluster.in  .vbub:has(> .rxn-applied),
+.cluster.in  .filebub:has(> .rxn-applied),
+.cluster.in  .media-bub:has(> .rxn-applied),
+.cluster.in  .cc-bub:has(> .rxn-applied){
+  margin-top:10px;
+}
+.msgs.rxn-active .vbub:not(.rxn-target),
+.msgs.rxn-active .media-bub:not(.rxn-target),
+.msgs.rxn-active .filebub:not(.rxn-target),
+.msgs.rxn-active .cc-bub:not(.rxn-target){
+  opacity:0.55;transition:opacity 200ms var(--ease);
+}
+
+/* ───── Member list / pick list in sheets ─────
+   Reuses .crow exactly. Adds a tag slot on the trailing edge for
+   "شما" / "سازنده" labels and a check circle for multi-select. */
+.member-list{padding:0;}
+.member-list .crow{padding:10px 4px;border-radius:10px;}
+.member-list .crow.selected{background:color-mix(in srgb, var(--blue) 10%, transparent);}
+.member-tag{font-size:12px;color:var(--ink-3);flex-shrink:0;letter-spacing:-0.1px;}
+.member-tag.you{color:var(--blue);}
+.upick-check{
+  width:22px;height:22px;border-radius:50%;
+  border:1.5px solid var(--ink-4);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all var(--quick) var(--ease);
+}
+.crow.selected .upick-check{background:var(--blue);border-color:var(--blue);}
+.crow.selected .upick-check::after{
+  content:'';width:5px;height:9px;
+  border:solid #fff;border-width:0 2px 2px 0;
+  transform:rotate(45deg);margin-bottom:2px;
+}
+
+/* Sheet section label (small uppercase hint) */
+.sec-lbl{
+  font-size:13px;font-weight:600;color:var(--ink-2);
+  margin:14px 4px 8px;direction:rtl;
+  letter-spacing:-0.1px;
+}
+
+/* Detail header (profile or group/channel head) */
+.detail-head{
+  display:flex;flex-direction:column;align-items:center;
+  gap:8px;padding:8px 0 16px;
+}
+.detail-head .av{width:84px;height:84px;font-size:30px;}
+.detail-head .d-name{font-size:20px;font-weight:600;letter-spacing:-0.2px;}
+.detail-head .d-sub{font-size:13.5px;color:var(--ink-2);text-align:center;line-height:1.5;}
+
+/* Settings: grouped rows block with hairline dividers between */
+.set-group{
+  border:1px solid var(--hair);
+  border-radius:12px;
+  overflow:hidden;
+  background:color-mix(in srgb, var(--bg-2) 50%, transparent);
+}
+.set-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:11px 14px;direction:rtl;
+}
+.set-row + .set-row{border-top:.5px solid var(--hair);}
+.set-row .label{font-size:15px;letter-spacing:-0.1px;}
+.set-row .desc{font-size:12.5px;color:var(--ink-3);margin-top:1px;line-height:1.3;}
+
+/* Theme picker — two-button segmented control */
+.theme-pick{
+  display:inline-flex;background:var(--grey);
+  border-radius:10px;padding:2px;gap:2px;
+}
+.theme-pick button{
+  padding:6px 12px;border-radius:8px;
+  font-size:13px;color:var(--ink-2);font-weight:500;
+  display:flex;align-items:center;gap:5px;
+  transition:background var(--quick) var(--ease),color var(--quick) var(--ease);
+}
+.theme-pick button.active{background:var(--bg);color:var(--ink);}
+[data-dark] .theme-pick button.active{background:#3a3a3d;}
+.theme-pick svg{width:13px;height:13px;}
+
+/* Background tile grid — coupled to active theme */
+.bg-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+}
+.bg-tile{
+  aspect-ratio:1;border-radius:12px;
+  cursor:pointer;position:relative;
+  border:1.5px solid var(--hair);
+  transition:transform var(--quick) var(--ease),border-color var(--quick) var(--ease);
+}
+.bg-tile:hover{transform:scale(1.05);}
+.bg-tile.selected{border-color:var(--blue);border-width:2px;}
+.bg-tile.selected::after{
+  content:'';position:absolute;top:5px;inset-inline-end:5px;
+  width:18px;height:18px;border-radius:50%;background:var(--blue);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+  background-repeat:no-repeat;background-position:center;
+}
+
+/* iOS switch */
+.sw{
+  position:relative;width:46px;height:28px;
+  background:var(--ink-4);border-radius:99px;cursor:pointer;
+  transition:background 240ms var(--ease);flex-shrink:0;
+}
+.sw::after{
+  content:'';position:absolute;top:2px;inset-inline-start:2px;
+  width:24px;height:24px;background:#fff;border-radius:50%;
+  transition:transform 240ms var(--ease);
+  box-shadow:0 2px 4px rgba(0,0,0,0.18);
+}
+.sw.on{background:#34C759;}
+[dir="rtl"] .sw.on::after{transform:translateX(-18px);}
+
+/* ───── Media viewer (image / video full-screen) ───── */
+.viewer{
+  position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,0.96);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 240ms var(--ease);
+}
+.viewer.on{opacity:1;pointer-events:auto;}
+.viewer .vw-content{
+  max-width:94vw;max-height:84vh;
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  line-height:0;
+}
+.viewer .vw-content > .ph{width:min(94vw,640px);height:min(72vh,720px);}
+.viewer .vbox{
+  width:min(86vw,720px);height:min(56vh,540px);
+  background:#000;display:flex;align-items:center;justify-content:center;
+  border-radius:14px;
+}
+.vw-bar{
+  position:absolute;top:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;direction:rtl;
+  background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,transparent 100%);
+  color:#fff;
+}
+@supports(padding-top:env(safe-area-inset-top)){
+  .vw-bar{padding-top:calc(14px + env(safe-area-inset-top));}
+}
+.vw-meta{font-size:14px;font-weight:500;text-align:start;}
+.vw-meta .vw-sub{font-size:12px;opacity:0.7;margin-top:2px;direction:ltr;text-align:end;unicode-bidi:isolate;}
+.vw-close{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,0.16);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+}
+
+/* ───── Toast ───── */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:rgba(0,0,0,0.82);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  color:#fff;padding:9px 18px;border-radius:99px;
+  font-size:13.5px;font-weight:500;
+  z-index:500;opacity:0;pointer-events:none;
+  transition:opacity 240ms var(--ease),transform 240ms var(--ease);
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+[data-dark] .toast{background:rgba(255,255,255,0.92);color:#000;}
+
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+
+<div class="bg-canvas" id="bgCanvas"></div>
+
+<div class="app">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sb">
+    <div class="sb-top">
+      <div class="sb-row">
+        <span class="sb-title">پیام‌ها</span>
+        <button class="ib" id="newConvBtn" title="گفتگوی جدید">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="search">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M9.5 9.5L12 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        <input id="searchInput" type="text" placeholder="جستجو…">
+      </div>
+    </div>
+    <div class="clist" id="clist"></div>
+    <div class="sb-me" id="meStrip">
+      <div class="av" id="meAv">م ح</div>
+      <div class="me-meta">
+        <div class="me-name" id="meName">مریم حسینی</div>
+        <div class="me-role" id="meRole">معلم</div>
+      </div>
+      <button class="ib" id="meSettings" title="تنظیمات">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══ CHAT ══ -->
+  <div class="chat" id="chat">
+    <div class="empty">
+      <div class="e-ico">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M20 14a2 2 0 01-2 2H6l-4 4V4a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="e-ttl">یک گفت‌وگو انتخاب کنید</div>
+      <div class="e-sub">پیام‌ها و فایل‌های صوتی هنرجویانتان اینجا دیده می‌شود</div>
+    </div>
+  </div>
+</div>
+
+<!-- Reaction popover (reusing the original CSS) -->
+<div class="rxn-popover" id="rxnPopover"></div>
+
+<!-- Scrim + sheet for modals -->
+<div class="scrim" id="scrim"><div class="sheet" id="sheet"></div></div>
+
+<!-- Media viewer -->
+<div class="viewer" id="viewer"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Hidden file input -->
+<input type="file" id="fileInput" class="hidden" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.txt">
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   HELPERS — kept compact, copied from the original where relevant
+════════════════════════════════════════════════════════════════ */
+function initials(name){
+  const parts = String(name||'').trim().split(/\s+/);
+  if(parts.length === 1) return parts[0][0] || '?';
+  return (parts[0][0]||'') + (parts[1][0]||'');
+}
+function esc(v){
+  if(v === null || v === undefined) return '';
+  return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/`/g,'&#96;');
+}
+const FA_DIGITS = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+function toFa(s){ return String(s).replace(/[0-9]/g, d => FA_DIGITS[+d]); }
+function formatTime(iso){
+  if(!iso) return '';
+  const d = new Date(iso), now = new Date();
+  if(d.toDateString() === now.toDateString()){
+    return toFa(`${d.getHours()}:${d.getMinutes().toString().padStart(2,'0')}`);
+  }
+  const y = new Date(now); y.setDate(now.getDate()-1);
+  if(d.toDateString() === y.toDateString()) return 'دیروز';
+  const days = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
+  if(now - d < 7*24*60*60*1000) return days[d.getDay()];
+  return toFa(`${d.getMonth()+1}/${d.getDate()}`);
+}
+function fmt(s){
+  const m = Math.floor(s/60), ss = Math.round(s)%60;
+  return toFa(`${m}:${ss.toString().padStart(2,'0')}`);
+}
+function fmtBytes(b){
+  if(b<1024) return toFa(b)+' B';
+  if(b<1048576) return toFa((b/1024).toFixed(1))+' KB';
+  if(b<1073741824) return toFa((b/1048576).toFixed(1))+' MB';
+  return toFa((b/1073741824).toFixed(2))+' GB';
+}
+function genWave(n){
+  const out = [];
+  for(let i=0;i<n;i++){
+    const v = Math.abs(Math.sin(i*0.47+1.7)*0.55 + Math.sin(i*1.1+0.3)*0.25 + (Math.random()-0.5)*0.2);
+    out.push(Math.max(0.16, Math.min(1, v + 0.22)));
+  }
+  return out;
+}
+
+const $ = s => document.querySelector(s);
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast._t); toast._t = setTimeout(()=>t.classList.remove('on'), 2000);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DATA
+════════════════════════════════════════════════════════════════ */
+const ROLE_FA = { admin:'مدیر', staff:'پرسنل', teacher:'معلم', student:'هنرجو' };
+const RXN = { heart:'❤️', thumbsup:'👍', thumbsdown:'👎', haha:'😂', emphasize:'‼️', question:'❓' };
+
+const BACKGROUNDS = {
+  light: [
+    { id:'def',   cls:'',          name:'پیش‌فرض', tile:'background:#ffffff;' },
+    { id:'paper', cls:'l-paper',   name:'کاغذ',    tile:'background:linear-gradient(180deg,#fbfaf7,#f3efe8);' },
+    { id:'linen', cls:'l-linen',   name:'پارچه',   tile:'background:linear-gradient(180deg,#f5ecde,#e6d8be);' },
+    { id:'mist',  cls:'l-mist',    name:'مه',      tile:'background:linear-gradient(160deg,#e8eef4,#cfd9e4);' },
+    { id:'sand',  cls:'l-sand',    name:'شن',      tile:'background:linear-gradient(160deg,#f3ead8,#dfcfae);' },
+  ],
+  dark: [
+    { id:'def',      cls:'',           name:'پیش‌فرض', tile:'background:#000;' },
+    { id:'graphite', cls:'d-graphite', name:'گرافیت',  tile:'background:linear-gradient(180deg,#16171a,#0a0a0c);' },
+    { id:'midnight', cls:'d-midnight', name:'نیمه‌شب', tile:'background:linear-gradient(180deg,#0a1730,#040818);' },
+    { id:'velvet',   cls:'d-velvet',   name:'مخمل',    tile:'background:linear-gradient(160deg,#1f0e26,#10060f);' },
+    { id:'forest',   cls:'d-forest',   name:'جنگل',    tile:'background:linear-gradient(160deg,#0b1f1a,#04100c);' },
+  ]
+};
+
+const users = {
+  1: { id:1, role:'admin',   name:'مدیر سیستم',   dnd:false },
+  2: { id:2, role:'staff',   name:'علی رضایی',     dnd:false, online:true },
+  3: { id:3, role:'teacher', name:'مریم حسینی',    dnd:false, online:true },
+  4: { id:4, role:'teacher', name:'رضا کریمی',     dnd:true, dndMsg:'در کلاس هستم' },
+  5: { id:5, role:'student', name:'سارا احمدی',    dnd:false, online:true },
+  6: { id:6, role:'student', name:'آرمان مرادی',   dnd:false },
+  7: { id:7, role:'student', name:'نیلوفر صادقی',  dnd:false },
+  8: { id:8, role:'teacher', name:'پدرام نوری',    dnd:false, online:true },
+};
+
+const teacherStudents = { 3:[5,6], 4:[7], 8:[] };
+
+let ME_ID = 3;
+let ME = users[ME_ID];
+
+const conversations = {
+  100:{ id:100, type:'channel', name:'اعلانات آموزشگاه', sub:'کانال', members:[1,2,3,4,5,6,7,8], createdBy:1, description:'اطلاعیه‌های رسمی پارس موزیک' },
+  101:{ id:101, type:'dm', members:[3,5], createdBy:3 },
+  102:{ id:102, type:'dm', members:[3,6], createdBy:3 },
+  103:{ id:103, type:'dm', members:[3,4], createdBy:3 },
+  104:{ id:104, type:'dm', members:[3,2], createdBy:2 },
+  105:{ id:105, type:'group', name:'گروه استادان پیانو', sub:'گروه', members:[3,4,8,2], createdBy:2 },
+};
+
+const messages = {
+  100:[
+    { id:1001, conv:100, sender:1, type:'text', body:'به پلتفرم جدید پارس موزیک خوش آمدید! 🎵', t:'2026-05-18T09:00:00', reactions:[{u:3,r:'heart'},{u:5,r:'heart'},{u:6,r:'thumbsup'},{u:7,r:'thumbsup'},{u:4,r:'heart'}] },
+    { id:1002, conv:100, sender:2, type:'text', body:'یادآوری: کنسرت پایان ترم روز جمعه ساعت ۱۸ در سالن مرکزی برگزار می‌شود.', t:'2026-05-18T14:30:00', reactions:[{u:3,r:'thumbsup'},{u:6,r:'emphasize'}] },
+    { id:1003, conv:100, sender:1, type:'text', body:'برنامه کلاس‌های تابستان به‌زودی منتشر می‌شود.', t:'2026-05-19T08:15:00', reactions:[] },
+  ],
+  101:[
+    { id:2001, conv:101, sender:3, type:'text', body:'سلام سارا، تمرین این هفته چطور پیش رفت؟', t:'2026-05-19T09:30:00', reactions:[] },
+    { id:2002, conv:101, sender:5, type:'text', body:'سلام استاد. دو قسمت اول راحت بود ولی قسمت سوم تمپو رو نگه نمی‌داشتم.', t:'2026-05-19T09:32:00', reactions:[] },
+    { id:2003, conv:101, sender:5, type:'voice', dur:34, waveform:genWave(40), bps:[], t:'2026-05-19T09:33:00', reactions:[{u:3,r:'heart'}] },
+    { id:2004, conv:101, sender:3, type:'voice', dur:28, waveform:genWave(40), bps:[
+      {pct:0.18, note:'اینجا تمپو رو حفظ کن'},
+      {pct:0.50, note:'دست چپ خیلی سنگینه'},
+      {pct:0.77, note:'این عبارت رو دوباره گوش بده'}
+    ], t:'2026-05-19T09:45:00', reactions:[{u:5,r:'thumbsup'}] },
+    { id:2005, conv:101, sender:5, type:'text', body:'ممنون استاد، نکته‌هاتون رو روی نت‌ها علامت زدم.', replyTo:2004, t:'2026-05-19T10:02:00', reactions:[] },
+    { id:2006, conv:101, sender:5, type:'image', file:{ name:'sheet-page-3.jpg', size:1248203, ph:'ph-sheet' }, t:'2026-05-19T10:04:00', reactions:[] },
+    { id:2007, conv:101, sender:5, type:'text', body:'صفحه‌ای که گفتم 📸', t:'2026-05-19T10:04:30', reactions:[] },
+    { id:2008, conv:101, sender:3, type:'document', file:{ name:'تمرین_شماره_۸.pdf', size:847203 }, t:'2026-05-19T10:05:00', reactions:[] },
+    { id:2009, conv:101, sender:3, type:'text', body:'این فایل تمرین جدیده، قبل از جلسه بعد بخونش 📄', t:'2026-05-19T10:05:30', reactions:[] },
+    { id:2010, conv:101, sender:3, type:'video', file:{ name:'demo-clip.mp4', size:8472030, ph:'ph-video', dur:42 }, t:'2026-05-19T10:08:00', reactions:[] },
+  ],
+  102:[
+    { id:3001, conv:102, sender:6, type:'text', body:'استاد سلام، می‌تونم جلسه این هفته رو به چهارشنبه منتقل کنم؟', t:'2026-05-18T19:20:00', reactions:[] },
+    { id:3002, conv:102, sender:3, type:'text', body:'بله مشکلی نیست. ساعت ۱۷؟', t:'2026-05-18T19:45:00', reactions:[{u:6,r:'thumbsup'}] },
+  ],
+  103:[
+    { id:4001, conv:103, sender:4, type:'text', body:'مریم، یکی از هنرجوهام می‌خواست با شما هم تمرین کنه. اطلاعاتش رو می‌فرستم.', t:'2026-05-17T11:00:00', reactions:[] },
+    { id:4002, conv:103, sender:4, type:'contact', contact:{ studentId:7 }, t:'2026-05-17T11:01:00', reactions:[] },
+    { id:4003, conv:103, sender:3, type:'text', body:'ممنون، باهاش هماهنگ می‌کنم.', t:'2026-05-17T11:30:00', reactions:[{u:4,r:'heart'}] },
+  ],
+  104:[
+    { id:5001, conv:104, sender:2, type:'text', body:'مریم جان، فردا جلسه‌ی اساتید رأس ساعت ۱۰ تشکیل می‌شه.', t:'2026-05-18T16:00:00', reactions:[{u:3,r:'thumbsup'}] },
+  ],
+  105:[
+    { id:6001, conv:105, sender:2, type:'text', body:'سلام به همه. درباره برنامه کنسرت پیانو نظر بدید لطفاً.', t:'2026-05-18T13:00:00', reactions:[] },
+    { id:6002, conv:105, sender:3, type:'text', body:'من پیشنهاد می‌دم قطعات کلاسیک رو اول برنامه بگذاریم.', t:'2026-05-18T13:15:00', reactions:[{u:2,r:'thumbsup'},{u:8,r:'heart'}] },
+    { id:6003, conv:105, sender:8, type:'text', body:'موافقم. می‌تونیم هنرجوهای پیشرفته رو هم آخر برنامه بذاریم.', replyTo:6002, t:'2026-05-18T13:22:00', reactions:[] },
+  ],
+};
+
+let activeId = 101;
+let replyingTo = null;
+let activeBgLight = 'def';
+let activeBgDark = 'def';
+
+/* ════════════════════════════════════════════════════════════════
+   PERMISSIONS — mirrors server-side rules
+════════════════════════════════════════════════════════════════ */
+function canDM(s, r){
+  const sender = users[s], rec = users[r];
+  if(!sender || !rec || sender.id === rec.id) return false;
+  if(sender.role === 'admin' || sender.role === 'staff') return true;
+  if(rec.role === 'admin' || rec.role === 'staff') return true;
+  if(sender.role === 'teacher'){
+    if(rec.role === 'teacher') return true;
+    if(rec.role === 'student') return (teacherStudents[s]||[]).includes(r);
+  }
+  if(sender.role === 'student'){
+    if(rec.role === 'teacher') return (teacherStudents[r]||[]).includes(s);
+  }
+  return false;
+}
+function canPostChannel(uid){ const r = users[uid]?.role; return r === 'admin' || r === 'staff'; }
+function canCreateGroup(uid){ return users[uid]?.role !== 'student'; }
+function canCreateChannel(uid){ return users[uid]?.role === 'admin'; }
+function canShareContact(uid){ const r = users[uid]?.role; return r === 'staff' || r === 'teacher'; }
+function canSeeDND(viewer, who){ return canDM(viewer, who); }
+
+/* ════════════════════════════════════════════════════════════════
+   THEME + BG
+════════════════════════════════════════════════════════════════ */
+function isDark(){ return document.documentElement.hasAttribute('data-dark'); }
+function applyTheme(mode){
+  if(mode === 'dark') document.documentElement.setAttribute('data-dark','');
+  else document.documentElement.removeAttribute('data-dark');
+  applyBg();
+  try { localStorage.setItem('pars.theme', mode); } catch(e){}
+}
+function applyBg(){
+  const c = $('#bgCanvas');
+  c.className = 'bg-canvas';
+  const list = isDark() ? BACKGROUNDS.dark : BACKGROUNDS.light;
+  const id = isDark() ? activeBgDark : activeBgLight;
+  const f = list.find(b => b.id === id);
+  if(f && f.cls) c.classList.add(f.cls);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DISPLAY HELPERS
+════════════════════════════════════════════════════════════════ */
+function convDisplay(conv){
+  if(conv.type === 'dm'){
+    const oid = conv.members.find(id => id !== ME_ID);
+    const o = users[oid];
+    return {
+      name: o.name,
+      sub: ROLE_FA[o.role],
+      avChars: initials(o.name),
+      isDM: true,
+      other: o,
+      online: o.online && !o.dnd,
+      dnd: o.dnd && canSeeDND(ME_ID, o.id),
+      dndMsg: o.dndMsg
+    };
+  }
+  return {
+    name: conv.name,
+    sub: conv.type === 'channel'
+      ? `کانال · ${toFa(conv.members.length)} عضو`
+      : `گروه · ${toFa(conv.members.length)} عضو`,
+    avChars: initials(conv.name),
+    isDM: false
+  };
+}
+function lastMsg(cid){ const l = messages[cid] || []; return l[l.length-1]; }
+function previewText(m, conv){
+  if(!m) return '';
+  let prefix = '';
+  if(conv.type !== 'dm' && m.sender !== ME_ID){
+    prefix = (users[m.sender]?.name?.split(' ')[0] || '') + ': ';
+  } else if(m.sender === ME_ID){
+    prefix = 'شما: ';
+  }
+  if(m.type === 'voice')    return prefix + 'پیام صوتی';
+  if(m.type === 'image')    return prefix + 'تصویر';
+  if(m.type === 'video')    return prefix + 'ویدئو';
+  if(m.type === 'document') return prefix + m.file.name;
+  if(m.type === 'contact')  return prefix + 'اطلاعات تماس';
+  return prefix + (m.body || '');
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SIDEBAR — same anatomy as original
+════════════════════════════════════════════════════════════════ */
+function visibleConvs(){
+  const list = Object.values(conversations).filter(c => c.members.includes(ME_ID));
+  list.sort((a,b)=>{
+    const la = lastMsg(a.id)?.t || '';
+    const lb = lastMsg(b.id)?.t || '';
+    return lb.localeCompare(la);
+  });
+  return list;
+}
+function renderSidebar(filter){
+  let items = visibleConvs();
+  if(filter){
+    const q = filter.toLowerCase();
+    items = items.filter(c => convDisplay(c).name.toLowerCase().includes(q));
+  }
+  $('#clist').innerHTML = items.map(c => {
+    const d = convDisplay(c);
+    const last = lastMsg(c.id);
+    const time = last ? formatTime(last.t) : '';
+    const onCls  = d.online ? ' on' : '';
+    const dndCls = d.dnd ? ' dnd' : '';
+    return `
+    <div class="crow${activeId === c.id ? ' active' : ''}" onclick="openConv(${c.id})">
+      <div class="av${onCls}${dndCls}">${esc(d.avChars)}</div>
+      <div class="cmeta">
+        <div class="cr1">
+          <span class="cn">${esc(d.name)}</span>
+          <span class="ct">${esc(time)}</span>
+        </div>
+        <div class="cp">${esc(previewText(last, c))}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderMeStrip(){
+  $('#meAv').textContent = initials(ME.name);
+  $('#meName').textContent = ME.name;
+  $('#meRole').textContent = ROLE_FA[ME.role];
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CHAT — header + msgs + ibar (composer)
+════════════════════════════════════════════════════════════════ */
+function openConv(id){
+  const chat = $('#chat');
+  if(activeId === id){
+    if(window.innerWidth <= 760) $('#sb').classList.add('off');
+    return;
+  }
+  chat.classList.add('switching');
+  setTimeout(()=>{
+    activeId = id;
+    replyingTo = null;
+    if(window.innerWidth <= 760) $('#sb').classList.add('off');
+    renderSidebar();
+    renderChat();
+    chat.classList.remove('switching');
+    requestAnimationFrame(()=>{
+      const m = document.getElementById('msgs');
+      if(m) m.scrollTop = m.scrollHeight;
+    });
+  }, 120);
+}
+function goBack(){ $('#sb').classList.remove('off'); }
+
+function canPostHere(conv){
+  if(conv.type === 'channel') return canPostChannel(ME_ID);
+  if(conv.type === 'dm'){
+    const oid = conv.members.find(id => id !== ME_ID);
+    return canDM(ME_ID, oid);
+  }
+  return true;
+}
+
+function renderChat(){
+  const chat = $('#chat');
+  const conv = conversations[activeId];
+  if(!conv){
+    chat.innerHTML = `
+      <div class="empty">
+        <div class="e-ico">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M20 14a2 2 0 01-2 2H6l-4 4V4a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="e-ttl">یک گفت‌وگو انتخاب کنید</div>
+      </div>`;
+    return;
+  }
+  const d = convDisplay(conv);
+  const onCls  = d.online ? ' on' : '';
+  const dndCls = d.dnd ? ' dnd' : '';
+
+  // Subtitle: short role/type label, plus DND chip when applicable
+  const subParts = [];
+  subParts.push(esc(d.sub));
+  if(d.dnd) subParts.push(`<span class="dnd-chip">${esc(d.dndMsg || 'مزاحم نشوید')}</span>`);
+  const subHtml = subParts.join(' ');
+
+  const canPost = canPostHere(conv);
+  const inputBlock = canPost ? `
+    ${replyingTo ? buildReplyCtx() : ''}
+    <div class="ibar-bg" aria-hidden="true">
+      <div class="l1"></div><div class="l2"></div><div class="l3"></div><div class="l4"></div>
+    </div>
+    <div class="ibar" id="ibar">
+      <button class="plus-btn" id="attachBtn" aria-label="more">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="ishell" id="ishell">
+        <textarea class="ibox" id="ibox" rows="1" placeholder="پیام"
+          oninput="handleInput(this)" onkeydown="handleKey(event)"></textarea>
+        <button class="mic-inline" aria-label="record voice" onclick="toast('🎤 ضبط پیام صوتی (دمو)')">
+          <svg width="14" height="17" viewBox="0 0 14 17" fill="none">
+            <rect x="4" y="1" width="6" height="9" rx="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M1 9a6 6 0 0012 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M7 15v1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="send-btn" onclick="sendText()" aria-label="send">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M6.5 11V2M6.5 2L2.5 6M6.5 2l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>` : `
+    <div class="ibar-bg" aria-hidden="true">
+      <div class="l1"></div><div class="l2"></div><div class="l3"></div><div class="l4"></div>
+    </div>
+    <div class="ch-readonly">
+      <svg viewBox="0 0 24 24" fill="none">
+        <rect x="4" y="11" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>${conv.type === 'channel'
+        ? 'فقط مدیران و پرسنل می‌توانند در این کانال پیام بفرستند'
+        : 'ارسال پیام به این گفتگو ممکن نیست'}</span>
+    </div>`;
+
+  chat.innerHTML = `
+    <div class="ch">
+      <button class="back-btn" onclick="goBack()" aria-label="back">
+        <svg width="11" height="18" viewBox="0 0 11 18" fill="none">
+          <path d="M2 1.5L9.5 9l-7.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="av${onCls}${dndCls}" style="flex-shrink:0">${esc(d.avChars)}</div>
+      <div class="ch-info" onclick="openConvDetail()">
+        <div class="ch-mob-av${onCls}${dndCls}">${esc(d.avChars)}</div>
+        <div class="ch-name">${esc(d.name)}</div>
+        <div class="ch-sub">${subHtml}</div>
+      </div>
+      <div class="ch-actions">
+        <button class="ib" onclick="openConvDetail()" aria-label="info">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="10" cy="6.5" r="0.8" fill="currentColor"/>
+            <path d="M10 9v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="msgs" id="msgs">
+      <div id="clusters"></div>
+      <div style="height:6px"></div>
+    </div>
+    ${inputBlock}
+  `;
+  renderClusters();
+}
+
+function buildReplyCtx(){
+  const t = (messages[activeId]||[]).find(m => m.id === replyingTo);
+  if(!t) return '';
+  const ts = users[t.sender];
+  const snip = t.body || (t.type==='voice'?'پیام صوتی':t.type==='image'?'تصویر':t.type==='video'?'ویدئو':t.type==='document'?t.file.name:t.type==='contact'?'اطلاعات تماس':'');
+  return `<div class="reply-ctx">
+    <div class="rc-bar"></div>
+    <div class="rc-text">
+      <div class="rc-author">پاسخ به ${esc(ts.name)}</div>
+      <div class="rc-snippet">${esc(snip.slice(0,90))}</div>
+    </div>
+    <button class="rc-close" onclick="cancelReply()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>`;
+}
+function cancelReply(){ replyingTo = null; renderChat(); }
+
+/* ════════════════════════════════════════════════════════════════
+   CLUSTERS — closely tracks the original
+════════════════════════════════════════════════════════════════ */
+function renderClusters(){
+  const msgs = messages[activeId] || [];
+  const container = document.getElementById('clusters');
+  if(!container) return;
+
+  const conv = conversations[activeId];
+  const blocks = [];
+  let lastDay = '';
+  let cur = null;
+  msgs.forEach(m => {
+    const day = new Date(m.t).toDateString();
+    if(day !== lastDay){
+      blocks.push({ kind:'day', t:m.t });
+      lastDay = day;
+      cur = null;
+    }
+    const s = m.sender === ME_ID ? 'out' : 'in';
+    if(!cur || cur.s !== s || cur.senderId !== m.sender){
+      cur = { kind:'cluster', s, senderId:m.sender, items:[] };
+      blocks.push(cur);
+    }
+    cur.items.push(m);
+  });
+
+  container.innerHTML = blocks.map(b => {
+    if(b.kind === 'day'){
+      const d = new Date(b.t), now = new Date();
+      let word;
+      if(d.toDateString() === now.toDateString()) word = 'امروز';
+      else {
+        const y = new Date(now); y.setDate(now.getDate()-1);
+        if(d.toDateString() === y.toDateString()) word = 'دیروز';
+        else word = d.toLocaleDateString('fa-IR',{weekday:'long', day:'numeric', month:'long'});
+      }
+      return `<div class="day-sep"><span class="day-sep-cap"><span class="when">${esc(word)}</span></span></div>`;
+    }
+    const sender = users[b.senderId];
+    const showSenderLbl = b.s === 'in' && conv.type !== 'dm';
+    const av = b.s === 'in' ? `<div class="cl-av">${esc(initials(sender.name))}</div>` : '';
+    const senderLine = showSenderLbl ? `<div class="sender-lbl">${esc(sender.name)}</div>` : '';
+    const rows = b.items.map(m => buildRow(m, b.s)).join('');
+    return `<div class="cluster ${b.s}">${senderLine}${av}${rows}</div>`;
+  }).join('');
+
+  // Waveforms (post-pass like the original)
+  msgs.forEach(m => {
+    if(m.type === 'voice'){
+      const wvel = document.getElementById('wv-' + m.id);
+      if(wvel){
+        wvel.innerHTML = '';
+        const n = 40;
+        for(let i=0;i<n;i++){
+          const idx = Math.floor((i/n) * m.waveform.length);
+          const h = Math.max(4, m.waveform[idx] * 24 + 4);
+          const b = document.createElement('div');
+          b.className = 'wbar';
+          b.style.height = Math.round(h) + 'px';
+          wvel.appendChild(b);
+        }
+        (m.bps||[]).forEach(bp => {
+          const pin = document.createElement('div');
+          pin.className = 'bpin';
+          pin.style.left = (bp.pct*100) + '%';
+          pin.title = bp.note;
+          wvel.appendChild(pin);
+        });
+      }
+    }
+  });
+}
+
+function buildRow(m, side){
+  let inner = '';
+  const rxn = buildRxnApplied(m);
+
+  // reply preview HTML (lives inside text bubble; for media/file/voice we
+  // tack it on top of the row, just like the original's bpc treatment)
+  let reply = '';
+  if(m.replyTo){
+    const t = (messages[activeId]||[]).find(x => x.id === m.replyTo);
+    if(t){
+      const ts = users[t.sender];
+      const snip = t.body || (t.type==='voice'?'پیام صوتی':t.type==='image'?'تصویر':t.type==='video'?'ویدئو':t.type==='document'?t.file.name:t.type==='contact'?'اطلاعات تماس':'');
+      reply = `<div class="reply-prev" onclick="event.stopPropagation();jumpTo(${t.id})">
+        <div class="reply-author">${esc(ts.name)}</div>
+        <div class="reply-snippet">${esc(snip.slice(0,80))}</div>
+      </div>`;
+    }
+  }
+
+  if(m.type === 'text'){
+    const pill = m.body.replace(/\s/g,'').length <= 8;
+    inner = `<div class="bubble${pill?' pill':''}" data-mid="${m.id}"
+      onmousedown="rxnPress(event,${m.id})" onmouseup="rxnRelease()" onmouseleave="rxnRelease()"
+      ontouchstart="rxnPress(event,${m.id})" ontouchend="rxnRelease()" ontouchcancel="rxnRelease()"
+      oncontextmenu="rxnCtx(event,${m.id})">${reply}${esc(m.body)}${rxn}</div>`;
+  }
+  else if(m.type === 'voice'){
+    inner = `<div class="vbub" id="vb-${m.id}" data-mid="${m.id}"
+      onmousedown="rxnPress(event,${m.id})" onmouseup="rxnRelease()" onmouseleave="rxnRelease()"
+      ontouchstart="rxnPress(event,${m.id})" ontouchend="rxnRelease()" ontouchcancel="rxnRelease()"
+      oncontextmenu="rxnCtx(event,${m.id})">
+      <button class="vplay" onclick="event.stopPropagation();toast('▶ پخش (دمو)')"><div class="ptri"></div></button>
+      <div class="wv" id="wv-${m.id}"></div>
+      <span class="vdur">${esc(fmt(m.dur))}</span>
+      ${rxn}
+    </div>`;
+  }
+  else if(m.type === 'image' || m.type === 'video'){
+    const ph = m.file.ph || (m.type === 'image' ? 'ph-photo' : 'ph-video');
+    const overlay = m.type === 'video' ? `
+      <div class="vid-play"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div>
+      ${m.file.dur ? `<div class="vid-dur">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        ${esc(fmt(m.file.dur))}
+      </div>` : ''}` : '';
+    inner = `<div class="media-bub" data-mid="${m.id}"
+      onclick="openViewer(${m.id})"
+      onmousedown="rxnPress(event,${m.id})" onmouseup="rxnRelease()" onmouseleave="rxnRelease()"
+      ontouchstart="rxnPress(event,${m.id})" ontouchend="rxnRelease()" ontouchcancel="rxnRelease()"
+      oncontextmenu="rxnCtx(event,${m.id})">
+      <div class="ph ${ph}"></div>
+      ${overlay}${rxn}
+    </div>`;
+  }
+  else if(m.type === 'document'){
+    const docIco = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M14 2v6h6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>`;
+    inner = `<div class="filebub" data-mid="${m.id}"
+      onclick="toast('📄 ' + ${JSON.stringify(esc(m.file.name))})"
+      onmousedown="rxnPress(event,${m.id})" onmouseup="rxnRelease()" onmouseleave="rxnRelease()"
+      ontouchstart="rxnPress(event,${m.id})" ontouchend="rxnRelease()" ontouchcancel="rxnRelease()"
+      oncontextmenu="rxnCtx(event,${m.id})">
+      <div class="file-ico">${docIco}</div>
+      <div class="file-meta">
+        <div class="file-name">${esc(m.file.name)}</div>
+        <div class="file-size">${esc(fmtBytes(m.file.size))}</div>
+      </div>
+      ${rxn}
+    </div>`;
+  }
+  else if(m.type === 'contact'){
+    const s = users[m.contact.studentId];
+    inner = `<div class="cc-bub" data-mid="${m.id}"
+      onclick="openContactCard(${m.contact.studentId})"
+      onmousedown="rxnPress(event,${m.id})" onmouseup="rxnRelease()" onmouseleave="rxnRelease()"
+      ontouchstart="rxnPress(event,${m.id})" ontouchend="rxnRelease()" ontouchcancel="rxnRelease()"
+      oncontextmenu="rxnCtx(event,${m.id})">
+      <div class="cc-row">
+        <div class="av">${esc(initials(s.name))}</div>
+        <div>
+          <div class="cc-name">${esc(s.name)}</div>
+          <div class="cc-sub">${esc(ROLE_FA[s.role])}</div>
+        </div>
+      </div>
+      <div class="cc-sep"></div>
+      <div class="cc-cta">شروع گفتگو</div>
+      ${rxn}
+    </div>`;
+  }
+
+  return `<div data-msgid="${m.id}">${inner}</div>`;
+}
+
+function buildRxnApplied(m){
+  if(!m.reactions || m.reactions.length === 0) return '';
+  const counts = {};
+  let total = 0, mine = false;
+  m.reactions.forEach(r => {
+    counts[r.r] = (counts[r.r] || 0) + 1;
+    total++;
+    if(r.u === ME_ID) mine = true;
+  });
+  // Show up to two distinct emoji, plus count when total > 1
+  const emojis = Object.keys(counts).slice(0,2).map(k => RXN[k] || '').join('');
+  const countHtml = total > 1 ? `<span class="rc">${toFa(total)}</span>` : '';
+  return `<span class="rxn-applied${mine?' mine':''}" onclick="event.stopPropagation();rxnCtx(event,${m.id})">${emojis}${countHtml}</span>`;
+}
+
+function jumpTo(mid){
+  const el = document.querySelector(`[data-msgid="${mid}"] [data-mid]`);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+  const orig = el.style.boxShadow;
+  el.style.boxShadow = '0 0 0 4px rgba(0,136,255,0.35)';
+  el.style.transition = 'box-shadow 800ms';
+  setTimeout(()=>{ el.style.boxShadow = orig; }, 1000);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   INPUT
+════════════════════════════════════════════════════════════════ */
+function handleInput(ta){
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(120, ta.scrollHeight) + 'px';
+  $('#ishell').classList.toggle('has-text', ta.value.trim().length > 0);
+}
+function handleKey(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendText(); }
+}
+function sendText(){
+  const ta = $('#ibox');
+  const body = ta.value.trim();
+  if(!body) return;
+  const m = { id:Date.now(), conv:activeId, sender:ME_ID, type:'text', body, t:new Date().toISOString(), reactions:[] };
+  if(replyingTo) m.replyTo = replyingTo;
+  messages[activeId] = messages[activeId] || [];
+  messages[activeId].push(m);
+  replyingTo = null;
+  ta.value = '';
+  ta.style.height = 'auto';
+  $('#ishell').classList.remove('has-text');
+  renderSidebar();
+  renderClusters();
+  requestAnimationFrame(()=>{
+    const m = document.getElementById('msgs');
+    m.scrollTop = m.scrollHeight;
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   REACTION POPOVER — combined emoji + actions, frosted glass
+════════════════════════════════════════════════════════════════ */
+let lpTimer = null, lpFired = false;
+function rxnPress(e, mid){
+  lpFired = false;
+  lpTimer = setTimeout(()=>{ lpFired = true; openRxnPopover(e, mid); }, 480);
+}
+function rxnRelease(){ if(lpTimer) clearTimeout(lpTimer); }
+function rxnCtx(e, mid){ e.preventDefault(); openRxnPopover(e, mid); }
+
+function openRxnPopover(evt, mid){
+  const conv = conversations[activeId];
+  const m = (messages[activeId]||[]).find(x => x.id === mid);
+  if(!m) return;
+  const isOut = m.sender === ME_ID;
+  const canReply = canPostHere(conv);
+  const canDelete = isOut;
+  const bubble = document.querySelector(`[data-mid="${mid}"]`);
+  if(!bubble) return;
+
+  const items = [];
+  if(canReply) items.push({ icon:'reply', label:'پاسخ', action:()=>{ replyingTo = mid; closeRxn(); renderChat(); } });
+  if(m.body)   items.push({ icon:'copy',  label:'کپی متن', action:()=>{ navigator.clipboard?.writeText(m.body); toast('کپی شد'); closeRxn(); } });
+  if(m.type === 'image' || m.type === 'video') items.push({ icon:'eye', label:'مشاهده', action:()=>{ closeRxn(); openViewer(mid); } });
+  if(m.type === 'document' || m.type === 'image' || m.type === 'video') items.push({ icon:'download', label:'دانلود', action:()=>{ toast('دانلود (دمو)'); closeRxn(); } });
+  if(canDelete) items.push({ icon:'trash', destructive:true, label:'حذف', action:()=>{
+    messages[activeId] = messages[activeId].filter(x => x.id !== mid);
+    closeRxn(); renderClusters(); renderSidebar();
+  }});
+
+  const myReact = m.reactions?.find(r => r.u === ME_ID);
+  const ic = {
+    reply: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 17 4 12l5-5M20 18v-2a4 4 0 0 0-4-4H4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    copy:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+    eye:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg>`,
+    download:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    trash: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  };
+
+  const pop = $('#rxnPopover');
+  pop.innerHTML = `
+    <div class="rxn-row${items.length?' has-actions':''}">
+      ${Object.keys(RXN).map(k => `
+        <button class="rxn-btn${myReact && myReact.r === k ? ' selected' : ''}" data-r="${k}">${RXN[k]}</button>
+      `).join('')}
+    </div>
+    ${items.length ? `<div class="rxn-actions">
+      ${items.map((it,i)=>`<button class="rxn-menu-item${it.destructive?' destructive':''}" data-i="${i}">
+        <span>${esc(it.label)}</span>
+        <span class="rxn-menu-item-icon">${ic[it.icon]}</span>
+      </button>`).join('')}
+    </div>` : ''}
+  `;
+
+  document.getElementById('msgs').classList.add('rxn-active');
+  document.querySelectorAll('.rxn-target').forEach(t => t.classList.remove('rxn-target'));
+  bubble.classList.add('rxn-target');
+
+  pop.classList.add('on');
+  const rect = bubble.getBoundingClientRect();
+  const pr = pop.getBoundingClientRect();
+  let top = rect.top - pr.height - 10;
+  if(top < 70) top = rect.bottom + 10;
+  if(top + pr.height > window.innerHeight - 20) top = window.innerHeight - pr.height - 20;
+  let left = isOut ? rect.right - pr.width : rect.left;
+  left = Math.max(10, Math.min(window.innerWidth - pr.width - 10, left));
+  pop.style.top = top + 'px';
+  pop.style.left = left + 'px';
+
+  pop.querySelectorAll('.rxn-btn').forEach(b => {
+    b.onclick = () => { toggleReaction(mid, b.dataset.r); closeRxn(); };
+  });
+  pop.querySelectorAll('.rxn-menu-item').forEach(b => {
+    b.onclick = () => items[parseInt(b.dataset.i)].action();
+  });
+}
+
+function closeRxn(){
+  $('#rxnPopover').classList.remove('on');
+  const msgsEl = document.getElementById('msgs');
+  if(msgsEl) msgsEl.classList.remove('rxn-active');
+  document.querySelectorAll('.rxn-target').forEach(t => t.classList.remove('rxn-target'));
+}
+
+function toggleReaction(mid, r){
+  const list = messages[activeId] || [];
+  const m = list.find(x => x.id === mid);
+  if(!m) return;
+  m.reactions = m.reactions || [];
+  const mine = m.reactions.find(x => x.u === ME_ID);
+  if(mine && mine.r === r){
+    m.reactions = m.reactions.filter(x => x.u !== ME_ID);
+  } else if(mine){
+    mine.r = r;
+  } else {
+    m.reactions.push({ u:ME_ID, r });
+  }
+  renderClusters();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MEDIA VIEWER
+════════════════════════════════════════════════════════════════ */
+function openViewer(mid){
+  const m = (messages[activeId]||[]).find(x => x.id === mid);
+  if(!m || (m.type !== 'image' && m.type !== 'video')) return;
+  const sender = users[m.sender];
+  const v = $('#viewer');
+  const inner = m.type === 'image'
+    ? `<div class="vw-content"><div class="ph ${esc(m.file.ph || 'ph-photo')}"></div></div>`
+    : `<div class="vw-content"><div class="vbox"><div class="vid-play" style="width:72px;height:72px;background:rgba(255,255,255,0.18);"><svg viewBox="0 0 24 24" fill="#fff" width="28" height="28"><path d="M8 5v14l11-7z"/></svg></div></div></div>`;
+  v.innerHTML = `
+    <div class="vw-bar">
+      <button class="vw-close" onclick="closeViewer()">
+        <svg width="16" height="16" viewBox="0 0 14 14" fill="none">
+          <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="vw-meta">
+        <div>${esc(sender.name)}</div>
+        <div class="vw-sub">${esc(fmtBytes(m.file.size))} · ${esc(m.file.name)}</div>
+      </div>
+    </div>
+    ${inner}
+  `;
+  v.classList.add('on');
+  v.onclick = e => { if(e.target === v) closeViewer(); };
+}
+function closeViewer(){ $('#viewer').classList.remove('on'); }
+
+/* ════════════════════════════════════════════════════════════════
+   SHEET FRAMEWORK
+════════════════════════════════════════════════════════════════ */
+function openSheet({ttl, sub, body, acts=[], onMount}){
+  const sh = $('#sheet');
+  sh.innerHTML = `
+    <div class="sh-handle"></div>
+    ${ttl ? `<div class="sh-ttl">${esc(ttl)}</div>` : ''}
+    ${sub ? `<div class="sh-sub">${esc(sub)}</div>` : ''}
+    <div class="sh-body">${body}</div>
+    ${acts.length ? `<div class="sh-acts">${acts.map((a,i)=>`<button class="sact ${a.cls||''}" data-a="${i}" ${a.disabled?'disabled':''}>${esc(a.label)}</button>`).join('')}</div>` : ''}
+  `;
+  $('#scrim').classList.add('on');
+  sh.querySelectorAll('[data-a]').forEach(b => {
+    b.onclick = () => acts[parseInt(b.dataset.a)].action();
+  });
+  if(onMount) onMount(sh);
+}
+function closeSheet(e){
+  if(e && e.target !== e.currentTarget) return;
+  $('#scrim').classList.remove('on');
+}
+
+/* The original .sh-body needs scroll inside the sheet — we have a fixed sheet
+   layout, this adds the scroll behaviour. */
+(function ensureSheetScroll(){
+  const css = `.sh-body{flex:1;overflow-y:auto;}.sh-body::-webkit-scrollbar{width:0;}`;
+  const s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
+})();
+
+/* ════════════════════════════════════════════════════════════════
+   CONVERSATION DETAIL (DM profile / group/channel members)
+════════════════════════════════════════════════════════════════ */
+function openConvDetail(){
+  const conv = conversations[activeId];
+  if(!conv) return;
+  if(conv.type === 'dm'){
+    const o = users[conv.members.find(id => id !== ME_ID)];
+    const showDnd = o.dnd && canSeeDND(ME_ID, o.id);
+    openSheet({
+      ttl: '',
+      body: `
+        <div class="detail-head">
+          <div class="av${o.online && !o.dnd?' on':''}${showDnd?' dnd':''}">${esc(initials(o.name))}</div>
+          <div class="d-name">${esc(o.name)}</div>
+          <div class="d-sub">${esc(ROLE_FA[o.role])}${showDnd ? ` · <span style="color:#C97500">${esc(o.dndMsg || 'مزاحم نشوید')}</span>` : ''}</div>
+        </div>
+      `,
+      acts:[{label:'بستن', cls:'cancel', action:()=>closeSheet()}]
+    });
+    return;
+  }
+  const isOwner = conv.createdBy === ME_ID || ME.role === 'admin';
+  const memberRows = conv.members.map(mid => {
+    const u = users[mid];
+    if(!u) return '';
+    const onCls = u.online && !u.dnd ? ' on' : '';
+    const dndCls = u.dnd ? ' dnd' : '';
+    let tag = '';
+    if(mid === ME_ID) tag = '<span class="member-tag you">شما</span>';
+    else if(mid === conv.createdBy) tag = '<span class="member-tag">سازنده</span>';
+    return `<div class="crow" onclick="memberClick(${mid})">
+      <div class="av${onCls}${dndCls}" style="width:42px;height:42px;font-size:15px;">${esc(initials(u.name))}</div>
+      <div class="cmeta">
+        <div class="cr1"><span class="cn">${esc(u.name)}</span></div>
+        <div class="cp">${esc(ROLE_FA[u.role])}</div>
+      </div>
+      ${tag}
+    </div>`;
+  }).join('');
+
+  const actions = [{label:'بستن', cls:'cancel', action:()=>closeSheet()}];
+  if(isOwner){
+    actions.push({label: conv.type==='channel'?'حذف کانال':'حذف گروه', cls:'danger', action:()=>{
+      delete conversations[activeId];
+      delete messages[activeId];
+      activeId = visibleConvs()[0]?.id || null;
+      closeSheet();
+      renderSidebar();
+      if(activeId) renderChat(); else $('#chat').innerHTML = '<div class="empty"><div class="e-ttl">—</div></div>';
+      toast(conv.type==='channel'?'کانال حذف شد':'گروه حذف شد');
+    }});
+  }
+
+  openSheet({
+    ttl: conv.name,
+    sub: conv.type === 'channel' ? `کانال · ${toFa(conv.members.length)} عضو` : `گروه · ${toFa(conv.members.length)} عضو`,
+    body: `
+      ${conv.description ? `<div style="font-size:14px;color:var(--ink-2);text-align:center;margin:0 8px 18px;line-height:1.5;direction:rtl;">${esc(conv.description)}</div>` : ''}
+      <div class="sec-lbl">اعضا</div>
+      <div class="member-list">${memberRows}</div>
+    `,
+    acts: actions
+  });
+}
+
+function memberClick(uid){
+  if(uid === ME_ID){ closeSheet(); openSettings(); return; }
+  if(!canDM(ME_ID, uid)){ toast('گفتگو با این کاربر مجاز نیست'); return; }
+  let dm = Object.values(conversations).find(c => c.type==='dm' && c.members.includes(ME_ID) && c.members.includes(uid));
+  if(!dm){
+    const id = Math.max(...Object.keys(conversations).map(Number)) + 1;
+    conversations[id] = { id, type:'dm', members:[ME_ID, uid], createdBy:ME_ID };
+    messages[id] = [];
+    dm = conversations[id];
+  }
+  closeSheet();
+  openConv(dm.id);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CONTACT CARD TAP — opens or creates a DM with the student
+════════════════════════════════════════════════════════════════ */
+function openContactCard(sid){
+  const s = users[sid];
+  if(!s) return;
+  const linked = (teacherStudents[ME_ID]||[]).includes(sid);
+  let dm = Object.values(conversations).find(c => c.type==='dm' && c.members.includes(ME_ID) && c.members.includes(sid));
+  openSheet({
+    ttl: '',
+    body: `
+      <div class="detail-head">
+        <div class="av${s.online?' on':''}">${esc(initials(s.name))}</div>
+        <div class="d-name">${esc(s.name)}</div>
+        <div class="d-sub">${esc(ROLE_FA[s.role])}</div>
+      </div>
+      ${!linked && !dm && ME.role === 'teacher' ? `
+        <div style="font-size:13px;color:var(--ink-2);text-align:center;margin:0 8px 6px;line-height:1.5;direction:rtl;">
+          با ارسال اولین پیام، این هنرجو به لیست شما اضافه می‌شود
+        </div>` : ''}
+    `,
+    acts:[
+      {label:'بستن', cls:'cancel', action:()=>closeSheet()},
+      {label:'شروع گفتگو', cls:'confirm', action:()=>{
+        if(!dm){
+          if(ME.role === 'teacher' && !linked){
+            teacherStudents[ME_ID] = teacherStudents[ME_ID] || [];
+            teacherStudents[ME_ID].push(sid);
+            toast(`${s.name} به لیست شما اضافه شد`);
+          }
+          const id = Math.max(...Object.keys(conversations).map(Number)) + 1;
+          conversations[id] = { id, type:'dm', members:[ME_ID, sid], createdBy:ME_ID };
+          messages[id] = [];
+          dm = conversations[id];
+        }
+        closeSheet();
+        openConv(dm.id);
+      }}
+    ]
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   NEW CONVERSATION FLOWS
+════════════════════════════════════════════════════════════════ */
+function openNewConv(){
+  const items = [
+    { icon:'message', label:'گفتگوی خصوصی جدید', action:newDM },
+  ];
+  if(canCreateGroup(ME_ID))   items.push({ icon:'users',   label:'گروه جدید',     action:newGroup });
+  if(canCreateChannel(ME_ID)) items.push({ icon:'channel', label:'کانال جدید',     action:newChannel });
+  if(canShareContact(ME_ID))  items.push({ icon:'share',   label:'اشتراک اطلاعات هنرجو', action:shareContact });
+  const ic = {
+    message:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5"/></svg>`,
+    users:  `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/></svg>`,
+    channel:`<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11l18-5v12L3 14v-3zM11.6 16.8a3 3 0 1 1-5.8-1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    share:  `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`
+  };
+  openSheet({
+    ttl:'گفتگوی جدید',
+    body:`<div class="member-list">${items.map((it,i)=>`
+      <div class="crow" data-a="${i}">
+        <div class="av" style="width:42px;height:42px;color:var(--ink-2);">${ic[it.icon]}</div>
+        <div class="cmeta"><div class="cr1"><span class="cn">${esc(it.label)}</span></div></div>
+      </div>`).join('')}</div>`,
+    onMount: s => {
+      s.querySelectorAll('[data-a]').forEach(r => {
+        r.onclick = () => { closeSheet(); setTimeout(items[parseInt(r.dataset.a)].action, 220); };
+      });
+    }
+  });
+}
+
+function newDM(){
+  const cands = Object.values(users).filter(u => u.id !== ME_ID && canDM(ME_ID, u.id));
+  openSheet({
+    ttl:'گفتگوی خصوصی جدید',
+    body: cands.length === 0
+      ? `<div style="text-align:center;padding:24px;color:var(--ink-3);font-size:14px;">کاربر قابل گفتگویی نیست</div>`
+      : `<div class="member-list">${cands.map(u => `
+        <div class="crow" data-uid="${u.id}">
+          <div class="av${u.online?' on':''}${u.dnd?' dnd':''}" style="width:42px;height:42px;font-size:15px;">${esc(initials(u.name))}</div>
+          <div class="cmeta">
+            <div class="cr1"><span class="cn">${esc(u.name)}</span></div>
+            <div class="cp">${esc(ROLE_FA[u.role])}</div>
+          </div>
+        </div>`).join('')}</div>`,
+    acts:[{label:'بستن', cls:'cancel', action:()=>closeSheet()}],
+    onMount: s => {
+      s.querySelectorAll('[data-uid]').forEach(r => {
+        r.onclick = () => {
+          const uid = parseInt(r.dataset.uid);
+          let dm = Object.values(conversations).find(c => c.type==='dm' && c.members.includes(ME_ID) && c.members.includes(uid));
+          if(!dm){
+            const id = Math.max(...Object.keys(conversations).map(Number)) + 1;
+            conversations[id] = { id, type:'dm', members:[ME_ID, uid], createdBy:ME_ID };
+            messages[id] = [];
+            dm = conversations[id];
+          }
+          closeSheet();
+          openConv(dm.id);
+        };
+      });
+    }
+  });
+}
+
+function newGroup(){
+  const cands = Object.values(users).filter(u => u.id !== ME_ID && canDM(ME_ID, u.id));
+  const state = { title:'', selected:new Set() };
+  openSheet({
+    ttl:'گروه جدید',
+    body: `
+      <input id="grpTitle" type="text" class="sh-input" placeholder="نام گروه" value="" style="margin-bottom:12px;width:100%;padding:11px 14px;background:var(--grey);border:none;border-radius:10px;font-size:16px;color:var(--ink);outline:none;direction:rtl;font-family:var(--fa);">
+      <div class="sec-lbl">اعضا · <span id="grpCount">۰</span> نفر</div>
+      <div class="member-list">${cands.map(u => `
+        <div class="crow" data-uid="${u.id}">
+          <div class="av${u.online?' on':''}${u.dnd?' dnd':''}" style="width:42px;height:42px;font-size:15px;">${esc(initials(u.name))}</div>
+          <div class="cmeta">
+            <div class="cr1"><span class="cn">${esc(u.name)}</span></div>
+            <div class="cp">${esc(ROLE_FA[u.role])}</div>
+          </div>
+          <div class="upick-check"></div>
+        </div>`).join('')}</div>
+    `,
+    acts:[
+      {label:'انصراف', cls:'cancel', action:()=>closeSheet()},
+      {label:'ایجاد', cls:'confirm', action:()=>{
+        if(!state.title.trim() || state.selected.size === 0){ toast('نام گروه و حداقل یک عضو لازم است'); return; }
+        const id = Math.max(...Object.keys(conversations).map(Number)) + 1;
+        conversations[id] = { id, type:'group', name:state.title.trim(), members:[ME_ID, ...state.selected], createdBy:ME_ID };
+        messages[id] = [];
+        closeSheet(); openConv(id); toast('گروه ساخته شد');
+      }}
+    ],
+    onMount: s => {
+      s.querySelector('#grpTitle').oninput = e => state.title = e.target.value;
+      s.querySelectorAll('[data-uid]').forEach(r => {
+        r.onclick = () => {
+          const uid = parseInt(r.dataset.uid);
+          if(state.selected.has(uid)) state.selected.delete(uid); else state.selected.add(uid);
+          r.classList.toggle('selected');
+          s.querySelector('#grpCount').textContent = toFa(state.selected.size);
+        };
+      });
+    }
+  });
+}
+
+function newChannel(){
+  if(!canCreateChannel(ME_ID)){ toast('فقط مدیران می‌توانند کانال بسازند'); return; }
+  const cands = Object.values(users).filter(u => u.id !== ME_ID);
+  const state = { title:'', desc:'', selected:new Set(cands.map(u => u.id)) };
+  openSheet({
+    ttl:'کانال جدید',
+    body: `
+      <input id="chTitle" type="text" class="sh-input" placeholder="نام کانال" value="" style="margin-bottom:8px;width:100%;padding:11px 14px;background:var(--grey);border:none;border-radius:10px;font-size:16px;color:var(--ink);outline:none;direction:rtl;font-family:var(--fa);">
+      <input id="chDesc"  type="text" class="sh-input" placeholder="توضیح (اختیاری)" value="" style="margin-bottom:12px;width:100%;padding:11px 14px;background:var(--grey);border:none;border-radius:10px;font-size:16px;color:var(--ink);outline:none;direction:rtl;font-family:var(--fa);">
+      <div class="sec-lbl">اعضا · <span id="chCount">${toFa(state.selected.size)}</span> نفر</div>
+      <div class="member-list">${cands.map(u => `
+        <div class="crow${state.selected.has(u.id)?' selected':''}" data-uid="${u.id}">
+          <div class="av${u.online?' on':''}${u.dnd?' dnd':''}" style="width:42px;height:42px;font-size:15px;">${esc(initials(u.name))}</div>
+          <div class="cmeta">
+            <div class="cr1"><span class="cn">${esc(u.name)}</span></div>
+            <div class="cp">${esc(ROLE_FA[u.role])}</div>
+          </div>
+          <div class="upick-check"></div>
+        </div>`).join('')}</div>
+    `,
+    acts:[
+      {label:'انصراف', cls:'cancel', action:()=>closeSheet()},
+      {label:'ایجاد کانال', cls:'confirm', action:()=>{
+        if(!state.title.trim()){ toast('نام کانال لازم است'); return; }
+        const id = Math.max(...Object.keys(conversations).map(Number)) + 1;
+        conversations[id] = { id, type:'channel', name:state.title.trim(), description:state.desc.trim(), members:[ME_ID, ...state.selected], createdBy:ME_ID };
+        messages[id] = [];
+        closeSheet(); openConv(id); toast('کانال ساخته شد');
+      }}
+    ],
+    onMount: s => {
+      s.querySelector('#chTitle').oninput = e => state.title = e.target.value;
+      s.querySelector('#chDesc').oninput  = e => state.desc  = e.target.value;
+      s.querySelectorAll('[data-uid]').forEach(r => {
+        r.onclick = () => {
+          const uid = parseInt(r.dataset.uid);
+          if(state.selected.has(uid)) state.selected.delete(uid); else state.selected.add(uid);
+          r.classList.toggle('selected');
+          s.querySelector('#chCount').textContent = toFa(state.selected.size);
+        };
+      });
+    }
+  });
+}
+
+function shareContact(){
+  if(!canShareContact(ME_ID)){ toast('شما اجازه اشتراک‌گذاری ندارید'); return; }
+  const myStudents = (teacherStudents[ME_ID]||[]).map(id => users[id]).filter(Boolean);
+  const allStudents = ME.role === 'staff'
+    ? Object.values(users).filter(u => u.role === 'student')
+    : myStudents;
+  if(allStudents.length === 0){ toast('هنرجویی برای اشتراک نیست'); return; }
+  openSheet({
+    ttl:'اشتراک اطلاعات هنرجو',
+    sub:'گام ۱ · انتخاب هنرجو',
+    body: `<div class="member-list">${allStudents.map(u => `
+      <div class="crow" data-sid="${u.id}">
+        <div class="av${u.online?' on':''}" style="width:42px;height:42px;font-size:15px;">${esc(initials(u.name))}</div>
+        <div class="cmeta">
+          <div class="cr1"><span class="cn">${esc(u.name)}</span></div>
+          <div class="cp">هنرجو</div>
+        </div>
+      </div>`).join('')}</div>`,
+    acts:[{label:'انصراف', cls:'cancel', action:()=>closeSheet()}],
+    onMount: s => {
+      s.querySelectorAll('[data-sid]').forEach(r => {
+        r.onclick = () => { closeSheet(); setTimeout(()=>pickShareRecipient(parseInt(r.dataset.sid)), 220); };
+      });
+    }
+  });
+}
+
+function pickShareRecipient(sid){
+  const s = users[sid];
+  const recipients = Object.values(users).filter(u => u.role === 'teacher' && u.id !== ME_ID && u.id !== sid);
+  openSheet({
+    ttl:'اشتراک با کدام معلم؟',
+    sub:`گام ۲ · ${s.name}`,
+    body: `<div class="member-list">${recipients.map(u => `
+      <div class="crow" data-rid="${u.id}">
+        <div class="av${u.online?' on':''}${u.dnd?' dnd':''}" style="width:42px;height:42px;font-size:15px;">${esc(initials(u.name))}</div>
+        <div class="cmeta">
+          <div class="cr1"><span class="cn">${esc(u.name)}</span></div>
+          <div class="cp">معلم</div>
+        </div>
+      </div>`).join('')}</div>`,
+    acts:[{label:'بازگشت', cls:'cancel', action:()=>{ closeSheet(); setTimeout(shareContact, 220); }}],
+    onMount: shObj => {
+      shObj.querySelectorAll('[data-rid]').forEach(r => {
+        r.onclick = () => sendContactCard(sid, parseInt(r.dataset.rid));
+      });
+    }
+  });
+}
+
+function sendContactCard(sid, rid){
+  let dm = Object.values(conversations).find(c => c.type==='dm' && c.members.includes(ME_ID) && c.members.includes(rid));
+  if(!dm){
+    const id = Math.max(...Object.keys(conversations).map(Number)) + 1;
+    conversations[id] = { id, type:'dm', members:[ME_ID, rid], createdBy:ME_ID };
+    messages[id] = [];
+    dm = conversations[id];
+  }
+  messages[dm.id].push({ id:Date.now(), conv:dm.id, sender:ME_ID, type:'contact', contact:{studentId:sid}, t:new Date().toISOString(), reactions:[] });
+  closeSheet();
+  openConv(dm.id);
+  toast(`اطلاعات ${users[sid].name} ارسال شد`);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SETTINGS
+════════════════════════════════════════════════════════════════ */
+function openSettings(){
+  const dark = isDark();
+  const bgList = dark ? BACKGROUNDS.dark : BACKGROUNDS.light;
+  const activeBgId = dark ? activeBgDark : activeBgLight;
+
+  const body = `
+    <div class="detail-head">
+      <div class="av">${esc(initials(ME.name))}</div>
+      <div class="d-name">${esc(ME.name)}</div>
+      <div class="d-sub">${esc(ROLE_FA[ME.role])}</div>
+    </div>
+
+    <div class="sec-lbl">حالت نمایش</div>
+    <div class="set-group">
+      <div class="set-row">
+        <div class="label">حالت رنگ</div>
+        <div class="theme-pick" id="themePick">
+          <button data-theme="light" class="${!dark?'active':''}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke-linecap="round"/></svg>
+            روشن
+          </button>
+          <button data-theme="dark" class="${dark?'active':''}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            تاریک
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-lbl">پس‌زمینه</div>
+    <div class="bg-grid" id="bgGrid">${bgList.map(b => `
+      <div class="bg-tile${b.id===activeBgId?' selected':''}" data-bg="${b.id}" style="${b.tile}"></div>
+    `).join('')}</div>
+
+    ${ME.role === 'teacher' ? `
+      <div class="sec-lbl">حالت مزاحم نشوید</div>
+      <div class="set-group">
+        <div class="set-row">
+          <div>
+            <div class="label">فعال</div>
+            <div class="desc">به دیگران نشان می‌دهد در دسترس نیستید</div>
+          </div>
+          <div class="sw${ME.dnd?' on':''}" id="dndSw"></div>
+        </div>
+        <div class="set-row" id="dndRow" style="${ME.dnd?'':'display:none;'}">
+          <input id="dndMsg" type="text" placeholder="پیام نمایشی" value="${esc(ME.dndMsg || 'در کلاس هستم')}" style="width:100%;padding:11px 14px;background:var(--grey);border:none;border-radius:10px;font-size:16px;color:var(--ink);outline:none;direction:rtl;font-family:var(--fa);">
+        </div>
+      </div>` : ''}
+
+    <div class="sec-lbl">حساب کاربری (دمو)</div>
+    <div class="set-group">
+      ${[1,2,3,5].map(id => `
+        <div class="set-row" data-uid="${id}" style="cursor:pointer;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="av" style="width:32px;height:32px;font-size:12px;">${esc(initials(users[id].name))}</div>
+            <div>
+              <div class="label">${esc(users[id].name)}</div>
+              <div class="desc">${esc(ROLE_FA[users[id].role])}</div>
+            </div>
+          </div>
+          ${id === ME_ID ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="var(--blue)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  openSheet({
+    ttl:'تنظیمات',
+    body,
+    acts:[{label:'بستن', cls:'cancel', action:()=>closeSheet()}],
+    onMount: sh => {
+      sh.querySelectorAll('#themePick button').forEach(b => {
+        b.onclick = () => {
+          applyTheme(b.dataset.theme);
+          closeSheet();
+          setTimeout(openSettings, 280);
+        };
+      });
+      sh.querySelectorAll('[data-bg]').forEach(t => {
+        t.onclick = () => {
+          const id = t.dataset.bg;
+          if(isDark()) activeBgDark = id; else activeBgLight = id;
+          try {
+            localStorage.setItem('pars.bgLight', activeBgLight);
+            localStorage.setItem('pars.bgDark', activeBgDark);
+          } catch(e){}
+          applyBg();
+          sh.querySelectorAll('[data-bg]').forEach(x => x.classList.toggle('selected', x === t));
+        };
+      });
+      const sw = sh.querySelector('#dndSw');
+      if(sw){
+        sw.onclick = () => {
+          ME.dnd = !ME.dnd;
+          sw.classList.toggle('on', ME.dnd);
+          sh.querySelector('#dndRow').style.display = ME.dnd ? '' : 'none';
+          toast(ME.dnd ? 'مزاحم نشوید فعال شد' : 'غیرفعال شد');
+          renderSidebar();
+          if(activeId) renderChat();
+        };
+        const di = sh.querySelector('#dndMsg');
+        if(di) di.oninput = () => { ME.dndMsg = di.value || 'مزاحم نشوید'; };
+      }
+      sh.querySelectorAll('[data-uid]').forEach(r => {
+        r.onclick = () => {
+          ME_ID = parseInt(r.dataset.uid);
+          ME = users[ME_ID];
+          renderMeStrip();
+          activeId = visibleConvs()[0]?.id || null;
+          renderSidebar();
+          if(activeId) renderChat();
+          else $('#chat').innerHTML = '<div class="empty"><div class="e-ttl">—</div></div>';
+          closeSheet();
+        };
+      });
+    }
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   FILE INPUT
+════════════════════════════════════════════════════════════════ */
+$('#fileInput').onchange = e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  e.target.value = '';
+  const type = f.type.startsWith('image/') ? 'image'
+             : f.type.startsWith('video/') ? 'video' : 'document';
+  openSheet({
+    ttl:'ارسال فایل',
+    body: `
+      <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--grey);border-radius:12px;margin-bottom:14px;direction:rtl;">
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;color:var(--ink-2);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.5"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(f.name)}</div>
+          <div style="font-size:12px;color:var(--ink-3);margin-top:1px;direction:ltr;text-align:end;unicode-bidi:isolate;">${fmtBytes(f.size)}</div>
+        </div>
+      </div>
+      <textarea id="capInput" placeholder="افزودن توضیح (اختیاری)" rows="2" style="width:100%;background:var(--grey);border:none;border-radius:12px;padding:12px 14px;font-size:16px;color:var(--ink);resize:none;outline:none;direction:rtl;line-height:1.55;min-height:60px;font-family:var(--fa);"></textarea>
+      ${f.size > 32*1024*1024 ? `<div style="margin-top:10px;color:#FF3B30;font-size:12.5px;">⚠ فایل بزرگ‌تر از ۳۲ مگابایت</div>` : ''}
+    `,
+    acts:[
+      {label:'انصراف', cls:'cancel', action:()=>closeSheet()},
+      {label:'ارسال', cls:'confirm', action:()=>{
+        if(f.size > 32*1024*1024){ toast('فایل بزرگ‌تر از ۳۲ مگابایت'); return; }
+        const cap = $('#capInput').value.trim();
+        const fileObj = { name:f.name, size:f.size };
+        if(type === 'image') fileObj.ph = 'ph-photo';
+        if(type === 'video'){ fileObj.ph = 'ph-video'; fileObj.dur = 0; }
+        const mid = Date.now();
+        messages[activeId].push({ id:mid, conv:activeId, sender:ME_ID, type, file:fileObj, t:new Date().toISOString(), reactions:[] });
+        if(cap){
+          messages[activeId].push({ id:mid+1, conv:activeId, sender:ME_ID, type:'text', body:cap, t:new Date(Date.now()+10).toISOString(), reactions:[] });
+        }
+        closeSheet();
+        renderClusters(); renderSidebar();
+        requestAnimationFrame(()=>{ const m=document.getElementById('msgs'); m.scrollTop = m.scrollHeight; });
+      }}
+    ]
+  });
+};
+
+/* ════════════════════════════════════════════════════════════════
+   GLOBAL HANDLERS
+════════════════════════════════════════════════════════════════ */
+document.addEventListener('click', e => {
+  if(!e.target.closest('#rxnPopover') && !e.target.closest('[data-mid]')){
+    closeRxn();
+  }
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){ closeRxn(); $('#scrim').classList.remove('on'); closeViewer(); }
+});
+$('#scrim').onclick = e => { if(e.target === $('#scrim')) $('#scrim').classList.remove('on'); };
+$('#newConvBtn').onclick = openNewConv;
+$('#meStrip').onclick = openSettings;
+$('#meSettings').onclick = e => { e.stopPropagation(); openSettings(); };
+$('#searchInput').addEventListener('input', e => renderSidebar(e.target.value));
+
+// Wire attach button when chat is rendered (it's inside the chat innerHTML, so
+// we have to rebind every render — handle via event delegation instead)
+document.addEventListener('click', e => {
+  if(e.target.closest('#attachBtn')) $('#fileInput').click();
+});
+
+/* ════════════════════════════════════════════════════════════════
+   BOOT
+════════════════════════════════════════════════════════════════ */
+(function init(){
+  try {
+    const t = localStorage.getItem('pars.theme');
+    if(t === 'dark') document.documentElement.setAttribute('data-dark','');
+    activeBgLight = localStorage.getItem('pars.bgLight') || 'def';
+    activeBgDark  = localStorage.getItem('pars.bgDark')  || 'def';
+  } catch(e){}
+  applyBg();
+  renderMeStrip();
+  renderSidebar();
+  if(window.innerWidth > 760){
+    renderChat();
+  }
+
+  // Test/dev harness
+  window.parsApp = {
+    users, conversations, messages, teacherStudents,
+    get meId(){ return ME_ID; },
+    setMe(id){
+      ME_ID = id; ME = users[id]; renderMeStrip();
+      activeId = visibleConvs()[0]?.id || null;
+      renderSidebar();
+      if(activeId) renderChat();
+      else $('#chat').innerHTML = '<div class="empty"></div>';
+    },
+    setTheme: applyTheme,
+    setBgLight: id => { activeBgLight = id; applyBg(); },
+    setBgDark:  id => { activeBgDark  = id; applyBg(); },
+    openConv, renderSidebar, renderChat, openSettings, openConvDetail, openNewConv,
+    forceMobileChat(){ document.getElementById('sb').classList.add('off'); }
+  };
+})();
+</script>
+
+</body>
+</html>
