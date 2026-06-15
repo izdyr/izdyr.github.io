@@ -281,7 +281,7 @@
 <body>
 <div class="wrap">
   <header class="hero">
-    <span class="brand"><span class="dot"></span>قدرت گرفته از بی خوابی ایزدیار</span>
+    <span class="brand"><span class="dot"></span> قدرت گرفته از بی خوابی ایزدیار</span>
     <h1>تقلب کار دانش‌آموزهاست،<br>من <span class="swipe">وسیله ام</span></h1>
     <svg class="squiggle" width="124" height="9" viewBox="0 0 124 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M2 5 Q 15 1 28 5 T 54 5 T 80 5 T 106 5 T 122 4"/></svg>
     <p class="sub">سوال ها، جواب ها و متن کتاب رو میریزم اینجا و بعد با یه کلمه بین همه شون می گردی. همین. </p>
@@ -377,10 +377,19 @@
     <div class="note">یک فایل HTML مستقل می‌سازد که همهٔ محتوا داخلش جاسازی شده و فقط جست‌وجو دارد (بدون ویرایش). همین فایل را به دانش‌آموزان بده یا روی هاست بگذار — به اینترنت هم نیازی ندارد.</div>
     <button class="btn primary full" id="buildStudent">ساخت فایل دانش‌آموز</button>
 
-    <h4>پشتیبان‌گیری</h4>
+    <h4>افزودن گروهی از فایل JSON</h4>
+    <div class="note">یک فایل JSON آماده کن و یکجا کلی سؤال/جواب و متن کتاب اضافه کن — به‌جای تایپِ تک‌تک. محتوای فعلی پاک نمی‌شود؛ موارد جدید فقط <b>اضافه</b> می‌شوند. ساختار فایل را از «دانلود نمونه» ببین. 📥</div>
+    <div class="row">
+      <button class="btn primary" id="bulkAddBtn" style="flex:1">انتخاب فایل JSON</button>
+      <button class="btn ghost" id="sampleBtn" style="flex:1">دانلود نمونه</button>
+    </div>
+    <input type="file" id="bulkFile" accept="application/json,.json" style="display:none" />
+
+    <h4>پشتیبان و بازیابی</h4>
+    <div class="note">«برون‌بری» یک نسخهٔ پشتیبان از همه‌چیز می‌گیرد. «بازیابی» کلِ محتوای فعلی را با فایل پشتیبان <b>جایگزین</b> می‌کند.</div>
     <div class="row">
       <button class="btn ghost" id="exportBtn" style="flex:1">برون‌بری (JSON)</button>
-      <button class="btn ghost" id="importBtn" style="flex:1">درون‌ریزی (JSON)</button>
+      <button class="btn ghost" id="importBtn" style="flex:1">بازیابی کامل (JSON)</button>
     </div>
     <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
 
@@ -410,9 +419,9 @@ const Store = {
     return (k in mem)? mem[k] : null;
   },
   async set(k,v){
-    try{ if(window.storage){ await window.storage.set(k,v); return; } }catch(e){}
-    try{ localStorage.setItem(k,v); return; }catch(e){}
-    mem[k]=v;
+    try{ if(window.storage){ await window.storage.set(k,v); return true; } }catch(e){}
+    try{ localStorage.setItem(k,v); return true; }catch(e){}
+    mem[k]=v; return false;
   }
 };
 
@@ -534,24 +543,55 @@ let state = { qa:[], books:[] };
 let items = [];   // ایندکس مسطح برای جست‌وجو
 let filter = "all";
 let embedded = false;
+const PAGE = 50;
+let shownLimit = PAGE;
+let lastKey = "__init__";
 
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
+const MAX_CHUNK = 480;
 function chunkText(body){
-  // شکستن به پاراگراف؛ پاراگراف‌های خیلی بلند با جمله‌ها به قطعه‌های ~۵۰۰ نویسه
-  const paras = body.split(/\n\s*\n+/).map(p=>p.replace(/\s+/g,' ').trim()).filter(Boolean);
+  body = (body||"").replace(/\r\n?/g,'\n').trim();
+  if(!body) return [];
+  // اول با خط خالی جدا کن؛ اگر خط خالی نبود، با تک‌خط
+  let blocks = body.split(/\n{2,}/);
+  if(blocks.length<=1) blocks = body.split(/\n+/);
   const out=[];
-  for(const p of paras){
-    if(p.length<=520){ out.push(p); continue; }
-    const sents = p.split(/(?<=[.!?؟])\s+|(?<=[.!؟])\s+/).filter(Boolean);
+  const pushChunked = (text)=>{
+    text = text.replace(/[ \t]+/g,' ').trim();
+    if(!text) return;
+    if(text.length<=MAX_CHUNK){ out.push(text); return; }
+    // تلاش برای شکستن بر اساس جمله
+    const sents = text.split(/(?<=[.!?؟…؛])\s+/);
     let buf="";
-    for(const sn of sents){
-      if((buf+" "+sn).trim().length>520 && buf){ out.push(buf.trim()); buf=sn; }
-      else buf=(buf?buf+" ":"")+sn;
+    for(let s of sents){
+      // جمله‌ای که خودش از حد بلندتر است را به‌زور می‌شکنیم (حتی بدون نقطه‌گذاری)
+      while(s.length>MAX_CHUNK){
+        let cut=s.lastIndexOf(' ', MAX_CHUNK);
+        if(cut < MAX_CHUNK*0.6) cut=MAX_CHUNK;
+        if(buf){ out.push(buf.trim()); buf=""; }
+        out.push(s.slice(0,cut).trim());
+        s=s.slice(cut).trim();
+      }
+      if((buf+' '+s).trim().length>MAX_CHUNK && buf){ out.push(buf.trim()); buf=s; }
+      else buf=(buf?buf+' ':'')+s;
     }
     if(buf.trim()) out.push(buf.trim());
-  }
+  };
+  for(const b of blocks) pushChunked(b);
   return out.length?out:[body.replace(/\s+/g,' ').trim()];
+}
+
+/* قطعه‌های بسیار بلندِ ذخیره‌شدهٔ قدیمی را دوباره می‌شکند */
+function migrateChunks(){
+  let changed=false;
+  for(const b of state.books){
+    if(Array.isArray(b.passages) && b.passages.some(p=>(p||"").length>MAX_CHUNK+120)){
+      b.passages = chunkText(b.passages.join("\n\n"));
+      changed=true;
+    }
+  }
+  return changed;
 }
 
 function buildIndex(){
@@ -628,9 +668,8 @@ function runSearch(raw){
   if(filter!=="all") pool = items.filter(it=>it.type===filter);
 
   if(!q.terms.length){
-    // بدون کلیدواژه: تازه‌ترین‌ها
-    const recent = pool.slice().reverse().slice(0,40)
-      .map(it=>({item:it, sc:0}));
+    // بدون کلیدواژه: همه (تازه‌ترین‌ها اول) — صفحه‌بندی می‌شود
+    const recent = pool.slice().reverse().map(it=>({item:it, sc:0}));
     return {q, list:recent, empty:true};
   }
   const scored=[];
@@ -639,7 +678,7 @@ function runSearch(raw){
     if(sc>0) scored.push({item:it, sc});
   }
   scored.sort((a,b)=>b.sc-a.sc);
-  return {q, list:scored.slice(0,80), empty:false};
+  return {q, list:scored, empty:false};
 }
 
 /* ============================================================
@@ -669,18 +708,36 @@ function render(){
     return;
   }
 
+  // ریست صفحه‌بندی وقتی جست‌وجو یا فیلتر عوض می‌شود
+  const key = filter+"|"+raw.trim();
+  if(key!==lastKey){ lastKey=key; shownLimit=PAGE; }
+
+  const total = list.length;
+
   if(empty){
-    metaEl.innerHTML = `${faNum(totalQa)} سؤال و ${faNum(totalBook)} تیکه متن این تو هست — یه کلمه بنویس ببین چی درمیاد.`;
-  } else if(list.length===0){
+    metaEl.innerHTML = `${faNum(totalQa)} سؤال و ${faNum(totalBook)} تیکه متن این تو هست — یه کلمه بنویس، یا پایین‌تر همه‌شو ببین.`;
+  } else if(total===0){
     metaEl.textContent="";
     resultsEl.innerHTML = `<div class="empty"><div class="big">🤔</div><h3>هیچی پیدا نشد</h3><p>برای «${escapeHTML(raw)}» چیزی نبود. شاید یه کلمهٔ کوتاه‌تر یا یه جور دیگه‌ش؟</p></div>`;
     return;
   } else {
-    metaEl.textContent = `${faNum(list.length)} نتیجه`;
+    metaEl.textContent = total>shownLimit
+      ? `نمایش ${faNum(Math.min(shownLimit,total))} از ${faNum(total)} نتیجه`
+      : `${faNum(total)} نتیجه`;
   }
 
-  resultsEl.innerHTML = list.map(({item})=>cardHTML(item,q)).join("");
+  const slice = list.slice(0, shownLimit);
+  resultsEl.innerHTML = slice.map(({item})=>cardHTML(item,q)).join("");
   bindResultEvents(q);
+
+  if(total>shownLimit){
+    const more=document.createElement("button");
+    more.className="btn ghost full";
+    more.style.marginTop="14px";
+    more.textContent=`بیشتر نشان بده — ${faNum(total-shownLimit)} مورد دیگه`;
+    more.onclick=()=>{ shownLimit+=PAGE; render(); };
+    resultsEl.appendChild(more);
+  }
 }
 
 function cardHTML(item,q){
@@ -700,12 +757,10 @@ function cardHTML(item,q){
     </article>`;
   }
   const txt=item.ref;
-  const isLong=txt.length>240;
   return `<article class="card">
     <span class="tag-type book"><span class="sq"></span>متن کتاب</span>
     <div class="src-text">${highlight(item.book.title,q)}</div>
-    <div class="passage">${snippet(txt,q,240)}</div>
-    ${isLong?`<div class="card-foot"><button class="mini expand" data-full="${encodeURIComponent(txt)}">دیدنِ کاملِ متن</button></div>`:""}
+    <div class="passage">${highlight(txt,q)}</div>
   </article>`;
 }
 
@@ -766,7 +821,14 @@ setInterval(()=>{
 /* ============================================================
    ۶) درج/ذخیره
    ============================================================ */
-async function save(){ await Store.set(KEY, JSON.stringify(state)); }
+async function save(){
+  const ok = await Store.set(KEY, JSON.stringify(state));
+  if(!ok && !save._warned){
+    save._warned=true;
+    toast("داده‌ها سنگین شدن و شاید ذخیره نمونن — یه «برون‌بری JSON» بگیر که از دست نره");
+  }
+  return ok;
+}
 function refresh(){ buildIndex(); render(); renderLibrary(); }
 
 function toast(msg){
@@ -840,6 +902,92 @@ $("#exportBtn").onclick=()=>{
   download(JSON.stringify(state,null,2), "پشتیبان-جستجوگر.json", "application/json");
   toast("پشتیبان دانلود شد");
 };
+
+/* ----- افزودن گروهی از فایل JSON (با ساختار منعطف) ----- */
+function pick(o, keys){
+  for(const k of keys){ if(o && o[k]!=null && o[k]!=="") return o[k]; }
+  return "";
+}
+function coerceQA(x){
+  if(!x || typeof x!=="object") return null;
+  const q=String(pick(x,["q","question","پرسش","سوال","سؤال"])).trim();
+  const a=String(pick(x,["a","answer","پاسخ","جواب"])).trim();
+  if(!q || !a) return null;
+  let tags=x.tags ?? x["برچسب"] ?? x["برچسب‌ها"] ?? [];
+  if(typeof tags==="string") tags=tags.split(/[,،]/).map(s=>s.trim()).filter(Boolean);
+  if(!Array.isArray(tags)) tags=[];
+  return {id:uid(), q, a, tags:tags.map(String), created:Date.now()};
+}
+function coerceBook(x){
+  if(!x || typeof x!=="object") return null;
+  const title=String(pick(x,["title","عنوان","نام","source","منبع"])||"بدون عنوان").trim();
+  let passages;
+  if(Array.isArray(x.passages) && x.passages.length){
+    passages=chunkText(x.passages.map(p=>String(p||"")).join("\n\n"));
+  } else {
+    passages=chunkText(String(pick(x,["text","متن","body","content","محتوا"])));
+  }
+  if(!passages.length) return null;
+  return {id:uid(), title, passages, created:Date.now()};
+}
+function parseImport(data){
+  const qa=[], books=[];
+  const addQA=arr=>{ for(const x of arr){ const r=coerceQA(x); if(r) qa.push(r); } };
+  const addBooks=arr=>{ for(const x of arr){ const b=coerceBook(x); if(b) books.push(b); } };
+  if(Array.isArray(data)){
+    for(const x of data){
+      if(x && (x.text!=null||x.passages!=null||x.body!=null||x["متن"]!=null)) { const b=coerceBook(x); if(b) books.push(b); }
+      else { const r=coerceQA(x); if(r) qa.push(r); }
+    }
+  } else if(data && typeof data==="object"){
+    if(Array.isArray(data.qa)) addQA(data.qa);
+    if(Array.isArray(data.questions)) addQA(data.questions);
+    if(Array.isArray(data["سوالات"])) addQA(data["سوالات"]);
+    if(Array.isArray(data.books)) addBooks(data.books);
+    if(Array.isArray(data["کتاب‌ها"])) addBooks(data["کتاب‌ها"]);
+    if(Array.isArray(data.texts)) addBooks(data.texts);
+  }
+  return {qa, books};
+}
+
+$("#bulkAddBtn").onclick=()=>$("#bulkFile").click();
+$("#bulkFile").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=async()=>{
+    try{
+      const data=JSON.parse(r.result);
+      const {qa,books}=parseImport(data);
+      if(!qa.length && !books.length){ toast("هیچ سؤال یا متنی توی فایل پیدا نشد"); e.target.value=""; return; }
+      state.qa.push(...qa);
+      state.books.push(...books);
+      await save(); refresh();
+      const psg=books.reduce((s,b)=>s+b.passages.length,0);
+      const parts=[];
+      if(qa.length) parts.push(`${faNum(qa.length)} سؤال`);
+      if(books.length) parts.push(`${faNum(books.length)} کتاب (${faNum(psg)} قطعه)`);
+      toast(parts.join(" و ")+" اضافه شد ✓");
+    }catch(err){ toast("فایل JSON معتبر نیست"); }
+    e.target.value="";
+  };
+  r.readAsText(f);
+};
+
+$("#sampleBtn").onclick=()=>{
+  const sample={
+    qa:[
+      {q:"یک نمونه سؤال؟", a:"و این هم جوابش.", tags:["فصل ۱","نمونه"]},
+      {q:"سؤال دوم چیست؟", a:"جوابِ سؤال دوم اینجا."}
+    ],
+    books:[
+      {title:"اسمِ درس — فصل ۱", text:"کلِ متنِ فصل رو اینجا بذار.\n\nهر پاراگراف رو با یک خط خالی جدا کن.\n\nخودش به‌صورت خودکار تیکه‌تیکه می‌شه."},
+      {title:"درسِ دیگر", passages:["اگه متن از قبل تیکه شده، اینجوری بذارش.","این هم قطعهٔ دوم."]}
+    ]
+  };
+  download(JSON.stringify(sample,null,2), "نمونه-محتوا.json", "application/json");
+  toast("فایل نمونه دانلود شد");
+};
+
 $("#importBtn").onclick=()=>$("#importFile").click();
 $("#importFile").onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
@@ -848,7 +996,9 @@ $("#importFile").onchange=e=>{
     try{
       const data=JSON.parse(r.result);
       if(!data || !Array.isArray(data.qa) || !Array.isArray(data.books)) throw 0;
-      state=data; await save(); refresh(); toast("محتوا بازیابی شد");
+      const hasContent = state.qa.length || state.books.length;
+      if(hasContent && !confirm("کلِ محتوای فعلی با این فایل جایگزین می‌شود. اگر می‌خواهی فقط اضافه شود از «افزودن گروهی» استفاده کن. ادامه؟")){ e.target.value=""; return; }
+      state=data; migrateChunks(); await save(); refresh(); toast("محتوا بازیابی شد");
     }catch(err){ toast("فایل معتبر نیست"); }
     e.target.value="";
   };
@@ -921,6 +1071,7 @@ async function init(){
     const saved=await Store.get(KEY);
     if(saved){ try{ const d=JSON.parse(saved); if(d&&Array.isArray(d.qa)&&Array.isArray(d.books)) state=d; }catch(e){} }
   }
+  if(migrateChunks()){ try{ await save(); }catch(e){} }
   buildIndex(); render(); renderLibrary();
 }
 init();
