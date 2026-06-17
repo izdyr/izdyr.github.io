@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جستجوگر کلاس</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFAF6;
+    --paper-2:#F4F1E9;
+    --card:#FFFFFF;
+    --ink:#20212E;
+    --ink-soft:#5C5E6E;
+    --ink-faint:#8A8C99;
+    --line:#E7E3D8;
+    --line-strong:#D9D4C6;
+    --accent:#2F6F62;
+    --accent-deep:#214f46;
+    --accent-soft:#E4F0EC;
+    --mark:#FCE38A;
+    --mark-strong:#F6C945;
+    --qa:#2F6F62;
+    --book:#9A5B2C;
+    --pop:#E8705B;
+    --pop-soft:#FBE7E2;
+    --danger:#B23A3A;
+    --radius:16px;
+    --radius-sm:10px;
+    --shadow:0 1px 2px rgba(32,33,46,.04), 0 8px 24px rgba(32,33,46,.06);
+    --shadow-lg:0 12px 40px rgba(32,33,46,.16);
+    --font:'Vazirmatn','Vazir',Tahoma,'Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--font);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    font-size:16px;
+  }
+  ::selection{background:var(--mark);color:var(--ink)}
+  button{font-family:inherit;cursor:pointer}
+  input,textarea{font-family:inherit}
+
+  .wrap{max-width:820px;margin:0 auto;padding:0 18px 120px}
+
+  /* ===== Header / hero ===== */
+  header.hero{
+    padding:34px 0 14px;
+    text-align:center;
+  }
+  .brand{
+    display:inline-flex;align-items:center;gap:10px;
+    font-weight:800;font-size:13px;letter-spacing:.04em;
+    color:var(--accent);
+  }
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--mark-strong);box-shadow:0 0 0 4px var(--accent-soft)}
+  h1{
+    font-size:clamp(28px,6vw,40px);
+    font-weight:800;margin:14px 0 6px;letter-spacing:-.01em;line-height:1.25;
+  }
+  h1 .swipe{
+    background:linear-gradient(transparent 12%, var(--mark) 12% 86%, transparent 86%);
+    padding:0 .12em;border-radius:3px;
+  }
+  .sub{color:var(--ink-soft);font-size:15px;max-width:520px;margin:0 auto}
+
+  /* ===== Search ===== */
+  .searchbar{
+    margin:26px 0 16px;position:sticky;top:12px;z-index:30;
+  }
+  .search-shell{
+    display:flex;align-items:center;gap:10px;
+    background:var(--card);border:1.5px solid var(--line-strong);
+    border-radius:999px;padding:6px 8px 6px 16px;
+    box-shadow:var(--shadow);
+    transition:border-color .18s, box-shadow .18s;
+  }
+  .search-shell:focus-within{
+    border-color:var(--accent);
+    box-shadow:0 0 0 4px var(--accent-soft), var(--shadow);
+  }
+  .search-shell .ic{color:var(--ink-faint);flex-shrink:0;display:flex}
+  #search{
+    border:0;outline:0;background:transparent;flex:1;min-width:0;
+    font-size:17px;color:var(--ink);padding:10px 4px;
+  }
+  #search::placeholder{color:var(--ink-faint)}
+  .kbd{
+    border:1px solid var(--line-strong);border-radius:6px;
+    font-size:11px;color:var(--ink-faint);padding:2px 7px;background:var(--paper-2);
+    flex-shrink:0;
+  }
+  .clear-btn{
+    border:0;background:var(--paper-2);color:var(--ink-soft);
+    width:30px;height:30px;border-radius:50%;font-size:16px;line-height:1;
+    display:none;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .clear-btn:hover{background:var(--line)}
+
+  /* ===== Toolbar: filters + manage ===== */
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+  .seg{display:inline-flex;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .seg button{
+    border:0;background:transparent;color:var(--ink-soft);
+    padding:6px 14px;border-radius:999px;font-size:13.5px;font-weight:600;
+    transition:.15s;
+  }
+  .seg button .n{font-size:11px;opacity:.7;margin-inline-start:4px}
+  .seg button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .manage-btn{
+    display:inline-flex;align-items:center;gap:7px;
+    border:1px solid var(--line-strong);background:var(--card);color:var(--ink);
+    padding:8px 14px;border-radius:999px;font-size:13.5px;font-weight:600;
+    transition:.15s;
+  }
+  .manage-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+  .meta{color:var(--ink-faint);font-size:13px;margin:14px 2px 10px}
+
+  /* ===== Result cards ===== */
+  .results{display:flex;flex-direction:column;gap:14px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 20px;box-shadow:var(--shadow);
+    animation:rise .28s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .tag-type{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;font-weight:700;border-radius:999px;padding:3px 11px;margin-bottom:10px;
+  }
+  .tag-type.qa{color:var(--qa);background:var(--accent-soft)}
+  .tag-type.book{color:var(--book);background:#F4E9DD}
+  .tag-type .sq{width:6px;height:6px;border-radius:2px}
+  .tag-type.qa .sq{background:var(--qa)}
+  .tag-type.book .sq{background:var(--book)}
+  .q-text{font-weight:700;font-size:18px;margin:2px 0 8px;line-height:1.6}
+  .a-text{color:var(--ink-soft);font-size:15.5px;line-height:1.85;white-space:pre-wrap}
+  .src-text{font-weight:700;font-size:15px;margin:2px 0 7px;color:var(--ink)}
+  .passage{color:var(--ink-soft);font-size:15.5px;line-height:1.9;white-space:pre-wrap}
+  .card-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .chip{
+    font-size:12px;color:var(--ink-soft);background:var(--paper-2);
+    border:1px solid var(--line);border-radius:999px;padding:3px 10px;
+  }
+  .chip.click{cursor:pointer}
+  .chip.click:hover{border-color:var(--accent);color:var(--accent)}
+  .mini{
+    margin-inline-start:auto;border:0;background:transparent;color:var(--ink-faint);
+    font-size:12.5px;font-weight:600;padding:5px 8px;border-radius:8px;display:inline-flex;align-items:center;gap:5px;
+  }
+  .mini:hover{background:var(--paper-2);color:var(--accent)}
+  mark{
+    background:linear-gradient(transparent 14%, var(--mark) 14% 86%, transparent 86%);
+    color:inherit;padding:0 .06em;border-radius:2px;font-weight:600;
+  }
+
+  /* ===== Empty states ===== */
+  .empty{
+    text-align:center;padding:54px 20px;color:var(--ink-soft);
+    border:1.5px dashed var(--line-strong);border-radius:var(--radius);background:var(--card);
+  }
+  .empty .big{font-size:38px;margin-bottom:8px}
+  .empty h3{margin:6px 0;color:var(--ink);font-size:18px;font-weight:700}
+  .empty p{margin:4px 0;font-size:14.5px}
+  .empty .act{margin-top:16px}
+
+  /* ===== Drawer (manage) ===== */
+  .scrim{
+    position:fixed;inset:0;background:rgba(32,33,46,.42);backdrop-filter:blur(2px);
+    opacity:0;pointer-events:none;transition:.22s;z-index:50;
+  }
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{
+    position:fixed;inset-block:0;inset-inline-start:0;width:min(520px,100%);
+    background:var(--paper);box-shadow:var(--shadow-lg);
+    transform:translateX(-101%);transition:transform .26s cubic-bezier(.4,0,.2,1);
+    z-index:60;display:flex;flex-direction:column;
+  }
+  html[dir="rtl"] .drawer{transform:translateX(101%)} /* slides from right visually... handled below */
+  .drawer.open{transform:translateX(0)!important}
+  .drawer-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 20px;border-bottom:1px solid var(--line);background:var(--card);
+  }
+  .drawer-head h2{margin:0;font-size:17px;font-weight:800}
+  .x{border:0;background:var(--paper-2);width:34px;height:34px;border-radius:50%;font-size:18px;color:var(--ink-soft)}
+  .x:hover{background:var(--line)}
+  .tabs{display:flex;gap:4px;padding:12px 16px 0;flex-wrap:wrap;background:var(--card);border-bottom:1px solid var(--line)}
+  .tabs button{
+    border:0;background:transparent;color:var(--ink-soft);font-weight:600;font-size:13.5px;
+    padding:9px 12px;border-radius:9px 9px 0 0;position:relative;
+  }
+  .tabs button[aria-selected="true"]{color:var(--accent)}
+  .tabs button[aria-selected="true"]::after{
+    content:"";position:absolute;inset-inline:8px;bottom:-1px;height:2.5px;background:var(--accent);border-radius:2px;
+  }
+  .panel{padding:20px;overflow:auto;flex:1}
+  .panel:not(.show){display:none}
+  label.fld{display:block;margin-bottom:14px}
+  label.fld .lab{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px;display:block}
+  label.fld .hint{font-size:12px;color:var(--ink-faint);font-weight:400;margin-inline-start:6px}
+  .in{
+    width:100%;border:1.5px solid var(--line-strong);border-radius:var(--radius-sm);
+    background:var(--card);padding:11px 13px;font-size:15px;color:var(--ink);outline:0;transition:.15s;
+  }
+  textarea.in{resize:vertical;min-height:90px;line-height:1.8}
+  textarea.in.big{min-height:200px}
+  .in:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .btn{
+    border:0;border-radius:var(--radius-sm);font-weight:700;font-size:14.5px;
+    padding:11px 18px;display:inline-flex;align-items:center;gap:8px;justify-content:center;transition:.15s;
+  }
+  .btn.primary{background:var(--accent);color:#fff}
+  .btn.primary:hover{background:var(--accent-deep)}
+  .btn.ghost{background:var(--card);color:var(--ink);border:1.5px solid var(--line-strong)}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.danger{background:transparent;color:var(--danger);border:1.5px solid #E9CFCF}
+  .btn.danger:hover{background:#FBEDED}
+  .btn.full{width:100%}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+
+  .note{
+    background:var(--accent-soft);border:1px solid #CBE2DB;border-radius:var(--radius-sm);
+    padding:12px 14px;font-size:13px;color:var(--accent-deep);line-height:1.8;margin-bottom:16px;
+  }
+  .list-item{
+    display:flex;align-items:flex-start;gap:10px;justify-content:space-between;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:12px 14px;margin-bottom:9px;
+  }
+  .list-item .lt{font-size:14.5px;font-weight:600;line-height:1.6;word-break:break-word}
+  .list-item .ls{font-size:12px;color:var(--ink-faint);margin-top:3px}
+  .iconbtn{border:0;background:transparent;color:var(--ink-faint);font-size:13px;font-weight:600;padding:5px 8px;border-radius:7px;flex-shrink:0}
+  .iconbtn:hover{background:#FBEDED;color:var(--danger)}
+  .panel h4{margin:22px 0 10px;font-size:13px;color:var(--ink-faint);font-weight:700;letter-spacing:.02em}
+  .panel h4:first-child{margin-top:0}
+  .count-row{display:flex;gap:10px;margin-bottom:18px}
+  .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:14px;text-align:center}
+  .stat b{display:block;font-size:24px;font-weight:800;color:var(--accent)}
+  .stat span{font-size:12px;color:var(--ink-soft)}
+
+  /* ===== Toast ===== */
+  #toast{
+    position:fixed;inset-block-end:24px;inset-inline:0;display:flex;justify-content:center;
+    z-index:90;pointer-events:none;
+  }
+  #toast .t{
+    background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;
+    font-size:14px;font-weight:600;box-shadow:var(--shadow-lg);
+    transform:translateY(20px);opacity:0;transition:.25s;
+  }
+  #toast .t.show{transform:none;opacity:1}
+
+  .badge-student{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#F4E9DD;color:var(--book);font-weight:700;font-size:12px;
+    padding:4px 12px;border-radius:999px;margin-top:10px;
+  }
+
+  /* ===== handmade accent ===== */
+  .squiggle{display:block;margin:10px auto 0;color:var(--mark-strong)}
+  .tools-right{display:flex;gap:8px;flex-wrap:wrap}
+
+  @media (max-width:560px){
+    .wrap{padding:0 14px 110px}
+    .card{padding:16px}
+    .seg button{padding:6px 11px;font-size:12.5px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <span class="brand"><span class="dot"></span> قدرت گرفته از بی خوابی ایزدیار</span>
+    <h1>تقلب کار دانش‌آموزهاست،<br>من <span class="swipe">وسیله ام</span></h1>
+    <svg class="squiggle" width="124" height="9" viewBox="0 0 124 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M2 5 Q 15 1 28 5 T 54 5 T 80 5 T 106 5 T 122 4"></path></svg>
+    <p class="sub">سوال ها، جواب ها و متن کتاب رو میریزم اینجا و بعد با یه کلمه بین همه شون می گردی. همین. </p>
+    <div id="studentBadge" style="display:none"><span class="badge-student">📒 نسخهٔ دانش‌آموز — فقط جست‌وجو</span></div>
+  </header>
+
+  <div class="searchbar">
+    <div class="search-shell">
+      <span class="ic" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      </span>
+      <input id="search" type="text" placeholder="مثلاً: تا سختی کمان شما نیز خب؟... بگذرد!" autocomplete="off" aria-label="جستجو">
+      <button class="clear-btn" id="clearBtn" aria-label="پاک کردن" style="display: none;">×</button>
+      <span class="kbd" id="slashHint" style="">/</span>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="seg" role="tablist" aria-label="فیلتر نوع">
+      <button data-f="all" aria-selected="true" role="tab">همه<span class="n" id="cAll">۶۴</span></button>
+      <button data-f="qa" aria-selected="false" role="tab">پرسش ها<span class="n" id="cQa">۶۴</span></button>
+      <button data-f="book" aria-selected="false" role="tab">متن کتاب<span class="n" id="cBook"></span></button>
+    </div>
+    <div class="tools-right">
+      <button class="manage-btn" id="manageBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+        مدیریت محتوا
+      </button>
+    </div>
+  </div>
+
+  <div class="meta" id="meta">۶۴ سؤال و ۰ تیکه متن این تو هست — یه کلمه بنویس، یا پایین‌تر همه‌شو ببین.</div>
+  <div class="results" id="results"></div>
+</div>
+
+<!-- ===== Drawer ===== -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="false" aria-label="مدیریت محتوا">
+  <div class="drawer-head">
+    <h2>مدیریت محتوا</h2>
+    <button class="x" id="closeDrawer" aria-label="بستن">×</button>
+  </div>
+  <div class="tabs" role="tablist">
+    <button data-t="qa" aria-selected="false">پرسش و پاسخ</button>
+    <button data-t="book" aria-selected="false">متن کتاب</button>
+    <button data-t="library" aria-selected="false">کتابخانه</button>
+    <button data-t="backup" aria-selected="true">پشتیبان و انتشار</button>
+  </div>
+
+  <!-- Add Q&A -->
+  <div class="panel" data-p="qa">
+    <div class="note">سؤال‌ها بیشترین وزن رو تو جست‌وجو دارن؛ یعنی اگه کلیدواژه تو خودِ سؤال باشه، بالاتر میاد. 👌</div>
+    <label class="fld"><span class="lab">سؤال</span>
+      <textarea class="in" id="qIn" placeholder="اون سؤالی که همیشه سرِ امتحان میاد…" style="height: 50px;"></textarea>
+    </label>
+    <label class="fld"><span class="lab">جواب</span>
+      <textarea class="in" id="aIn" placeholder="جوابِ کامل رو اینجا بنویس…"></textarea>
+    </label>
+    <label class="fld"><span class="lab">برچسب‌ها <span class="hint">اختیاری — با ویرگول جدا کن</span></span>
+      <input class="in" id="tIn" placeholder="مثلاً: فصل ۳، مهمِ امتحان">
+    </label>
+    <button class="btn primary full" id="addQa">اضافه‌ش کن</button>
+  </div>
+
+  <!-- Add book -->
+  <div class="panel" data-p="book">
+    <div class="note">کلِ یه فصل رو یهو بچسبون اینجا؛ خودش تیکه‌تیکه‌ش می‌کنه تا جواب‌ها کوتاه و دقیق باشن. 📖</div>
+    <label class="fld"><span class="lab">اسمِ منبع</span>
+      <input class="in" id="bTitle" placeholder="مثلاً: تاریخ — درس ۵">
+    </label>
+    <label class="fld"><span class="lab">متنِ کتاب <span class="hint">کلِ فصل رو یکجا بذار</span></span>
+      <textarea class="in big" id="bBody" placeholder="متن رو اینجا بچسبون…"></textarea>
+    </label>
+    <button class="btn primary full" id="addBook">اضافه‌ش کن</button>
+  </div>
+
+  <!-- Library -->
+  <div class="panel" data-p="library">
+    <div class="count-row">
+      <div class="stat"><b id="stQa">۶۴</b><span>پرسش و پاسخ</span></div>
+      <div class="stat"><b id="stBook">۰</b><span>کتاب / منبع</span></div>
+      <div class="stat"><b id="stPsg">۰</b><span>قطعهٔ متن</span></div>
+    </div>
+    <h4>کتاب‌ها و منابع</h4>
+    <div id="bookList"><div class="ls" style="color:var(--ink-faint)">هنوز کتابی اضافه نشده.</div></div>
+    <h4>پرسش و پاسخ‌ها</h4>
+    <div id="qaList">
+    <div class="list-item">
+      <div><div class="lt">نقش هر سکونتگاه هبر چه اساسی تعیین میشود</div><div class="ls">نقش هر سکونتگاه بر اساس وضعیت جغرافیای آن اهم از طبیعی یا ان…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bcf628">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">شهر خطی را با مثال توضیح دهید</div><div class="ls">شهری که حول محورهای ارتباطی (ریلی و جاده ای ) و یا در امتداد…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bdr5yg">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">شهر شطرنجی ا با مثال توضیح دهید</div><div class="ls">در این شهرها یک شبکه مستقیم شکل از راههای ارتباطی زمینهای شه…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19b8s8bp">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مهمترین اشکال شهرهای ایران را با توجه به نحوه پیدایش و کارکرد آنها نام ببرید.</div><div class="ls">شهر شعاعی (ستاره ای )_شهر شطرنجی_شهر خطی</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19b3sjt3">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">روستا های پراکنده و متمرکز را نام ببرید</div><div class="ls">روستا های متمرکز تحت تاثیر پدیده های اطراف خود است</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19blitpw">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">اجزا سوکونت گاه روستایی کدامند</div><div class="ls">هر سکونتگاه از اجزای مختلف تشکیل شده است. اجزای سکونتگاههای …</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19b8ahvc">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">منظو از یک روستا به عنوان یک سکونت گاه چیست</div><div class="ls">روستای محلی از که فعالیت اکثر ساکنان آن به زمین وابسته است و…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19b6ckcn">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">قدیمیترین نوع سکونتگاه در ایران کدام است؟ ویژگی آن را بیان کنید.</div><div class="ls">قدیمی‌ترین و سکونتگاهی که در ایران شناخته شده است سکونتگاه ع…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19b96bhi">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">چه عواملی در گسترش سکونت گاه اثر گذارند</div><div class="ls">شرایط جغرافیایی مناسب در گسترش سکونتگاهها اثرگذار است. بسیار…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bqxyok">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">منظور از مهاجرت چیست؟ انواع آن کدامند؟</div><div class="ls">مهاجرت عبارت است از جابه جایی بین دو واحد جغرافیایی یا به عب…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bm4056">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">گروه های عمده سنی در یک جمعیت کدامند؟</div><div class="ls">تقسیم بندی چهار گروه سنی کودکان و نوجوانان، جوانان، بزرگسالا…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19blkx0x">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مهمترین موراد استفاده از ساختمان سنی و جنسی جمعیت در کشور کدامند؟</div><div class="ls">رای تحقق برنامه های تأمین اجتماعی، بهبود وضعیت سالمندان، ارت…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19b43hzd">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">ساختمان جمعیت چه ویژگی هایی از جمعیت را نشان میدهد؟</div><div class="ls">ساختمان جمعیت، ویژگی های قابل اندازه گیری جمعیت را مورد بررس…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bud0r9">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">منظور از قانون ۷۰ در محاسبات جمعیتی چیست؟ چگونه محاسبه میشود؟</div><div class="ls">قانون ۷۰ زمان دو برابر شدن جمعیت هر کشور را نشان می دهد.</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bw8rvz">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">عوامل طبیعی موثر در پراکندگی جمعیت ایران کدامند؟</div><div class="ls">ناهمواری ها
+ رودهای دائمی و موقت
+پراکندگی معادن
+ پوشش گیاهی</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19barb1g">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">دریاچه ارومیه را در گذشته با نام های دیگری همچون ..... و ..... نیز می شناخته اند</div><div class="ls">چیچست و کبودان</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bmpqqd">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مهمترین دلایل اهمیتی دریاچه ارومیه کدامند؟</div><div class="ls">از دلايل اهميت اين درياچه، وجود جزاير متعدد در آن است كه محل…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bsqx1g">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">راه های تامین آب دریاچه ارومیه کدامند؟</div><div class="ls">آب اين درياچه علاوه بر چشمه هاي كف و حاشیۀ آن، از طريق رودها…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bf76uz">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">دریاچه های فصلی چه ویژگی هایی دارند و مهمترین آنها در ایران کدامند؟</div><div class="ls">این دریاچه ها در فصول پر بارش وسعت بیشتری پیدا می کنند ولی د…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19b43yqz">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">دریاچه دائمی بیشتر در کدام قسمت ایران قرار دارند؟
+از نظر اقلیمی این دریاچه ها در چه مناطقی پراکنده شده اند؟
+مهمترین دریاچه های دائمی ایران کدامند؟
+آب آنها چگونه است و چگونه تامین میشود؟</div><div class="ls">اغلب دریاچه های دائمی ایران در نیمه غربی کشور قرار دارند که …</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bk9wgp">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">جزایر مهم خلیج فارس را نام برده، بزرگترین آن کدام است؟</div><div class="ls">در خلیج فارس، جزایر مهمی همچون خارک، کیش، فرور، بوموسی ـ تنب…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bvgkqa">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">در منطقه خلیج فارس منظور از خور چیست؟ مثال بزنید</div><div class="ls">به خلیج های کوچک سواحل خلیج فارس «خور» می گویند؛ مثل خور موس…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19b5hxpu">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">رود هایی که به خلیج میریزند کدامند و چرا کارون مهمترین آن است؟</div><div class="ls">کارون، کرخه و دالکی و مُند. کارون پرآب ترین، طویل ترین
+و تنه…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bhg8tk">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">انواع کانون های آبگیر در ایران و ویژگی های هرکدام را ذکر نمایید</div><div class="ls">با استفاده از نقشۀ زیر بگویید چند نوع کانون آبگیر داریم؟
+ـ ک…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bovryh">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">۴ ویژگی رود های ایران را بنویسید</div><div class="ls">1 در ایران بیشتر بارش ها در اواخر فصل پاییز تا اوایل فصل بها…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19by0dad">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">چه عاملی در شکل گیری سکونت گاه ها نقش دارد</div><div class="ls">عوامل طبیعی و انسانی</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bntz9p">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مفهوم سکونتگاه از دیدگاه جغرافیا را تعریف کرده و مثال بزنید.</div><div class="ls">سکونتگاه محلی است. از مجموعه مساکن که عوامل طبیعی و انسانی د…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnc19bnkt35">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مهمترین تواندمندی های ایران برای گسترش گردشگری در چه زمینه هایی است؟</div><div class="ls">وجود مراکز گوناگون فرهنگی مانند
+9 وجود یادواره های دفاع مقدس…</div></div>
+      <button class="iconbtn" data-del-qa="mqhnab04fyww0">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مهمترین پیامد های گردشگری برای کشور میزبان کدامند؟</div><div class="ls">برای کشور میزبان می تواند اشتغال زایی،توسعه، رونق اقتصادی و
+…</div></div>
+      <button class="iconbtn" data-del-qa="mqhn85ykuvtnv">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">خدمات در کشور ها توسط چه کسانی به مردم عرضه میشوند؟ در ایران چطور؟</div><div class="ls">خدمات درکشورها به وسیله بخش خصوصی و دولتی به مردم عرضه می شو…</div></div>
+      <button class="iconbtn" data-del-qa="mqhn74ivody08">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">منظور از خدمات در فعالیت های اقتصادی چیست؟</div><div class="ls">به زنجیرۀ فعالیت های مالی، مدیریتی، بهداشتی، آموزشی، انتظامی…</div></div>
+      <button class="iconbtn" data-del-qa="mqhn633o7w1os">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">صنایع دفاعی ایران چه وظیفه ای دارد و از چه بخش هایی تشکیل شده اند؟</div><div class="ls">این صنایع وظیفه طراحی و تولید تجهیزات نظامی برای نیروهای مسل…</div></div>
+      <button class="iconbtn" data-del-qa="mqhn4wcs04opc">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">بزرگترین و مهمترین صنایع کشورمان به ترتیب کدامند؟</div><div class="ls">صنایع ماشینی
+صنایع پتروشیمی
+صنایع خودروسازی
+صنایع دفاعی</div></div>
+      <button class="iconbtn" data-del-qa="mqhn3khmu8tlt">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">یکی از صنایع دستی مهم کشور چیست؟ دلیل اهمیت و شهرت آن چه میباشد؟</div><div class="ls">یکی از صنایع دستی مهم ایران فرش دستبافت است.کشور ما یکی از ص…</div></div>
+      <button class="iconbtn" data-del-qa="mqhn0wfcbpgzr">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">نقش عشایر در اقتصاد کشور را توضیح دهید.</div><div class="ls">یکی از تولیدکنندگان محصولات دامی، عشایر غیور و زحمت کش هستند…</div></div>
+      <button class="iconbtn" data-del-qa="mqhmyh0mts3wb">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مهمترین مزایای کشت گلخانه ای کدامند؟</div><div class="ls">1 کاهش مصرف آب
+2 تولید در طول سال و همه جا
+3 کنترل بهتر وضعی…</div></div>
+      <button class="iconbtn" data-del-qa="mqhmxedb5ffr3">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">عامل اصلی در تنوع محصولات باغی در ایران چیست؟</div><div class="ls">اختلاف شدید درجه حرارت روزانه و سالانه در نواحی مختلف ایران،…</div></div>
+      <button class="iconbtn" data-del-qa="mqhmw6egcf6gh">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">با اینکه فعالیت های زراعی کشورمان بسیار گوناگون است، چرا در تامین برخی محصولات زراعی٬ به واردات وابسته ایم؟</div><div class="ls">محدودیت در منابع آب و خاک، بهره وری کم، وجود
+آفات و خسارات ط…</div></div>
+      <button class="iconbtn" data-del-qa="mqhmv12hdqw35">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مهمترین فغالیت های بخش کشاورزی در کشور ایران کدامند؟</div><div class="ls">مهم ترین فعالیت ها در این بخش عبارت است از: زراعت، باغداری و…</div></div>
+      <button class="iconbtn" data-del-qa="mqhmt9bm65cnk">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">منظور از کشاورزی در فعالیت های اقتصادی چیست؟
+چه نوع رابطه ای انسان و محیط را کشاورزی می نامیم؟</div><div class="ls">یکی از اساسی ترین نیاز های انسان، نیاز به غذا است. به منظور …</div></div>
+      <button class="iconbtn" data-del-qa="mqhmrxgg21iiw">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">منظور از روستا در تقسیمات کشوری چیست٬‌ توسط چه کسی اداره میشود؟</div><div class="ls">واحد مبدأ تقسیمات کشوری است که از لحاظ محیط زیستی، وضعیت طبی…</div></div>
+      <button class="iconbtn" data-del-qa="mqhmnzbtpc78l">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">منظور از شهرستان در تقسیمات کشوری چیست٬‌ توسط چه کسی اداره میشود؟</div><div class="ls">واحدی از تقسیمات کشوری با محدودۀ جغرافیایی معین است که از به…</div></div>
+      <button class="iconbtn" data-del-qa="mqhmm526z0nqc">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">واحد تقسیماتی سیاسی در کشور ایران در حال حاضر کدامند؟</div><div class="ls">استان
+شهرستان
+بخش
+دهستان
+شهر
+روستا</div></div>
+      <button class="iconbtn" data-del-qa="mqhmkyyg9ilqm">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">چرا کشور را به واحد های کوچکتر تقسیم میکنند؟</div><div class="ls">برای ادارهٔ بهتر کشور، عرضه خدمات مناسب تر و تأمین نیاز های …</div></div>
+      <button class="iconbtn" data-del-qa="mqhmiioo9vbg1">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">در سال ۱۳۵۷ کشور به چند استان تقسیم شد و از سال ۱۳۷۲ به بعد چه تغییراتی در استان کشور به وجود آمد؟</div><div class="ls">و درسال 1357 ه.ش، در آستانهٔ پیروزی انقلاب اسلامی، ایران به …</div></div>
+      <button class="iconbtn" data-del-qa="mqhmhg4q8fgon">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">ایالت های چهارگانه ایران در زمان قاجاریه کدام ها بودند؟</div><div class="ls">آذربایجان، کرمان وبلوچستان، فارس و بنادر، خراسان وسیستان.</div></div>
+      <button class="iconbtn" data-del-qa="mqhmg7ipleei7">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">تقسیمات کشوری ایران در دوره هخامنشیان و سلوکیان چگونه بوده است؟</div><div class="ls">بعدها در عصر هخامنشیان، داریوش کشور را به سی ش َ هْرَبی که ه…</div></div>
+      <button class="iconbtn" data-del-qa="mqhmf0apqotw4">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">تقسیمات کشوری در نخستین مراحل زندگی اجتماعی آریایی ها در ایران٬ شامیل یک آبادی کوچک به نام ....... و ........ است. آبادی بزرگتر به نام ....... بوده است.</div><div class="ls">پس از ورود آریاییان به فلات ایران و در نخستین مرحلۀ زندگی اج…</div></div>
+      <button class="iconbtn" data-del-qa="mqhmcmjam28ok">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">منظور از مهاجرت چیست؟ انواع آن کدامند؟</div><div class="ls">مهاجرت عبارت است از جابه جایی بین دو واحد جغرافیایی یا به عب…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705ax6f3">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">گروه های عمده سنی در یک جمعیت کدامند؟</div><div class="ls">تقسیم بندی چهار گروه سنی کودکان و نوجوانان، جوانان، بزرگسالا…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705pto1u">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مهمترین موراد استفاده از ساختمان سنی و جنسی جمعیت در کشور کدامند؟</div><div class="ls">رای تحقق برنامه های تأمین اجتماعی، بهبود وضعیت سالمندان، ارت…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705aj9cd">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">ساختمان جمعیت چه ویژگی هایی از جمعیت را نشان میدهد؟</div><div class="ls">ساختمان جمعیت، ویژگی های قابل اندازه گیری جمعیت را مورد بررس…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705e517c">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">منظور از قانون ۷۰ در محاسبات جمعیتی چیست؟ چگونه محاسبه میشود؟</div><div class="ls">قانون ۷۰ زمان دو برابر شدن جمعیت هر کشور را نشان می دهد.</div></div>
+      <button class="iconbtn" data-del-qa="mqhm67054mzl8">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">عوامل طبیعی موثر در پراکندگی جمعیت ایران کدامند؟</div><div class="ls">ناهمواری ها
+ رودهای دائمی و موقت
+پراکندگی معادن
+ پوشش گیاهی</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705483x6">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">دریاچه ارومیه را در گذشته با نام های دیگری همچون ..... و ..... نیز می شناخته اند</div><div class="ls">چیچست و کبودان</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705n86ti">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">مهمترین دلایل اهمیتی دریاچه ارومیه کدامند؟</div><div class="ls">از دلايل اهميت اين درياچه، وجود جزاير متعدد در آن است كه محل…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705n18ob">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">راه های تامین آب دریاچه ارومیه کدامند؟</div><div class="ls">آب اين درياچه علاوه بر چشمه هاي كف و حاشیۀ آن، از طريق رودها…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm67053ndxo">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">دریاچه های فصلی چه ویژگی هایی دارند و مهمترین آنها در ایران کدامند؟</div><div class="ls">این دریاچه ها در فصول پر بارش وسعت بیشتری پیدا می کنند ولی د…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705ghwop">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">دریاچه دائمی بیشتر در کدام قسمت ایران قرار دارند؟
+از نظر اقلیمی این دریاچه ها در چه مناطقی پراکنده شده اند؟
+مهمترین دریاچه های دائمی ایران کدامند؟
+آب آنها چگونه است و چگونه تامین میشود؟</div><div class="ls">اغلب دریاچه های دائمی ایران در نیمه غربی کشور قرار دارند که …</div></div>
+      <button class="iconbtn" data-del-qa="mqhm67054vuw3">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">جزایر مهم خلیج فارس را نام برده، بزرگترین آن کدام است؟</div><div class="ls">در خلیج فارس، جزایر مهمی همچون خارک، کیش، فرور، بوموسی ـ تنب…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705je0qn">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">در منطقه خلیج فارس منظور از خور چیست؟ مثال بزنید</div><div class="ls">به خلیج های کوچک سواحل خلیج فارس «خور» می گویند؛ مثل خور موس…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm67055iorf">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">رود هایی که به خلیج میریزند کدامند و چرا کارون مهمترین آن است؟</div><div class="ls">کارون، کرخه و دالکی و مُند. کارون پرآب ترین، طویل ترین
+و تنه…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705ezn86">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">انواع کانون های آبگیر در ایران و ویژگی های هرکدام را ذکر نمایید</div><div class="ls">با استفاده از نقشۀ زیر بگویید چند نوع کانون آبگیر داریم؟
+ـ ک…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705afp9i">حذف</button>
+    </div>
+    <div class="list-item">
+      <div><div class="lt">۴ ویژگی رود های ایران را بنویسید</div><div class="ls">1 در ایران بیشتر بارش ها در اواخر فصل پاییز تا اوایل فصل بها…</div></div>
+      <button class="iconbtn" data-del-qa="mqhm6705iza5e">حذف</button>
+    </div></div>
+  </div>
+
+  <!-- Backup -->
+  <div class="panel show" data-p="backup">
+    <h4>نسخهٔ دانش‌آموز</h4>
+    <div class="note">یک فایل HTML مستقل می‌سازد که همهٔ محتوا داخلش جاسازی شده و فقط جست‌وجو دارد (بدون ویرایش). همین فایل را به دانش‌آموزان بده یا روی هاست بگذار — به اینترنت هم نیازی ندارد.</div>
+    <button class="btn primary full" id="buildStudent">ساخت فایل دانش‌آموز</button>
+
+    <h4>افزودن گروهی از فایل JSON</h4>
+    <div class="note">یک فایل JSON آماده کن و یکجا کلی سؤال/جواب و متن کتاب اضافه کن — به‌جای تایپِ تک‌تک. محتوای فعلی پاک نمی‌شود؛ موارد جدید فقط <b>اضافه</b> می‌شوند. ساختار فایل را از «دانلود نمونه» ببین. 📥</div>
+    <div class="row">
+      <button class="btn primary" id="bulkAddBtn" style="flex:1">انتخاب فایل JSON</button>
+      <button class="btn ghost" id="sampleBtn" style="flex:1">دانلود نمونه</button>
+    </div>
+    <input type="file" id="bulkFile" accept="application/json,.json" style="display:none">
+
+    <h4>پشتیبان و بازیابی</h4>
+    <div class="note">«برون‌بری» یک نسخهٔ پشتیبان از همه‌چیز می‌گیرد. «بازیابی» کلِ محتوای فعلی را با فایل پشتیبان <b>جایگزین</b> می‌کند.</div>
+    <div class="row">
+      <button class="btn ghost" id="exportBtn" style="flex:1">برون‌بری (JSON)</button>
+      <button class="btn ghost" id="importBtn" style="flex:1">بازیابی کامل (JSON)</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json,.json" style="display:none">
+
+    <h4>خطرناک</h4>
+    <button class="btn danger full" id="clearAll">پاک کردن همهٔ محتوا</button>
+  </div>
+</aside>
+
+<div id="toast"><div class="t" id="toastInner">پشتیبان دانلود شد</div></div>
+
+<!-- داده‌های جاسازی‌شدهٔ نسخهٔ دانش‌آموز اینجا قرار می‌گیرد -->
+<script id="embedded-data" type="application/json">{"qa":[{"id":"mqhm6705iza5e","q":"۴ ویژگی رود های ایران را بنویسید","a":"1 در ایران بیشتر بارش ها در اواخر فصل پاییز تا اوایل فصل بهار می بارد، به این دلیل هر چه به پایان این دوره\nنزدیک تر می شویم، آبدهی رودها بیشتر می شود.\n2 با توجه به ناهمواری ها و جهت آنها، هر چه از غرب به سمت شرق کشور برویم، مقدار آب رودها کمتر می شود.\n3 رودهایی که از کوهستان های بلند و برف گیر تغذیه می شوند، دائمی هستند. اگر این رودها در نواحی مرطوب،\nجریان یابند مقدار آب آنها بیشتر خواهد بود.\n4 رودهای مناطق نسبتاً خشک بیشتر طغیانی و اتفاقی، و مقدار آب آنها در سال های مختلف متفاوت است.","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm6705afp9i","q":"انواع کانون های آبگیر در ایران و ویژگی های هرکدام را ذکر نمایید","a":"با استفاده از نقشۀ زیر بگویید چند نوع کانون آبگیر داریم؟\nـ کانون های آبگیری که بیش از 500 میلی متر بارش داشته باشند و حداقل در هشت ماه از سال، این بارش ها اتفاق\nبیفتد، به آنها کانون های دائمی می گویند.کانون های آبگیر دائمی را روی نقشه مشخص کنید.\nـ اگر کانون های آبگیر در فصول سرد سال، ذخیرۀ برف خود را تا ابتدای ماه های گرم سال حفظ کنند، بدون توجه به\nمیزان بارش و زمان آن جزءِ کانون های فصلی به شمار می روند. کانون های آبگیر فصلی را روی نقشه مشخص کنید.\nـ در کوهستان های نزدیک به مناطق گرم وخشک، که گاهی بارش های کوتاه و اتفاقی رخ می دهد، نوعی کانون آبگیر\nموقت شکل می گیرد که آنها را کانون های اتفاقی می نامند.","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm6705ezn86","q":"رود هایی که به خلیج میریزند کدامند و چرا کارون مهمترین آن است؟","a":"کارون، کرخه و دالکی و مُند. کارون پرآب ترین، طویل ترین\nو تنها رود قابل کشتیرانی ایران است.","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm67055iorf","q":"در منطقه خلیج فارس منظور از خور چیست؟ مثال بزنید","a":"به خلیج های کوچک سواحل خلیج فارس «خور» می گویند؛ مثل خور موسی.","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm6705je0qn","q":"جزایر مهم خلیج فارس را نام برده، بزرگترین آن کدام است؟","a":"در خلیج فارس، جزایر مهمی همچون خارک، کیش، فرور، بوموسی ـ تنب بزرگ، تنب کوچک، لاوان، هنگام، لارک، هرمز\nو ... وجود دارد که متعلق به ایران می باشند که برخی از آنها مسکونی هستند. قشم بزرگ ترین جزیره خلیج فارس است.","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm67054vuw3","q":"دریاچه دائمی بیشتر در کدام قسمت ایران قرار دارند؟\nاز نظر اقلیمی این دریاچه ها در چه مناطقی پراکنده شده اند؟\nمهمترین دریاچه های دائمی ایران کدامند؟\nآب آنها چگونه است و چگونه تامین میشود؟","a":"اغلب دریاچه های دائمی ایران در نیمه غربی کشور قرار دارند که از نظر شرایط آب وهوایی جزء نواحی مرطوب و نیمه مرطوب کشور هستند. آب بعضی از این دریاچه ها شور و برخی دیگر آب شیرین دارند.\nمهم ترین دریاچه های دائمی ایران عبارت اند از: دریاچه ارومیه، زریبار (زریوار) غرب مریوان در استان کردستان، پریشان (فامور)، مهارلو (استان فارس) و ... . البته در قله بعضی از کوه های آتش فشانی مانند سبلان هم دریاچه های کوچکی وجود دارند که آب آنها از ذوب برف ها تأمین می شود اما به دلیل سرمای ناشی از ارتفاع اغلب مواقع سال یخ بسته است.","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm6705ghwop","q":"دریاچه های فصلی چه ویژگی هایی دارند و مهمترین آنها در ایران کدامند؟","a":"این دریاچه ها در فصول پر بارش وسعت بیشتری پیدا می کنند ولی در ماه های گرم و یا در سال های کم بارش به دلیل تبخیر آب آنها خشک شده یا به شکل باتلاق و شوره زار در می آیند. مهم ترین دریاچه های فصلی ایران دریاچه مسیله در قم، نیریز در فارس، هامون در سیستان و بلوچستان و جازموریان بین دو استان کرمان و سیستان و بلوچستان.","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm67053ndxo","q":"راه های تامین آب دریاچه ارومیه کدامند؟","a":"آب اين درياچه علاوه بر چشمه هاي كف و حاشیۀ آن، از طريق رودهاي متعددي تأمين مي شود.","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm6705n18ob","q":"مهمترین دلایل اهمیتی دریاچه ارومیه کدامند؟","a":"از دلايل اهميت اين درياچه، وجود جزاير متعدد در آن است كه محل زندگي انواع پرندگان مهاجر است و همچنين\nگيرد. آب اين درياچه\nدر اطراف درياچه، املاح و رسوباتي است كه براي درمان امراض پوستي مورد استفاده قرار ميگیرد. آب این دریاچه موجب معتدل شدن آب و هواي منطقه شده است .","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm6705n86ti","q":"دریاچه ارومیه را در گذشته با نام های دیگری همچون ..... و ..... نیز می شناخته اند","a":"چیچست و کبودان","tags":["درس ۶"],"created":1781673116405},{"id":"mqhm6705483x6","q":"عوامل طبیعی موثر در پراکندگی جمعیت ایران کدامند؟","a":"ناهمواری ها\n رودهای دائمی و موقت\nپراکندگی معادن\n پوشش گیاهی","tags":["درس ۷"],"created":1781673116405},{"id":"mqhm67054mzl8","q":"منظور از قانون ۷۰ در محاسبات جمعیتی چیست؟ چگونه محاسبه میشود؟","a":"قانون ۷۰ زمان دو برابر شدن جمعیت هر کشور را نشان می دهد.","tags":["درس ۷"],"created":1781673116405},{"id":"mqhm6705e517c","q":"ساختمان جمعیت چه ویژگی هایی از جمعیت را نشان میدهد؟","a":"ساختمان جمعیت، ویژگی های قابل اندازه گیری جمعیت را مورد بررسی قرار می دهد. اطلاع از وضعیت سنی و جنسیتی جمعیت هر کشور از موارد قابل توجه برنامه ریزان است.","tags":["درس ۷"],"created":1781673116405},{"id":"mqhm6705aj9cd","q":"مهمترین موراد استفاده از ساختمان سنی و جنسی جمعیت در کشور کدامند؟","a":"رای تحقق برنامه های تأمین اجتماعی، بهبود وضعیت سالمندان، ارتقای سطح سلامت جامعه، تأمین شغل برای حال و آینده، ایجاد فرصت های تحصیلی، تفریحی و *، جلوگیری از پیری جمعیتی، از اطلاعات و آمارهای سنی و جنسیتی جمعیت کمک رفاهی برای جوانان، امنیت ملّی می گیرند.","tags":["درس ۷"],"created":1781673116405},{"id":"mqhm6705pto1u","q":"گروه های عمده سنی در یک جمعیت کدامند؟","a":"تقسیم بندی چهار گروه سنی کودکان و نوجوانان، جوانان، بزرگسالان و سالمندان","tags":["درس ۷"],"created":1781673116405},{"id":"mqhm6705ax6f3","q":"منظور از مهاجرت چیست؟ انواع آن کدامند؟","a":"مهاجرت عبارت است از جابه جایی بین دو واحد جغرافیایی یا به عبارتی ترک یک سرزمین و اسکان در سرزمین دیگر.","tags":["درس ۷"],"created":1781673116405},{"id":"mqhmcmjam28ok","q":"تقسیمات کشوری در نخستین مراحل زندگی اجتماعی آریایی ها در ایران٬ شامیل یک آبادی کوچک به نام ....... و ........ است. آبادی بزرگتر به نام ....... بوده است.","a":"پس از ورود آریاییان به فلات ایران و در نخستین مرحلۀ زندگی اجتماعی، یک آبادی کوچک را« ویس» و آبادی بزرگ تر را « گِئو » می نامیدند.","tags":["درس ۸"],"created":1781673416470},{"id":"mqhmf0apqotw4","q":"تقسیمات کشوری ایران در دوره هخامنشیان و سلوکیان چگونه بوده است؟","a":"بعدها در عصر هخامنشیان، داریوش کشور را به سی ش َ هْرَبی که همان شهر می باشد، تقسیم کرد و برای هریک از آنان مأمورینی گماشت که آنها را شهربان و به یونانی «ساتراپ» می گفتند. در دوران سلوکیان کشور به 72 بخش تقسیم شد. قسمت های حکومت هخامنشی در حکومت اشکانیان یا پارت ها ادامه داشت.","tags":["درس ۸"],"created":1781673527617},{"id":"mqhmg7ipleei7","q":"ایالت های چهارگانه ایران در زمان قاجاریه کدام ها بودند؟","a":"آذربایجان، کرمان وبلوچستان، فارس و بنادر، خراسان وسیستان.","tags":["درس ۸"],"created":1781673583633},{"id":"mqhmhg4q8fgon","q":"در سال ۱۳۵۷ کشور به چند استان تقسیم شد و از سال ۱۳۷۲ به بعد چه تغییراتی در استان کشور به وجود آمد؟","a":"و درسال 1357 ه.ش، در آستانهٔ پیروزی انقلاب اسلامی، ایران به 24 استان تقسیم شد. و در سال 1372ه.ش طرح اولین\nاستان جدید با نام اردبیل به تصویب مجلس شورای اسلامی رسید و پس از آن استان های قم، قزوین ، گلستان، خراسان های\nشمالی، رضوی، جنوبی و البرز اضافه شدند.","tags":["درس ۸"],"created":1781673641450},{"id":"mqhmiioo9vbg1","q":"چرا کشور را به واحد های کوچکتر تقسیم میکنند؟","a":"برای ادارهٔ بهتر کشور، عرضه خدمات مناسب تر و تأمین نیاز های مردم آن را به واحدهای کوچکتری تقسیم می کنند.","tags":["درس ۸"],"created":1781673691416},{"id":"mqhmkyyg9ilqm","q":"واحد تقسیماتی سیاسی در کشور ایران در حال حاضر کدامند؟","a":"استان\nشهرستان\nبخش\nدهستان\nشهر\nروستا","tags":["درس ۸"],"created":1781673805816},{"id":"mqhmm526z0nqc","q":"منظور از شهرستان در تقسیمات کشوری چیست٬‌ توسط چه کسی اداره میشود؟","a":"واحدی از تقسیمات کشوری با محدودۀ جغرافیایی معین است که از به ‌هم پیوستن چند بخش همجوار تشکیل شده که از نظر عوامل طبیعی و اوضاع اجتماعی، اقتصادی، سیاسی و فرهنگی، واحد متناسب و همگنی را به وجود آورده است. شهرستان توسط فرماندار اداره می ‌شود.","tags":["درس ۸"],"created":1781673860382},{"id":"mqhmnzbtpc78l","q":"منظور از روستا در تقسیمات کشوری چیست٬‌ توسط چه کسی اداره میشود؟","a":"واحد مبدأ تقسیمات کشوری است که از لحاظ محیط زیستی، وضعیت طبیعی، اجتماعی، فرهنگی و\nاقتصادی همگن بوده که حداقل تعداد 20 خانوار یا 100 نفر در آنجا سکونت داشته باشند.","tags":["درس ۸"],"created":1781673946265},{"id":"mqhmrxgg21iiw","q":"منظور از کشاورزی در فعالیت های اقتصادی چیست؟\nچه نوع رابطه ای انسان و محیط را کشاورزی می نامیم؟","a":"یکی از اساسی ترین نیاز های انسان، نیاز به غذا است. به منظور برطرف کردن این نیاز، شکلی از رابطۀ بین انسان و محیط طبیعی ایجاد شده است که آن را «کشاورزی» می نامیم.","tags":["درس ۱۰"],"created":1781674130464},{"id":"mqhmt9bm65cnk","q":"مهمترین فغالیت های بخش کشاورزی در کشور ایران کدامند؟","a":"مهم ترین فعالیت ها در این بخش عبارت است از: زراعت، باغداری و دامداری.","tags":["درس ۱۰"],"created":1781674192498},{"id":"mqhmv12hdqw35","q":"با اینکه فعالیت های زراعی کشورمان بسیار گوناگون است، چرا در تامین برخی محصولات زراعی٬ به واردات وابسته ایم؟","a":"محدودیت در منابع آب و خاک، بهره وری کم، وجود\nآفات و خسارات طبیعی، نوسانات آب و هوایی، بی ثباتی در قیمت محصولات و... از جمله مشکلات تولیدات زراعی\nدر کشور است که باعث شده است کشورمان در تأمین برخی محصولات زراعی به واردات وابسته باشد.","tags":["درس ۱۰"],"created":1781674275113},{"id":"mqhmw6egcf6gh","q":"عامل اصلی در تنوع محصولات باغی در ایران چیست؟","a":"اختلاف شدید درجه حرارت روزانه و سالانه در نواحی مختلف ایران، سبب ایجاد تنوع فراوان در تولیدات باغی شده است.","tags":["درس ۱۰"],"created":1781674328680},{"id":"mqhmxedb5ffr3","q":"مهمترین مزایای کشت گلخانه ای کدامند؟","a":"1 کاهش مصرف آب\n2 تولید در طول سال و همه جا\n3 کنترل بهتر وضعیت کشت","tags":["درس ۱۰"],"created":1781674385663},{"id":"mqhmyh0mts3wb","q":"نقش عشایر در اقتصاد کشور را توضیح دهید.","a":"یکی از تولیدکنندگان محصولات دامی، عشایر غیور و زحمت کش هستند، هر چند جمعیت عشایری کمتر از ٢% از جمعیت کشور است، آنان 25 % واحد دامی و 20 % از تولید پروتئین مربوط به دام کشور را به خود اختصاص داده اند.","tags":["درس ۱۰"],"created":1781674435750},{"id":"mqhn0wfcbpgzr","q":"یکی از صنایع دستی مهم کشور چیست؟ دلیل اهمیت و شهرت آن چه میباشد؟","a":"یکی از صنایع دستی مهم ایران فرش دستبافت است.کشور ما یکی از صادرکنندگان عمدۀ این فرش در جهان است که به دلیل بافت و نقش و نگار خاص، از اهمیت و شهرت بین المللی برخوردار است.","tags":["درس ‍۱۰"],"created":1781674549032},{"id":"mqhn3khmu8tlt","q":"بزرگترین و مهمترین صنایع کشورمان به ترتیب کدامند؟","a":"صنایع ماشینی\nصنایع پتروشیمی\nصنایع خودروسازی\nصنایع دفاعی","tags":["درس ۱۰"],"created":1781674673530},{"id":"mqhn4wcs04opc","q":"صنایع دفاعی ایران چه وظیفه ای دارد و از چه بخش هایی تشکیل شده اند؟","a":"این صنایع وظیفه طراحی و تولید تجهیزات نظامی برای نیروهای مسلح را عهده دار است و از بخش های تحقیق و توسعه، تولید تجهیزات نظامی و تأسیسات و کارخانجات تشکیل شده است","tags":["درس ۱۰"],"created":1781674735564},{"id":"mqhn633o7w1os","q":"منظور از خدمات در فعالیت های اقتصادی چیست؟","a":"به زنجیرۀ فعالیت های مالی، مدیریتی، بهداشتی، آموزشی، انتظامی، اطلاعاتی، گردشگری، تجارت و بازرگانی که به طور غیرمستقیم در بهبود کیفیت و کمیت تولیدات کشور مؤثرند، «خدمات» گویند.","tags":["درس ۱-"],"created":1781674790964},{"id":"mqhn74ivody08","q":"خدمات در کشور ها توسط چه کسانی به مردم عرضه میشوند؟ در ایران چطور؟","a":"خدمات درکشورها به وسیله بخش خصوصی و دولتی به مردم عرضه می شود. بسیاری از امکانات خدماتی در ایران از طریق سرمایه گذاری بخش دولتی انجام می شود. امکانات آموزشی وبهداشتی و درمانی از جمله خدماتی است که دولت به آن توجه می کند.","tags":["درس ۱۰"],"created":1781674839463},{"id":"mqhn85ykuvtnv","q":"مهمترین پیامد های گردشگری برای کشور میزبان کدامند؟","a":"برای کشور میزبان می تواند اشتغال زایی،توسعه، رونق اقتصادی و\nارتباطات جهانی سازنده ایجاد کند.","tags":["درس ۱۰"],"created":1781674887980},{"id":"mqhnab04fyww0","q":"مهمترین تواندمندی های ایران برای گسترش گردشگری در چه زمینه هایی است؟","a":"وجود مراکز گوناگون فرهنگی مانند\n9 وجود یادواره های دفاع مقدس در\nمناطق غربی ایران و خوزستان سالانه\nتعداد زیادی از هم وطنان را به این مناطق\nجلب می کند. (راهیان نور)\n8 موقعیت ریاضی کشورمان و\nگستردگی آن در عرض جغرافیایی\nباعث تنوع اقلیمی و چشم اندازهای\nطبیعی شده است.\nموزه ها، جشنواره ها، نمایشگاه ها، مراکز\nعلمی و تفریحی، مراکز خرید، مراکز\nدرمانی و… که هرکدام مقصد بسیاری از\nگردشگران داخلی و خارجی است.\n1 وجود مراکز ارزشمند دینی،\nمذهبی،زیارتگاهی و اماکن مقدس کشور زمینه فرهنگی مناسبی است.\n6 وجود تمدنی با ریشه هایی در اعماق تاریخ، از\nهزاره های قبل از میلاد تاکنون، کشور ما را به یکی از\nخاستگاه های تمدن بشری تبدیل نموده است که پیامد\nآن، وجود بیش از یک میلیون اثر باستانی و تاریخی در\nکشور است. این توانمندی، جاذب میلیون ها گردشگر،\nمحقق و علاقه مند از داخل و خارج کشور است.\n2 پیکره بندی طبیعی این سرزمین،\nبرخورداری از موقعیت دریایی و خشکی،\nوجود کوه های بلند، دشت های وسیع، سواحل\nگوناگون و بیابان های شگفت انگیز گردشگری\nزمین گردی (ژئوتوریسم ) را ایجاد کرده است.\n5 درکشور ما بیش از 160 نوع\nصنایع دستی وجود دارد که این\nتوانمندی، گردشگران علاقه مند\nخاص خود را دارد.\n3 تنوع زیستی ایران با وجود زیست بوم های\nبسیار گوناگون گیاهی و جانوری در کشور\nبرای گردشگری علمی و طبیعت گردی بسیار\nمناسب است.\n4 تنوع قومی و فرهنگی در کشور که به\nهمراه خود مجموعه ای از آیین ها، لباس ها،\nخوراکی ها، آهنگ ها، مراسم و گویش های\nمحلی را ایجاد کرده و زمینه های گردشگری\nاجتماعی ـ فرهنگی را فراهم آورده است.","tags":["درس ۱۰"],"created":1781674987828},{"id":"mqhnc19bnkt35","q":"مفهوم سکونتگاه از دیدگاه جغرافیا را تعریف کرده و مثال بزنید.","a":"سکونتگاه محلی است. از مجموعه مساکن که عوامل طبیعی و انسانی در شکلگیری آن نقش دارند، هر شهر و روستایی یک سکونتگاه است.","tags":["درس 9 سوال 1 مهم"],"created":1781675068511},{"id":"mqhnc19bntz9p","q":"چه عاملی در شکل گیری سکونت گاه ها نقش دارد","a":"عوامل طبیعی و انسانی","tags":["درس 9 سوال 2"],"created":1781675068511},{"id":"mqhnc19by0dad","q":"۴ ویژگی رود های ایران را بنویسید","a":"1 در ایران بیشتر بارش ها در اواخر فصل پاییز تا اوایل فصل بهار می بارد، به این دلیل هر چه به پایان این دوره\nنزدیک تر می شویم، آبدهی رودها بیشتر می شود.\n2 با توجه به ناهمواری ها و جهت آنها، هر چه از غرب به سمت شرق کشور برویم، مقدار آب رودها کمتر می شود.\n3 رودهایی که از کوهستان های بلند و برف گیر تغذیه می شوند، دائمی هستند. اگر این رودها در نواحی مرطوب،\nجریان یابند مقدار آب آنها بیشتر خواهد بود.\n4 رودهای مناطق نسبتاً خشک بیشتر طغیانی و اتفاقی، و مقدار آب آنها در سال های مختلف متفاوت است.","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19bovryh","q":"انواع کانون های آبگیر در ایران و ویژگی های هرکدام را ذکر نمایید","a":"با استفاده از نقشۀ زیر بگویید چند نوع کانون آبگیر داریم؟\nـ کانون های آبگیری که بیش از 500 میلی متر بارش داشته باشند و حداقل در هشت ماه از سال، این بارش ها اتفاق\nبیفتد، به آنها کانون های دائمی می گویند.کانون های آبگیر دائمی را روی نقشه مشخص کنید.\nـ اگر کانون های آبگیر در فصول سرد سال، ذخیرۀ برف خود را تا ابتدای ماه های گرم سال حفظ کنند، بدون توجه به\nمیزان بارش و زمان آن جزءِ کانون های فصلی به شمار می روند. کانون های آبگیر فصلی را روی نقشه مشخص کنید.\nـ در کوهستان های نزدیک به مناطق گرم وخشک، که گاهی بارش های کوتاه و اتفاقی رخ می دهد، نوعی کانون آبگیر\nموقت شکل می گیرد که آنها را کانون های اتفاقی می نامند.","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19bhg8tk","q":"رود هایی که به خلیج میریزند کدامند و چرا کارون مهمترین آن است؟","a":"کارون، کرخه و دالکی و مُند. کارون پرآب ترین، طویل ترین\nو تنها رود قابل کشتیرانی ایران است.","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19b5hxpu","q":"در منطقه خلیج فارس منظور از خور چیست؟ مثال بزنید","a":"به خلیج های کوچک سواحل خلیج فارس «خور» می گویند؛ مثل خور موسی.","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19bvgkqa","q":"جزایر مهم خلیج فارس را نام برده، بزرگترین آن کدام است؟","a":"در خلیج فارس، جزایر مهمی همچون خارک، کیش، فرور، بوموسی ـ تنب بزرگ، تنب کوچک، لاوان، هنگام، لارک، هرمز\nو ... وجود دارد که متعلق به ایران می باشند که برخی از آنها مسکونی هستند. قشم بزرگ ترین جزیره خلیج فارس است.","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19bk9wgp","q":"دریاچه دائمی بیشتر در کدام قسمت ایران قرار دارند؟\nاز نظر اقلیمی این دریاچه ها در چه مناطقی پراکنده شده اند؟\nمهمترین دریاچه های دائمی ایران کدامند؟\nآب آنها چگونه است و چگونه تامین میشود؟","a":"اغلب دریاچه های دائمی ایران در نیمه غربی کشور قرار دارند که از نظر شرایط آب وهوایی جزء نواحی مرطوب و نیمه مرطوب کشور هستند. آب بعضی از این دریاچه ها شور و برخی دیگر آب شیرین دارند.\nمهم ترین دریاچه های دائمی ایران عبارت اند از: دریاچه ارومیه، زریبار (زریوار) غرب مریوان در استان کردستان، پریشان (فامور)، مهارلو (استان فارس) و ... . البته در قله بعضی از کوه های آتش فشانی مانند سبلان هم دریاچه های کوچکی وجود دارند که آب آنها از ذوب برف ها تأمین می شود اما به دلیل سرمای ناشی از ارتفاع اغلب مواقع سال یخ بسته است.","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19b43yqz","q":"دریاچه های فصلی چه ویژگی هایی دارند و مهمترین آنها در ایران کدامند؟","a":"این دریاچه ها در فصول پر بارش وسعت بیشتری پیدا می کنند ولی در ماه های گرم و یا در سال های کم بارش به دلیل تبخیر آب آنها خشک شده یا به شکل باتلاق و شوره زار در می آیند. مهم ترین دریاچه های فصلی ایران دریاچه مسیله در قم، نیریز در فارس، هامون در سیستان و بلوچستان و جازموریان بین دو استان کرمان و سیستان و بلوچستان.","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19bf76uz","q":"راه های تامین آب دریاچه ارومیه کدامند؟","a":"آب اين درياچه علاوه بر چشمه هاي كف و حاشیۀ آن، از طريق رودهاي متعددي تأمين مي شود.","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19bsqx1g","q":"مهمترین دلایل اهمیتی دریاچه ارومیه کدامند؟","a":"از دلايل اهميت اين درياچه، وجود جزاير متعدد در آن است كه محل زندگي انواع پرندگان مهاجر است و همچنين\nگيرد. آب اين درياچه\nدر اطراف درياچه، املاح و رسوباتي است كه براي درمان امراض پوستي مورد استفاده قرار ميگیرد. آب این دریاچه موجب معتدل شدن آب و هواي منطقه شده است .","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19bmpqqd","q":"دریاچه ارومیه را در گذشته با نام های دیگری همچون ..... و ..... نیز می شناخته اند","a":"چیچست و کبودان","tags":["درس ۶"],"created":1781675068511},{"id":"mqhnc19barb1g","q":"عوامل طبیعی موثر در پراکندگی جمعیت ایران کدامند؟","a":"ناهمواری ها\n رودهای دائمی و موقت\nپراکندگی معادن\n پوشش گیاهی","tags":["درس ۷"],"created":1781675068511},{"id":"mqhnc19bw8rvz","q":"منظور از قانون ۷۰ در محاسبات جمعیتی چیست؟ چگونه محاسبه میشود؟","a":"قانون ۷۰ زمان دو برابر شدن جمعیت هر کشور را نشان می دهد.","tags":["درس ۷"],"created":1781675068511},{"id":"mqhnc19bud0r9","q":"ساختمان جمعیت چه ویژگی هایی از جمعیت را نشان میدهد؟","a":"ساختمان جمعیت، ویژگی های قابل اندازه گیری جمعیت را مورد بررسی قرار می دهد. اطلاع از وضعیت سنی و جنسیتی جمعیت هر کشور از موارد قابل توجه برنامه ریزان است.","tags":["درس ۷"],"created":1781675068511},{"id":"mqhnc19b43hzd","q":"مهمترین موراد استفاده از ساختمان سنی و جنسی جمعیت در کشور کدامند؟","a":"رای تحقق برنامه های تأمین اجتماعی، بهبود وضعیت سالمندان، ارتقای سطح سلامت جامعه، تأمین شغل برای حال و آینده، ایجاد فرصت های تحصیلی، تفریحی و *، جلوگیری از پیری جمعیتی، از اطلاعات و آمارهای سنی و جنسیتی جمعیت کمک رفاهی برای جوانان، امنیت ملّی می گیرند.","tags":["درس ۷"],"created":1781675068511},{"id":"mqhnc19blkx0x","q":"گروه های عمده سنی در یک جمعیت کدامند؟","a":"تقسیم بندی چهار گروه سنی کودکان و نوجوانان، جوانان، بزرگسالان و سالمندان","tags":["درس ۷"],"created":1781675068511},{"id":"mqhnc19bm4056","q":"منظور از مهاجرت چیست؟ انواع آن کدامند؟","a":"مهاجرت عبارت است از جابه جایی بین دو واحد جغرافیایی یا به عبارتی ترک یک سرزمین و اسکان در سرزمین دیگر.","tags":["درس ۷"],"created":1781675068511},{"id":"mqhnc19bqxyok","q":"چه عواملی در گسترش سکونت گاه اثر گذارند","a":"شرایط جغرافیایی مناسب در گسترش سکونتگاهها اثرگذار است. بسیاری از سکونتگاههای شهری و روستایی ایران گسترش چشمیری داشته است.","tags":["درس 9 سوال 11"],"created":1781675068511},{"id":"mqhnc19b96bhi","q":"قدیمیترین نوع سکونتگاه در ایران کدام است؟ ویژگی آن را بیان کنید.","a":"قدیمی‌ترین و سکونتگاهی که در ایران شناخته شده است سکونتگاه عشایری است. در این شیوه زندگی سکونت و جانشینی دائمی دیده نمی‌شود.","tags":["درس 9 سوال 14"],"created":1781675068511},{"id":"mqhnc19b6ckcn","q":"منظو از یک روستا به عنوان یک سکونت گاه چیست","a":"روستای محلی از که فعالیت اکثر ساکنان آن به زمین وابسته است و بیشتر روستاییان به کشاورزی اشتغال دارند. فضای باز اطراف روستاها چشم‌اندازهای طبیعی زیبایی را برای روستاییان فراهم کرده است.","tags":[],"created":1781675068511},{"id":"mqhnc19b8ahvc","q":"اجزا سوکونت گاه روستایی کدامند","a":"هر سکونتگاه از اجزای مختلف تشکیل شده است. اجزای سکونتگاههای روستایی شامل خانه‌ها، مزارع، چراگاها، باغها، مکانهای عمومی، مساجد، میدانها و شبکه معابر یا راههاست.","tags":["درس 9 سوال 26"],"created":1781675068511},{"id":"mqhnc19blitpw","q":"روستا های پراکنده و متمرکز را نام ببرید","a":"روستا های متمرکز تحت تاثیر پدیده های اطراف خود است","tags":["درس 9 سوال 30"],"created":1781675068511},{"id":"mqhnc19b3sjt3","q":"مهمترین اشکال شهرهای ایران را با توجه به نحوه پیدایش و کارکرد آنها نام ببرید.","a":"شهر شعاعی (ستاره ای )_شهر شطرنجی_شهر خطی","tags":["درس 9 سوال 34"],"created":1781675068511},{"id":"mqhnc19b8s8bp","q":"شهر شطرنجی ا با مثال توضیح دهید","a":"در این شهرها یک شبکه مستقیم شکل از راههای ارتباطی زمینهای شهر را به بلوکها و قطعات همسان تقسیم میکند.","tags":["درس 9 سوال 36"],"created":1781675068511},{"id":"mqhnc19bdr5yg","q":"شهر خطی را با مثال توضیح دهید","a":"شهری که حول محورهای ارتباطی (ریلی و جاده ای ) و یا در امتداد رود، دریا و دریاچه به صورت خطی شکل گرفته است.","tags":["درس 9 سوال 37"],"created":1781675068511},{"id":"mqhnc19bcf628","q":"نقش هر سکونتگاه هبر چه اساسی تعیین میشود","a":"نقش هر سکونتگاه بر اساس وضعیت جغرافیای آن اهم از طبیعی یا انسانی تعیین میشود. مثلا شهر تهران دارای نقش سیاسی-اداری است. برخی نکته هم وجود دارد، امروز اغلب سکونتگاهها چند نقش دارند و این نقشها را با هم ایفا میکنند. مثلا شهر تهران که نقش سیاسی-اداری، مذهبی، صنعتی، دانشگاهی و صنعتی را دارد، همینها را با هم انجام میدهد. نقش سکونتگاهها در چهره و سیمای آن منعکس میشود. سیمای سکونتگاه دانشگاهی با سیمای سکونتگاه صنعتی فرق دارد. ممکن است نقش سکونتگاه در طول زمان تغییر کند یا تکامل و توسعه بیابد. مثلا سکونتگاه صنعتی به تدریج نقشهای اداری و سیاسی را نیز بر عهده بگیرد.","tags":["درس 9 سوال 44"],"created":1781675068511}],"books":[]}</script>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   ۱) لایهٔ ذخیره‌سازی (window.storage → localStorage → حافظه)
+   ============================================================ */
+const KEY = "classSearch:data:v1";
+const mem = {};
+const Store = {
+  async get(k){
+    try{ if(window.storage){ const r=await window.storage.get(k); return r? r.value : null; } }catch(e){}
+    try{ return localStorage.getItem(k); }catch(e){}
+    return (k in mem)? mem[k] : null;
+  },
+  async set(k,v){
+    try{ if(window.storage){ await window.storage.set(k,v); return true; } }catch(e){}
+    try{ localStorage.setItem(k,v); return true; }catch(e){}
+    mem[k]=v; return false;
+  }
+};
+
+/* ============================================================
+   ۲) نرمال‌سازی فارسی + نگاشت موقعیت (برای هایلایت دقیق)
+   ============================================================ */
+const CHAR_MAP = {
+  'ي':'ی','ﻱ':'ی','ﻲ':'ی','ك':'ک','ﻙ':'ک','ﻚ':'ک',
+  'أ':'ا','إ':'ا','آ':'ا','ٱ':'ا','ﺁ':'ا','ٲ':'ا','ٳ':'ا',
+  'ؤ':'و','ئ':'ی','ۀ':'ه','ة':'ه','ﺓ':'ه','ﻪ':'ه',
+  '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9',
+  '٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'
+};
+const STRIP = /[\u064B-\u0652\u0670\u0640\u200B-\u200F\uFEFF]/; // اعراب، کشیده، نویسه‌های نامرئی
+
+function normalizeWithMap(s){
+  s = s || "";
+  let norm = "", map = [];
+  for(let i=0;i<s.length;i++){
+    let ch = s[i];
+    if(ch==='\u200C'){ ch=' '; }            // نیم‌فاصله → فاصله
+    else if(STRIP.test(ch)){ continue; }    // حذف اعراب/کشیده/نامرئی‌ها
+    if(CHAR_MAP[ch]!==undefined) ch = CHAR_MAP[ch];
+    ch = ch.toLowerCase();
+    norm += ch; map.push(i);
+  }
+  return {norm, map};
+}
+function normalize(s){ return normalizeWithMap(s).norm; }
+
+const WORD = /[0-9a-z\u0621-\u06CC]/;
+function tokenize(norm){
+  return norm.split(/[^0-9a-z\u0621-\u06CC]+/).filter(Boolean);
+}
+
+const STOP = new Set("و در به از که این آن را با است برای تا یک هم نیز یا اما اگر چون هر ها های می نمی بر بی نیست بود شد شده کرد کند ای رو روی هست بودن کردن".split(" "));
+
+/* فاصلهٔ ویرایشی محدود (برای تحمل غلط املایی) */
+function lev(a,b,max){
+  const m=a.length,n=b.length;
+  if(Math.abs(m-n)>max) return max+1;
+  let prev=new Array(n+1), cur=new Array(n+1);
+  for(let j=0;j<=n;j++) prev[j]=j;
+  for(let i=1;i<=m;i++){
+    cur[0]=i; let best=cur[0];
+    for(let j=1;j<=n;j++){
+      const cost=a[i-1]===b[j-1]?0:1;
+      cur[j]=Math.min(prev[j]+1, cur[j-1]+1, prev[j-1]+cost);
+      if(cur[j]<best) best=cur[j];
+    }
+    if(best>max) return max+1;
+    [prev,cur]=[cur,prev];
+  }
+  return prev[n];
+}
+
+function escapeHTML(s){
+  return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* هایلایت روی متنِ اصلی با کمک نگاشت موقعیت */
+function highlight(text, q){
+  if(!text) return "";
+  const {norm, map} = normalizeWithMap(text);
+  const pats = [];
+  if(q.phrase && q.phrase.length>=2) pats.push(q.phrase);
+  q.terms.forEach(t=>{ if(t.length>=2) pats.push(t); });
+  if(!pats.length) return escapeHTML(text);
+  pats.sort((a,b)=>b.length-a.length);
+  let ranges=[];
+  for(const p of pats){
+    let from=0,i;
+    while((i=norm.indexOf(p,from))!==-1){
+      const oStart=map[i];
+      const oEnd=(map[i+p.length-1]!==undefined? map[i+p.length-1] : map[map.length-1])+1;
+      ranges.push([oStart,oEnd]);
+      from=i+p.length;
+    }
+  }
+  if(!ranges.length) return escapeHTML(text);
+  ranges.sort((a,b)=>a[0]-b[0]);
+  const merged=[ranges[0].slice()];
+  for(let k=1;k<ranges.length;k++){
+    const last=merged[merged.length-1];
+    if(ranges[k][0]<=last[1]) last[1]=Math.max(last[1],ranges[k][1]);
+    else merged.push(ranges[k].slice());
+  }
+  let out="",cur=0;
+  for(const [a,b] of merged){
+    out += escapeHTML(text.slice(cur,a));
+    out += "<mark>"+escapeHTML(text.slice(a,b))+"</mark>";
+    cur=b;
+  }
+  out += escapeHTML(text.slice(cur));
+  return out;
+}
+
+/* قطعهٔ کوتاه حول اولین تطابق */
+function snippet(text, q, max=210){
+  if(!text) return "";
+  if(text.length<=max) return highlight(text,q);
+  const {norm,map}=normalizeWithMap(text);
+  let pos=-1;
+  const cands=[q.phrase,...q.terms].filter(x=>x&&x.length>=2);
+  for(const c of cands){ const i=norm.indexOf(c); if(i!==-1) pos=(pos===-1)?i:Math.min(pos,i); }
+  let oStart = pos===-1 ? 0 : (map[pos]!==undefined?map[pos]:0);
+  let s=Math.max(0, oStart-70);
+  if(s>0){ const sp=text.indexOf(' ',s); if(sp!==-1 && sp<oStart) s=sp+1; }
+  let e=Math.min(text.length, s+max);
+  if(e<text.length){ const sp=text.lastIndexOf(' ',e); if(sp>s+40) e=sp; }
+  let slice=text.slice(s,e);
+  return (s>0?'… ':'')+highlight(slice,q)+(e<text.length?' …':'');
+}
+
+/* ============================================================
+   ۳) داده و ساخت ایندکس
+   ============================================================ */
+let state = { qa:[], books:[] };
+let items = [];   // ایندکس مسطح برای جست‌وجو
+let filter = "all";
+let embedded = false;
+const PAGE = 50;
+let shownLimit = PAGE;
+let lastKey = "__init__";
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+const MAX_CHUNK = 480;
+function chunkText(body){
+  body = (body||"").replace(/\r\n?/g,'\n').trim();
+  if(!body) return [];
+  // اول با خط خالی جدا کن؛ اگر خط خالی نبود، با تک‌خط
+  let blocks = body.split(/\n{2,}/);
+  if(blocks.length<=1) blocks = body.split(/\n+/);
+  const out=[];
+  const pushChunked = (text)=>{
+    text = text.replace(/[ \t]+/g,' ').trim();
+    if(!text) return;
+    if(text.length<=MAX_CHUNK){ out.push(text); return; }
+    // تلاش برای شکستن بر اساس جمله
+    const sents = text.split(/(?<=[.!?؟…؛])\s+/);
+    let buf="";
+    for(let s of sents){
+      // جمله‌ای که خودش از حد بلندتر است را به‌زور می‌شکنیم (حتی بدون نقطه‌گذاری)
+      while(s.length>MAX_CHUNK){
+        let cut=s.lastIndexOf(' ', MAX_CHUNK);
+        if(cut < MAX_CHUNK*0.6) cut=MAX_CHUNK;
+        if(buf){ out.push(buf.trim()); buf=""; }
+        out.push(s.slice(0,cut).trim());
+        s=s.slice(cut).trim();
+      }
+      if((buf+' '+s).trim().length>MAX_CHUNK && buf){ out.push(buf.trim()); buf=s; }
+      else buf=(buf?buf+' ':'')+s;
+    }
+    if(buf.trim()) out.push(buf.trim());
+  };
+  for(const b of blocks) pushChunked(b);
+  return out.length?out:[body.replace(/\s+/g,' ').trim()];
+}
+
+/* قطعه‌های بسیار بلندِ ذخیره‌شدهٔ قدیمی را دوباره می‌شکند */
+function migrateChunks(){
+  let changed=false;
+  for(const b of state.books){
+    if(Array.isArray(b.passages) && b.passages.some(p=>(p||"").length>MAX_CHUNK+120)){
+      b.passages = chunkText(b.passages.join("\n\n"));
+      changed=true;
+    }
+  }
+  return changed;
+}
+
+function buildIndex(){
+  items=[];
+  for(const r of state.qa){
+    items.push({
+      type:"qa", id:r.id, ref:r,
+      fields:[
+        {text:normalize(r.q), w:3},
+        {text:normalize(r.a), w:1},
+        {text:normalize((r.tags||[]).join(" ")), w:2}
+      ]
+    });
+  }
+  for(const b of state.books){
+    for(let i=0;i<b.passages.length;i++){
+      items.push({
+        type:"book", id:b.id+":"+i, book:b, pi:i, ref:b.passages[i],
+        fields:[
+          {text:normalize(b.title), w:2},
+          {text:normalize(b.passages[i]), w:1}
+        ]
+      });
+    }
+  }
+}
+
+/* امتیازدهی */
+function score(item, q){
+  const useTerms = q.contentTerms.length ? q.contentTerms : q.terms;
+  let s=0, matched=new Set(), any=false;
+  for(const f of item.fields){
+    if(!f.text) continue;
+    if(q.phrase.length>=2 && f.text.indexOf(q.phrase)!==-1){ s+=40*f.w; any=true; }
+    for(const t of useTerms){
+      let idx=f.text.indexOf(t);
+      if(idx!==-1){
+        any=true; matched.add(t);
+        let base=4*f.w;
+        const before=idx>0?f.text[idx-1]:' ';
+        const after=(idx+t.length<f.text.length)?f.text[idx+t.length]:' ';
+        if(!WORD.test(before) && !WORD.test(after)) base+=3*f.w;
+        let occ=0,p=idx;
+        while(p!==-1 && occ<3){ occ++; p=f.text.indexOf(t,p+t.length); }
+        s += base + (occ-1)*f.w;
+      } else if(t.length>=4){
+        if(!f._toks) f._toks=tokenize(f.text);
+        const maxd = t.length>=7?2:1;
+        for(const tok of f._toks){
+          if(Math.abs(tok.length-t.length)>maxd) continue;
+          if(lev(tok,t,maxd)<=maxd){ s+=2*f.w; any=true; matched.add(t); break; }
+        }
+      }
+    }
+  }
+  if(!any) return 0;
+  const cov = matched.size/Math.max(1,useTerms.length);
+  s += cov*20;
+  if(useTerms.length>1 && matched.size===useTerms.length) s+=15;
+  if(item.type==="qa") s+=1; // در تساوی، پرسش‌وپاسخ کمی جلوتر
+  return s;
+}
+
+function buildQuery(raw){
+  const norm = normalize(raw).trim().replace(/\s+/g,' ');
+  const terms = tokenize(norm);
+  const contentTerms = terms.filter(t=>!STOP.has(t));
+  return { raw, phrase:norm, terms, contentTerms };
+}
+
+function runSearch(raw){
+  const q = buildQuery(raw);
+  let pool = items;
+  if(filter!=="all") pool = items.filter(it=>it.type===filter);
+
+  if(!q.terms.length){
+    // بدون کلیدواژه: همه (تازه‌ترین‌ها اول) — صفحه‌بندی می‌شود
+    const recent = pool.slice().reverse().map(it=>({item:it, sc:0}));
+    return {q, list:recent, empty:true};
+  }
+  const scored=[];
+  for(const it of pool){
+    const sc=score(it,q);
+    if(sc>0) scored.push({item:it, sc});
+  }
+  scored.sort((a,b)=>b.sc-a.sc);
+  return {q, list:scored, empty:false};
+}
+
+/* ============================================================
+   ۴) رندر
+   ============================================================ */
+const $ = s=>document.querySelector(s);
+const resultsEl=$("#results"), metaEl=$("#meta"), searchEl=$("#search");
+
+function faNum(n){ return Number(n).toLocaleString('fa-IR'); }
+
+function render(){
+  const raw = searchEl.value;
+  const {q,list,empty} = runSearch(raw);
+
+  // شمارنده‌ها
+  const totalAll=items.length, totalQa=items.filter(i=>i.type==='qa').length, totalBook=items.filter(i=>i.type==='book').length;
+  $("#cAll").textContent = totalAll?faNum(totalAll):"";
+  $("#cQa").textContent  = totalQa?faNum(totalQa):"";
+  $("#cBook").textContent= totalBook?faNum(totalBook):"";
+
+  if(totalAll===0){
+    metaEl.textContent="";
+    resultsEl.innerHTML = embedded
+      ? `<div class="empty"><div class="big">📭</div><h3>اینجا فعلاً خالیه</h3><p>هنوز چیزی توش ریخته نشده.</p></div>`
+      : `<div class="empty"><div class="big">👋</div><h3>سلام! بیا پُرش کنیم</h3><p>اولین سؤال‌وجواب یا یه تیکه از کتاب رو اضافه کن تا موتور جست‌وجو روشن شه.</p><div class="act"><button class="btn primary" id="emptyAdd">بزن بریم</button></div></div>`;
+    const ea=$("#emptyAdd"); if(ea) ea.onclick=()=>openDrawer('qa');
+    return;
+  }
+
+  // ریست صفحه‌بندی وقتی جست‌وجو یا فیلتر عوض می‌شود
+  const key = filter+"|"+raw.trim();
+  if(key!==lastKey){ lastKey=key; shownLimit=PAGE; }
+
+  const total = list.length;
+
+  if(empty){
+    metaEl.innerHTML = `${faNum(totalQa)} سؤال و ${faNum(totalBook)} تیکه متن این تو هست — یه کلمه بنویس، یا پایین‌تر همه‌شو ببین.`;
+  } else if(total===0){
+    metaEl.textContent="";
+    resultsEl.innerHTML = `<div class="empty"><div class="big">🤔</div><h3>هیچی پیدا نشد</h3><p>برای «${escapeHTML(raw)}» چیزی نبود. شاید یه کلمهٔ کوتاه‌تر یا یه جور دیگه‌ش؟</p></div>`;
+    return;
+  } else {
+    metaEl.textContent = total>shownLimit
+      ? `نمایش ${faNum(Math.min(shownLimit,total))} از ${faNum(total)} نتیجه`
+      : `${faNum(total)} نتیجه`;
+  }
+
+  const slice = list.slice(0, shownLimit);
+  resultsEl.innerHTML = slice.map(({item})=>cardHTML(item,q)).join("");
+  bindResultEvents(q);
+
+  if(total>shownLimit){
+    const more=document.createElement("button");
+    more.className="btn ghost full";
+    more.style.marginTop="14px";
+    more.textContent=`بیشتر نشان بده — ${faNum(total-shownLimit)} مورد دیگه`;
+    more.onclick=()=>{ shownLimit+=PAGE; render(); };
+    resultsEl.appendChild(more);
+  }
+}
+
+function cardHTML(item,q){
+  if(item.type==="qa"){
+    const r=item.ref;
+    const tags=(r.tags||[]).map(t=>`<span class="chip click" data-tag="${escapeHTML(t)}">${escapeHTML(t)}</span>`).join("");
+    const ans = r.a.length>520 ? snippet(r.a,q,420) : highlight(r.a,q);
+    const expand = r.a.length>520 ? `<button class="mini expand" data-full="${encodeURIComponent(r.a)}">دیدنِ کاملِ جواب</button>` : "";
+    return `<article class="card">
+      <span class="tag-type qa"><span class="sq"></span>پرسش و پاسخ</span>
+      <div class="q-text">${highlight(r.q,q)}</div>
+      <div class="a-text">${ans}</div>
+      <div class="card-foot">${tags}
+        <button class="mini copy" data-copy="${encodeURIComponent(r.a)}">📋 برداشتنِ جواب</button>
+        ${expand}
+      </div>
+    </article>`;
+  }
+  const txt=item.ref;
+  return `<article class="card">
+    <span class="tag-type book"><span class="sq"></span>متن کتاب</span>
+    <div class="src-text">${highlight(item.book.title,q)}</div>
+    <div class="passage">${highlight(txt,q)}</div>
+  </article>`;
+}
+
+function bindResultEvents(q){
+  resultsEl.querySelectorAll(".copy").forEach(b=>b.onclick=()=>{
+    const t=decodeURIComponent(b.dataset.copy);
+    navigator.clipboard?.writeText(t).then(()=>toast("جواب کپی شد ✓")).catch(()=>toast("کپی نشد"));
+  });
+  resultsEl.querySelectorAll(".expand").forEach(b=>b.onclick=()=>{
+    const full=decodeURIComponent(b.dataset.full);
+    const box=b.closest(".card").querySelector(".a-text,.passage");
+    box.innerHTML=highlight(full,q); b.remove();
+  });
+  resultsEl.querySelectorAll(".chip.click").forEach(c=>c.onclick=()=>{
+    searchEl.value=c.dataset.tag; onInput(); searchEl.focus();
+  });
+}
+
+/* ============================================================
+   ۵) ورودی جست‌وجو
+   ============================================================ */
+let deb;
+function onInput(){
+  $("#clearBtn").style.display = searchEl.value ? "flex":"none";
+  $("#slashHint").style.display = searchEl.value ? "none":"";
+  clearTimeout(deb); deb=setTimeout(render,110);
+}
+searchEl.addEventListener("input",onInput);
+$("#clearBtn").onclick=()=>{ searchEl.value=""; onInput(); searchEl.focus(); };
+document.addEventListener("keydown",e=>{
+  if(e.key==="/" && document.activeElement!==searchEl && !drawerOpen()){ e.preventDefault(); searchEl.focus(); }
+  if(e.key==="Escape"){ if(drawerOpen()) closeDrawer(); else if(searchEl.value){ searchEl.value=""; onInput(); } }
+});
+
+const $$=s=>document.querySelectorAll(s);
+$$(".seg button").forEach(b=>b.onclick=()=>{
+  filter=b.dataset.f;
+  $$(".seg button").forEach(x=>x.setAttribute("aria-selected", x===b?"true":"false"));
+  render();
+});
+
+/* جای‌نگهدارِ چرخشی برای جذاب‌تر شدن */
+const PLACEHOLDERS=[
+  "مثلاً: چگونه فردی جنتلمن باشیم",
+  "مثلاً: به ایزدیار کمتر اینترنت بدین",
+  "مثلاً: آیا عکس بکگراند ایزدیار در آینده آبرو اش را خواهد برد؟",
+  "مثلاً: حله قربان؟",
+  "مثلاً: تا سختی کمان شما نیز خب؟... بگذرد!",
+  "مثلاً: سیییییینووووووسهههه ۶۰ درجههههه میییشه رااادییکال سه دومم"
+];
+let phIdx=0;
+setInterval(()=>{
+  if(searchEl.value || document.activeElement===searchEl) return;
+  phIdx=(phIdx+1)%PLACEHOLDERS.length;
+  searchEl.placeholder=PLACEHOLDERS[phIdx];
+},2800);
+
+/* ============================================================
+   ۶) درج/ذخیره
+   ============================================================ */
+async function save(){
+  const ok = await Store.set(KEY, JSON.stringify(state));
+  if(!ok && !save._warned){
+    save._warned=true;
+    toast("داده‌ها سنگین شدن و شاید ذخیره نمونن — یه «برون‌بری JSON» بگیر که از دست نره");
+  }
+  return ok;
+}
+function refresh(){ buildIndex(); render(); renderLibrary(); }
+
+function toast(msg){
+  const t=$("#toastInner"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),1900);
+}
+
+$("#addQa").onclick=async()=>{
+  const q=$("#qIn").value.trim(), a=$("#aIn").value.trim();
+  const tags=$("#tIn").value.split(/[,،]/).map(s=>s.trim()).filter(Boolean);
+  if(!q || !a){ toast("صورت پرسش و پاسخ را پر کن"); return; }
+  state.qa.push({id:uid(), q, a, tags, created:Date.now()});
+  $("#qIn").value=$("#aIn").value=$("#tIn").value="";
+  await save(); refresh(); toast("پرسش و پاسخ افزوده شد");
+};
+
+$("#addBook").onclick=async()=>{
+  const title=$("#bTitle").value.trim(), body=$("#bBody").value.trim();
+  if(!title || !body){ toast("عنوان و متن را پر کن"); return; }
+  const passages=chunkText(body);
+  state.books.push({id:uid(), title, passages, created:Date.now()});
+  $("#bTitle").value=$("#bBody").value="";
+  await save(); refresh();
+  toast(`«${title}» با ${faNum(passages.length)} قطعه افزوده شد`);
+};
+
+/* ============================================================
+   ۷) کتابخانه (مدیریت/حذف)
+   ============================================================ */
+function renderLibrary(){
+  const psg=state.books.reduce((s,b)=>s+b.passages.length,0);
+  $("#stQa").textContent=faNum(state.qa.length);
+  $("#stBook").textContent=faNum(state.books.length);
+  $("#stPsg").textContent=faNum(psg);
+
+  const bl=$("#bookList");
+  bl.innerHTML = state.books.length ? state.books.map(b=>`
+    <div class="list-item">
+      <div><div class="lt">${escapeHTML(b.title)}</div><div class="ls">${faNum(b.passages.length)} قطعه</div></div>
+      <button class="iconbtn" data-del-book="${b.id}">حذف</button>
+    </div>`).join("") : `<div class="ls" style="color:var(--ink-faint)">هنوز کتابی اضافه نشده.</div>`;
+  bl.querySelectorAll("[data-del-book]").forEach(btn=>btn.onclick=async()=>{
+    state.books=state.books.filter(b=>b.id!==btn.dataset.delBook);
+    await save(); refresh(); toast("منبع حذف شد");
+  });
+
+  const ql=$("#qaList");
+  ql.innerHTML = state.qa.length ? state.qa.slice().reverse().map(r=>`
+    <div class="list-item">
+      <div><div class="lt">${escapeHTML(r.q)}</div><div class="ls">${escapeHTML(r.a.slice(0,60))}${r.a.length>60?'…':''}</div></div>
+      <button class="iconbtn" data-del-qa="${r.id}">حذف</button>
+    </div>`).join("") : `<div class="ls" style="color:var(--ink-faint)">هنوز پرسشی اضافه نشده.</div>`;
+  ql.querySelectorAll("[data-del-qa]").forEach(btn=>btn.onclick=async()=>{
+    state.qa=state.qa.filter(r=>r.id!==btn.dataset.delQa);
+    await save(); refresh(); toast("پرسش حذف شد");
+  });
+}
+
+/* ============================================================
+   ۸) پشتیبان / انتشار
+   ============================================================ */
+function download(content, name, type){
+  const blob=new Blob([content],{type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },100);
+}
+
+$("#exportBtn").onclick=()=>{
+  download(JSON.stringify(state,null,2), "پشتیبان-جستجوگر.json", "application/json");
+  toast("پشتیبان دانلود شد");
+};
+
+/* ----- افزودن گروهی از فایل JSON (با ساختار منعطف) ----- */
+function pick(o, keys){
+  for(const k of keys){ if(o && o[k]!=null && o[k]!=="") return o[k]; }
+  return "";
+}
+function coerceQA(x){
+  if(!x || typeof x!=="object") return null;
+  const q=String(pick(x,["q","question","پرسش","سوال","سؤال"])).trim();
+  const a=String(pick(x,["a","answer","پاسخ","جواب"])).trim();
+  if(!q || !a) return null;
+  let tags=x.tags ?? x["برچسب"] ?? x["برچسب‌ها"] ?? [];
+  if(typeof tags==="string") tags=tags.split(/[,،]/).map(s=>s.trim()).filter(Boolean);
+  if(!Array.isArray(tags)) tags=[];
+  return {id:uid(), q, a, tags:tags.map(String), created:Date.now()};
+}
+function coerceBook(x){
+  if(!x || typeof x!=="object") return null;
+  const title=String(pick(x,["title","عنوان","نام","source","منبع"])||"بدون عنوان").trim();
+  let passages;
+  if(Array.isArray(x.passages) && x.passages.length){
+    passages=chunkText(x.passages.map(p=>String(p||"")).join("\n\n"));
+  } else {
+    passages=chunkText(String(pick(x,["text","متن","body","content","محتوا"])));
+  }
+  if(!passages.length) return null;
+  return {id:uid(), title, passages, created:Date.now()};
+}
+function parseImport(data){
+  const qa=[], books=[];
+  const addQA=arr=>{ for(const x of arr){ const r=coerceQA(x); if(r) qa.push(r); } };
+  const addBooks=arr=>{ for(const x of arr){ const b=coerceBook(x); if(b) books.push(b); } };
+  if(Array.isArray(data)){
+    for(const x of data){
+      if(x && (x.text!=null||x.passages!=null||x.body!=null||x["متن"]!=null)) { const b=coerceBook(x); if(b) books.push(b); }
+      else { const r=coerceQA(x); if(r) qa.push(r); }
+    }
+  } else if(data && typeof data==="object"){
+    if(Array.isArray(data.qa)) addQA(data.qa);
+    if(Array.isArray(data.questions)) addQA(data.questions);
+    if(Array.isArray(data["سوالات"])) addQA(data["سوالات"]);
+    if(Array.isArray(data.books)) addBooks(data.books);
+    if(Array.isArray(data["کتاب‌ها"])) addBooks(data["کتاب‌ها"]);
+    if(Array.isArray(data.texts)) addBooks(data.texts);
+  }
+  return {qa, books};
+}
+
+$("#bulkAddBtn").onclick=()=>$("#bulkFile").click();
+$("#bulkFile").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=async()=>{
+    try{
+      const data=JSON.parse(r.result);
+      const {qa,books}=parseImport(data);
+      if(!qa.length && !books.length){ toast("هیچ سؤال یا متنی توی فایل پیدا نشد"); e.target.value=""; return; }
+      state.qa.push(...qa);
+      state.books.push(...books);
+      await save(); refresh();
+      const psg=books.reduce((s,b)=>s+b.passages.length,0);
+      const parts=[];
+      if(qa.length) parts.push(`${faNum(qa.length)} سؤال`);
+      if(books.length) parts.push(`${faNum(books.length)} کتاب (${faNum(psg)} قطعه)`);
+      toast(parts.join(" و ")+" اضافه شد ✓");
+    }catch(err){ toast("فایل JSON معتبر نیست"); }
+    e.target.value="";
+  };
+  r.readAsText(f);
+};
+
+$("#sampleBtn").onclick=()=>{
+  const sample={
+    qa:[
+      {q:"یک نمونه سؤال؟", a:"و این هم جوابش.", tags:["فصل ۱","نمونه"]},
+      {q:"سؤال دوم چیست؟", a:"جوابِ سؤال دوم اینجا."}
+    ],
+    books:[
+      {title:"اسمِ درس — فصل ۱", text:"کلِ متنِ فصل رو اینجا بذار.\n\nهر پاراگراف رو با یک خط خالی جدا کن.\n\nخودش به‌صورت خودکار تیکه‌تیکه می‌شه."},
+      {title:"درسِ دیگر", passages:["اگه متن از قبل تیکه شده، اینجوری بذارش.","این هم قطعهٔ دوم."]}
+    ]
+  };
+  download(JSON.stringify(sample,null,2), "نمونه-محتوا.json", "application/json");
+  toast("فایل نمونه دانلود شد");
+};
+
+$("#importBtn").onclick=()=>$("#importFile").click();
+$("#importFile").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=async()=>{
+    try{
+      const data=JSON.parse(r.result);
+      if(!data || !Array.isArray(data.qa) || !Array.isArray(data.books)) throw 0;
+      const hasContent = state.qa.length || state.books.length;
+      if(hasContent && !confirm("کلِ محتوای فعلی با این فایل جایگزین می‌شود. اگر می‌خواهی فقط اضافه شود از «افزودن گروهی» استفاده کن. ادامه؟")){ e.target.value=""; return; }
+      state=data; migrateChunks(); await save(); refresh(); toast("محتوا بازیابی شد");
+    }catch(err){ toast("فایل معتبر نیست"); }
+    e.target.value="";
+  };
+  r.readAsText(f);
+};
+
+$("#buildStudent").onclick=()=>{
+  const clone=document.documentElement.cloneNode(true);
+  const dataEl=clone.querySelector("#embedded-data");
+  let json=JSON.stringify(state).replace(/</g,"\\u003c").replace(/\u2028/g,"\\u2028").replace(/\u2029/g,"\\u2029");
+  dataEl.textContent=json;
+  const res=clone.querySelector("#results"); if(res) res.innerHTML="";
+  const dr=clone.querySelector("#drawer"); if(dr) dr.classList.remove("open");
+  const sc=clone.querySelector("#scrim"); if(sc) sc.classList.remove("open");
+  const html="<!DOCTYPE html>\n"+clone.outerHTML;
+  download(html, "جستجوگر-کلاس.html", "text/html;charset=utf-8");
+  toast("فایل دانش‌آموز ساخته شد");
+};
+
+$("#clearAll").onclick=async()=>{
+  if(!confirm("همهٔ پرسش ها و متن‌ها پاک می‌شوند. مطمئنی؟")) return;
+  state={qa:[],books:[]}; await save(); refresh(); toast("همه‌چیز پاک شد");
+};
+
+/* ============================================================
+   ۹) کشوی مدیریت
+   ============================================================ */
+const drawer=$("#drawer"), scrim=$("#scrim");
+function drawerOpen(){ return drawer.classList.contains("open"); }
+function openDrawer(tab){
+  drawer.classList.add("open"); scrim.classList.add("open");
+  drawer.setAttribute("aria-hidden","false");
+  if(tab) switchTab(tab);
+  renderLibrary();
+}
+function closeDrawer(){
+  drawer.classList.remove("open"); scrim.classList.remove("open");
+  drawer.setAttribute("aria-hidden","true");
+}
+$("#manageBtn").onclick=()=>openDrawer();
+$("#closeDrawer").onclick=closeDrawer;
+scrim.onclick=closeDrawer;
+
+function switchTab(t){
+  $$(".tabs button").forEach(b=>b.setAttribute("aria-selected", b.dataset.t===t?"true":"false"));
+  $$(".panel").forEach(p=>p.classList.toggle("show", p.dataset.p===t));
+}
+$$(".tabs button").forEach(b=>b.onclick=()=>switchTab(b.dataset.t));
+
+/* ============================================================
+   ۱۰) راه‌اندازی
+   ============================================================ */
+function setStudentMode(){
+  embedded=true;
+  $("#manageBtn").style.display="none";
+  $("#studentBadge").style.display="";
+}
+
+async function init(){
+  // داده‌های جاسازی‌شده؟
+  const el=document.getElementById("embedded-data");
+  let loaded=false;
+  if(el){
+    const raw=(el.textContent||"").trim();
+    if(raw && raw!=="__EMBEDDED_DATA__"){
+      try{ const d=JSON.parse(raw); if(d&&Array.isArray(d.qa)&&Array.isArray(d.books)){ state=d; setStudentMode(); loaded=true; } }catch(e){}
+    }
+  }
+  if(!loaded){
+    const saved=await Store.get(KEY);
+    if(saved){ try{ const d=JSON.parse(saved); if(d&&Array.isArray(d.qa)&&Array.isArray(d.books)) state=d; }catch(e){} }
+  }
+  if(migrateChunks()){ try{ await save(); }catch(e){} }
+  buildIndex(); render(); renderLibrary();
+}
+init();
+
+})();
+</script>
+
+
+</body></html>
