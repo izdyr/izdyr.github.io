@@ -333,22 +333,22 @@
 
   <!-- Add Q&A -->
   <div class="panel show" data-p="qa">
-    <div class="note">سؤال‌ها بیشترین وزن رو تو جست‌وجو دارن؛ یعنی اگه کلیدواژه تو خودِ سؤال باشه، بالاتر میاد. 👌</div>
+    <div class="note">سوال‌ها بیشترین وزن رو تو موتور دارن؛ یعنی اگه کلیدواژه تو خود سوال باشه، بالاتر میاد.</div>
     <label class="fld"><span class="lab">سؤال</span>
-      <textarea class="in" id="qIn" placeholder="اون سؤالی که همیشه سرِ امتحان میاد…"></textarea>
+      <textarea class="in" id="qIn" placeholder="اون سوالی که همیشه سرِ امتحان میاد…"></textarea>
     </label>
     <label class="fld"><span class="lab">جواب</span>
-      <textarea class="in" id="aIn" placeholder="جوابِ کامل رو اینجا بنویس…"></textarea>
+      <textarea class="in" id="aIn" placeholder="جواب کامل رو اینجا بنویس…"></textarea>
     </label>
-    <label class="fld"><span class="lab">برچسب‌ها <span class="hint">اختیاری — با ویرگول جدا کن</span></span>
-      <input class="in" id="tIn" placeholder="مثلاً: فصل ۳، مهمِ امتحان" />
+    <label class="fld"><span class="lab">برچسب‌ها <span class="hint">اختیاریه ولی با ویرگول جدا کن</span></span>
+      <input class="in" id="tIn" placeholder="مثلاً: فصل ۳، مهم امتحان" />
     </label>
     <button class="btn primary full" id="addQa">اضافه‌ش کن</button>
   </div>
 
   <!-- Add book -->
   <div class="panel" data-p="book">
-    <div class="note">کلِ یه فصل رو یهو بچسبون اینجا؛ خودش تیکه‌تیکه‌ش می‌کنه تا جواب‌ها کوتاه و دقیق باشن. 📖</div>
+    <div class="note">کل یه فصل رو یهو بچسبون اینجا؛ خودش تیکه تیکه اش میکنه تا جواب ها کوتاه و دقیق باشن. (تا یه وقت شما زخم بستر نگیری)</div>
     <label class="fld"><span class="lab">اسمِ منبع</span>
       <input class="in" id="bTitle" placeholder="مثلاً: تاریخ — درس ۵" />
     </label>
@@ -363,22 +363,22 @@
     <div class="count-row">
       <div class="stat"><b id="stQa">۰</b><span>پرسش و پاسخ</span></div>
       <div class="stat"><b id="stBook">۰</b><span>کتاب / منبع</span></div>
-      <div class="stat"><b id="stPsg">۰</b><span>قطعهٔ متن</span></div>
+      <div class="stat"><b id="stPsg">۰</b><span>قطعه متن</span></div>
     </div>
-    <h4>کتاب‌ها و منابع</h4>
+    <h4>کتاب ها و منابع</h4>
     <div id="bookList"></div>
-    <h4>پرسش و پاسخ‌ها</h4>
+    <h4>پرسش و پاسخ ها</h4>
     <div id="qaList"></div>
   </div>
 
   <!-- Backup -->
   <div class="panel" data-p="backup">
     <h4>نسخهٔ دانش‌آموز</h4>
-    <div class="note">یک فایل HTML مستقل می‌سازد که همهٔ محتوا داخلش جاسازی شده و فقط جست‌وجو دارد (بدون ویرایش). همین فایل را به دانش‌آموزان بده یا روی هاست بگذار — به اینترنت هم نیازی ندارد.</div>
+    <div class="note">یک فایل HTML مستقل می ساز که همه محتوا داخلش جاسازی شده و فقط جست و جو دارد (بدون ویرایش، امنیت ایزدیار در اولویته). همین فایل رو به دانش آموزان بده یا روی هاست بگذاربه اینترنت هم نیازی نداره.</div>
     <button class="btn primary full" id="buildStudent">ساخت فایل دانش‌آموز</button>
 
     <h4>افزودن گروهی از فایل JSON</h4>
-    <div class="note">یک فایل JSON آماده کن و یکجا کلی سؤال/جواب و متن کتاب اضافه کن — به‌جای تایپِ تک‌تک. محتوای فعلی پاک نمی‌شود؛ موارد جدید فقط <b>اضافه</b> می‌شوند. ساختار فایل را از «دانلود نمونه» ببین. 📥</div>
+    <div class="note">یک فایلیک فایل JSON آماده کن و یکجا کلی سؤال/جواب و متن کتاب اضافه کن به‌جای تایپ تک تک(به هر حال زخم بستر نگرفتن شما آرزوی قلبی ماست). محتوای فعلی پاک نمیشه؛ موارد جدید فقط اضافه میشن. ساختار فایل را از «دانلود نمونه» ببین.</div>
     <div class="row">
       <button class="btn primary" id="bulkAddBtn" style="flex:1">انتخاب فایل JSON</button>
       <button class="btn ghost" id="sampleBtn" style="flex:1">دانلود نمونه</button>
@@ -386,15 +386,15 @@
     <input type="file" id="bulkFile" accept="application/json,.json" style="display:none" />
 
     <h4>پشتیبان و بازیابی</h4>
-    <div class="note">«برون‌بری» یک نسخهٔ پشتیبان از همه‌چیز می‌گیرد. «بازیابی» کلِ محتوای فعلی را با فایل پشتیبان <b>جایگزین</b> می‌کند.</div>
+    <div class="note">«برونبری» یک نسخه پشتیبان از همه چیز می گیره «بازیابی» کل محتوای فعلی رو با فایل پشتیبان جایگزین میکنه.</div>
     <div class="row">
-      <button class="btn ghost" id="exportBtn" style="flex:1">برون‌بری (JSON)</button>
+      <button class="btn ghost" id="exportBtn" style="flex:1">برونبری (JSON)</button>
       <button class="btn ghost" id="importBtn" style="flex:1">بازیابی کامل (JSON)</button>
     </div>
     <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
 
     <h4>خطرناک</h4>
-    <button class="btn danger full" id="clearAll">پاک کردن همهٔ محتوا</button>
+    <button class="btn danger full" id="clearAll">پاک کردن همه محتوا</button>
   </div>
 </aside>
 
@@ -703,7 +703,7 @@ function render(){
     metaEl.textContent="";
     resultsEl.innerHTML = embedded
       ? `<div class="empty"><div class="big">📭</div><h3>اینجا فعلاً خالیه</h3><p>هنوز چیزی توش ریخته نشده.</p></div>`
-      : `<div class="empty"><div class="big">👋</div><h3>سلام! بیا پُرش کنیم</h3><p>اولین سؤال‌وجواب یا یه تیکه از کتاب رو اضافه کن تا موتور جست‌وجو روشن شه.</p><div class="act"><button class="btn primary" id="emptyAdd">بزن بریم</button></div></div>`;
+      : `<div class="empty"><div class="big">👋</div><h3>سلام! بیا پرش کنیم</h3><p>اولین پرسش یا یه تیکه از کتاب رو اضافه کن تا موتور روشن شه(شمعش خرابه)</p><div class="act"><button class="btn primary" id="emptyAdd">بزن بریم</button></div></div>`;
     const ea=$("#emptyAdd"); if(ea) ea.onclick=()=>openDrawer('qa');
     return;
   }
