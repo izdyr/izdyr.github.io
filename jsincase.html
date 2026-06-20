@@ -282,7 +282,7 @@
 <div class="wrap">
   <header class="hero">
     <span class="brand"><span class="dot"></span> قدرت گرفته از بی خوابی ایزدیار</span>
-    <h1>تقلب کار دانش‌آموزهاست،<br>من <span class="swipe">وسیله ام</span></h1>
+    <h1>تقلب کار دانش آموزهاست،<br>من <span class="swipe">وسیله ام</span></h1>
     <svg class="squiggle" width="124" height="9" viewBox="0 0 124 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M2 5 Q 15 1 28 5 T 54 5 T 80 5 T 106 5 T 122 4"/></svg>
     <p class="sub">سوال ها، جواب ها و متن کتاب رو میریزم اینجا و بعد با یه کلمه بین همه شون می گردی. همین. </p>
     <div id="studentBadge" style="display:none"><span class="badge-student">📒 نسخهٔ دانش‌آموز — فقط جست‌وجو</span></div>
@@ -373,9 +373,9 @@
 
   <!-- Backup -->
   <div class="panel" data-p="backup">
-    <h4>نسخهٔ دانش‌آموز</h4>
+    <h4>نسخه دانش آموز</h4>
     <div class="note">یک فایل HTML مستقل می ساز که همه محتوا داخلش جاسازی شده و فقط جست و جو دارد (بدون ویرایش، امنیت ایزدیار در اولویته). همین فایل رو به دانش آموزان بده یا روی هاست بگذاربه اینترنت هم نیازی نداره.</div>
-    <button class="btn primary full" id="buildStudent">ساخت فایل دانش‌آموز</button>
+    <button class="btn primary full" id="buildStudent">ساخت فایل دانش آموز</button>
 
     <h4>افزودن گروهی از فایل JSON</h4>
     <div class="note">یک فایلیک فایل JSON آماده کن و یکجا کلی سؤال/جواب و متن کتاب اضافه کن به‌جای تایپ تک تک(به هر حال زخم بستر نگرفتن شما آرزوی قلبی ماست). محتوای فعلی پاک نمیشه؛ موارد جدید فقط اضافه میشن. ساختار فایل را از «دانلود نمونه» ببین.</div>
@@ -703,7 +703,7 @@ function render(){
     metaEl.textContent="";
     resultsEl.innerHTML = embedded
       ? `<div class="empty"><div class="big">📭</div><h3>اینجا فعلاً خالیه</h3><p>هنوز چیزی توش ریخته نشده.</p></div>`
-      : `<div class="empty"><div class="big">👋</div><h3>سلام! بیا پرش کنیم</h3><p>اولین پرسش یا یه تیکه از کتاب رو اضافه کن تا موتور روشن شه(شمعش خرابه)</p><div class="act"><button class="btn primary" id="emptyAdd">بزن بریم</button></div></div>`;
+      : `<div class="empty"><div class="big">👋</div><h3>سلام! بیا پرش کنیم</h3><p>اولین پرسش یا یه تیکه از کتاب رو اضافه کن تا موتور روشن شه</p><div class="act"><button class="btn primary" id="emptyAdd">بزن بریم</button></div></div>`;
     const ea=$("#emptyAdd"); if(ea) ea.onclick=()=>openDrawer('qa');
     return;
   }
