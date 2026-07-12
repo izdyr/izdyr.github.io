@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>سَمباد — سازمان مدیریت بحران آزمون رها</title>
+<title>سَمبار — سازمان مدیریت بحران آزمون رها</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -26,7 +26,6 @@
   --green:#3FBF7F;
   --green-dark:#2E9A64;
   --green-soft:#E2F6EC;
-  --tile-empty:#CFE7E4;
   --radius:18px;
   --shadow:0 8px 24px rgba(30,58,65,.07);
 }
@@ -49,11 +48,10 @@ body{
 
 /* ---------- سربرگ خانه ---------- */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 2px 14px;}
-.brand{display:flex;align-items:center;gap:10px;}
 .brand h1{font-family:'Lalezar',cursive;font-size:30px;margin:0;color:var(--firoozeh-dark);letter-spacing:.5px;line-height:1;}
-.brand small{display:block;font-family:'Vazirmatn';font-size:11px;font-weight:500;color:var(--muted);margin-top:2px;letter-spacing:0;}
-.stats{display:flex;gap:8px;}
-.stat-chip{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:4px 12px;font-weight:800;font-size:14px;display:flex;align-items:center;gap:5px;box-shadow:0 2px 0 var(--line);}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px;}
+.stats{display:flex;gap:8px;align-items:center;}
+.stat-chip{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:4px 12px;font-weight:800;font-size:14px;display:flex;align-items:center;gap:5px;box-shadow:0 2px 0 var(--line);white-space:nowrap;}
 .stat-chip.fire{color:#E2743B;}
 .stat-chip.xp{color:var(--saffron-dark);}
 .sound-btn{background:var(--card);border:2px solid var(--line);border-radius:14px;width:38px;height:38px;font-size:17px;cursor:pointer;box-shadow:0 2px 0 var(--line);transition:transform .15s;}
@@ -83,36 +81,24 @@ body{
 .mascot{width:76px;height:76px;flex:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));animation:float 3.6s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 .tiles{display:grid;grid-template-columns:repeat(12,1fr);gap:7px;padding:4px 2px 0;}
-.tile{
-  width:100%;aspect-ratio:1;
-  background:rgba(255,255,255,.18);
-  transform:rotate(45deg) scale(.72);
-  border-radius:3px;
-  transition:background .4s, box-shadow .4s;
-}
+.tile{width:100%;aspect-ratio:1;background:rgba(255,255,255,.18);transform:rotate(45deg) scale(.72);border-radius:3px;transition:background .4s, box-shadow .4s;}
 .tile.on{background:var(--saffron);box-shadow:0 0 10px rgba(246,185,59,.55);}
 .hero .tiles-caption{font-size:11.5px;opacity:.75;margin:10px 2px 0;font-weight:500;}
+.sync-note{font-size:11px;font-weight:600;opacity:.7;display:flex;align-items:center;gap:5px;margin-top:6px;}
 
 /* ---------- کارت‌های موضوع ---------- */
 .section-title{font-family:'Lalezar';font-size:22px;color:var(--ink);margin:4px 4px 12px;}
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .cat-card{
-  background:var(--card);
-  border:2px solid var(--line);
-  border-radius:var(--radius);
-  padding:14px 14px 12px;
-  box-shadow:0 3px 0 var(--line);
+  background:var(--card);border:2px solid var(--line);border-radius:var(--radius);
+  padding:14px 14px 12px;box-shadow:0 3px 0 var(--line);
   display:flex;flex-direction:column;gap:8px;
-  transition:transform .15s, box-shadow .15s;
 }
-.cat-card:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line);}
 .cat-head{display:flex;align-items:center;gap:9px;}
-.cat-icon{
-  width:42px;height:42px;flex:none;border-radius:13px;
-  display:flex;align-items:center;justify-content:center;font-size:21px;
-}
+.cat-icon{width:42px;height:42px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;}
 .cat-name{font-weight:800;font-size:14.5px;line-height:1.4;}
 .cat-count{font-size:11px;color:var(--muted);font-weight:500;}
+.due-badge{font-size:10.5px;font-weight:800;color:#E2743B;background:#FDEEDB;border-radius:99px;padding:1px 8px;display:inline-block;margin-top:1px;}
 .mini-bar{height:8px;background:#EAF3F2;border-radius:99px;overflow:hidden;}
 .mini-fill{height:100%;background:linear-gradient(90deg,var(--firoozeh),#2BC1B8);border-radius:99px;transition:width .6s cubic-bezier(.22,1,.36,1);}
 .cat-actions{display:flex;gap:8px;margin-top:2px;}
@@ -139,7 +125,7 @@ body{
   margin-top:16px;background:linear-gradient(135deg,#FDF3DC,#FBE8BC);
   border:2px solid #F2D695;border-radius:var(--radius);
   padding:16px;display:flex;align-items:center;gap:14px;
-  box-shadow:0 3px 0 #ecca82;
+  box-shadow:0 3px 0 #ecca82;cursor:pointer;
 }
 .exam-card .txt{flex:1;}
 .exam-card b{display:block;font-size:16px;}
@@ -150,10 +136,8 @@ body{
 .close-x{background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;padding:4px;line-height:1;}
 .qbar{flex:1;height:14px;background:#E2EEEC;border-radius:99px;overflow:hidden;position:relative;}
 .qbar-fill{
-  height:100%;border-radius:99px;
-  background:linear-gradient(90deg,var(--firoozeh),#2BC1B8);
-  transition:width .5s cubic-bezier(.22,1,.36,1);
-  position:relative;overflow:hidden;
+  height:100%;border-radius:99px;background:linear-gradient(90deg,var(--firoozeh),#2BC1B8);
+  transition:width .5s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden;
 }
 .qbar-fill::after{
   content:'';position:absolute;inset:0;
@@ -162,29 +146,26 @@ body{
 }
 @keyframes shimmer{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
 .q-kind{font-size:12px;font-weight:700;color:var(--firoozeh-dark);background:var(--firoozeh-soft);display:inline-block;padding:3px 12px;border-radius:99px;margin-bottom:10px;}
-.q-prompt{font-size:18.5px;font-weight:800;margin:0 0 16px;line-height:2;}
+.q-prompt{font-size:18px;font-weight:800;margin:0 0 16px;line-height:2;}
 .verse-box{
   background:var(--card);border:2px solid var(--line);border-radius:16px;
-  padding:14px 18px;margin:0 0 18px;font-size:17px;font-weight:600;line-height:2.3;
+  padding:14px 18px;margin:0 0 18px;font-size:16.5px;font-weight:600;line-height:2.3;
   box-shadow:var(--shadow);position:relative;
 }
 .verse-box::before{content:'❝';position:absolute;top:-2px;left:12px;font-size:26px;color:var(--firoozeh);opacity:.35;}
-.blank{
-  display:inline-block;min-width:74px;border-bottom:3px dashed var(--saffron-dark);
-  text-align:center;color:var(--saffron-dark);font-weight:800;padding:0 6px;
-  transition:all .2s;
-}
-.blank.filled{border-bottom-style:solid;color:var(--firoozeh-dark);border-color:var(--firoozeh);}
+.verse-box.tf-cand{border-color:#EFD9A9;background:#FFFDF6;}
+.verse-box.tf-cand::before{content:'؟';color:var(--saffron-dark);opacity:.5;}
 
 .opts{display:flex;flex-direction:column;gap:10px;}
 .opts.grid2{display:grid;grid-template-columns:1fr 1fr;}
 .opt{
   background:var(--card);border:2px solid var(--line);border-radius:16px;
-  padding:13px 16px;font-family:'Vazirmatn';font-size:15.5px;font-weight:600;text-align:right;
+  padding:13px 16px;font-family:'Vazirmatn';font-size:15px;font-weight:600;text-align:right;
   cursor:pointer;box-shadow:0 3px 0 var(--line);
   transition:transform .12s, box-shadow .12s, border-color .15s, background .15s;
   line-height:1.8;color:var(--ink);
 }
+.opts.grid2 .opt{text-align:center;font-weight:800;}
 .opt:not(.locked):active{transform:translateY(3px);box-shadow:none;}
 .opt.selected{border-color:var(--firoozeh);background:var(--firoozeh-soft);box-shadow:0 3px 0 var(--firoozeh);color:var(--firoozeh-dark);}
 .opt.correct{border-color:var(--green);background:var(--green-soft);box-shadow:0 3px 0 var(--green);color:var(--green-dark);animation:pop .35s cubic-bezier(.22,1.4,.36,1);}
@@ -193,22 +174,36 @@ body{
 @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.04)}100%{transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(5px)}50%{transform:translateX(-5px)}75%{transform:translateX(3px)}}
 
-/* ---------- چیپ‌ها (سرهم‌کردنی) ---------- */
+/* ---------- حرف‌چینی ---------- */
 .asm-target{
   min-height:64px;background:var(--card);border:2px dashed var(--line);border-radius:16px;
-  padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;
-  transition:border-color .2s;
+  padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin-bottom:16px;
+  transition:border-color .2s;direction:rtl;
 }
 .asm-target.has{border-style:solid;border-color:var(--firoozeh);}
 .asm-bank{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;}
 .chip{
   background:var(--card);border:2px solid var(--line);border-radius:13px;
-  padding:8px 15px;font-family:'Vazirmatn';font-size:16px;font-weight:700;cursor:pointer;
+  padding:8px 15px;font-family:'Vazirmatn';font-size:17px;font-weight:800;cursor:pointer;
   box-shadow:0 3px 0 var(--line);transition:all .15s;color:var(--ink);
 }
 .chip:active{transform:translateY(3px);box-shadow:none;}
 .chip.in-target{border-color:var(--firoozeh);background:var(--firoozeh-soft);color:var(--firoozeh-dark);box-shadow:0 3px 0 var(--firoozeh);animation:pop .25s;}
 .chip.ghost{opacity:.25;pointer-events:none;}
+
+/* ---------- جفت‌سازی ---------- */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start;}
+.mcol{display:flex;flex-direction:column;gap:10px;}
+.mchip{
+  background:var(--card);border:2px solid var(--line);border-radius:14px;
+  padding:11px 12px;font-family:'Vazirmatn';font-size:13.5px;font-weight:700;text-align:center;
+  cursor:pointer;box-shadow:0 3px 0 var(--line);color:var(--ink);line-height:1.8;
+  transition:all .15s;min-height:52px;display:flex;align-items:center;justify-content:center;
+}
+.mchip:active{transform:translateY(3px);box-shadow:none;}
+.mchip.sel{border-color:var(--firoozeh);background:var(--firoozeh-soft);box-shadow:0 3px 0 var(--firoozeh);color:var(--firoozeh-dark);}
+.mchip.done{border-color:var(--green);background:var(--green-soft);color:var(--green-dark);box-shadow:0 3px 0 var(--green);opacity:.55;pointer-events:none;animation:pop .3s;}
+.mchip.err{animation:shake .4s;border-color:var(--coral);}
 
 /* ---------- نوار بررسی و بازخورد ---------- */
 .check-area{position:fixed;bottom:0;right:0;left:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 75%,transparent);z-index:5;}
@@ -222,12 +217,13 @@ body{
 .fb-inner{max-width:520px;margin:0 auto;border-radius:24px 24px 0 0;padding:20px 20px 22px;box-shadow:0 -8px 30px rgba(30,58,65,.14);}
 .feedback.good .fb-inner{background:var(--green-soft);}
 .feedback.bad .fb-inner{background:var(--saffron-soft);}
-.fb-title{display:flex;align-items:center;gap:10px;font-family:'Lalezar';font-size:23px;margin-bottom:4px;}
+.fb-title{display:flex;align-items:center;gap:10px;font-family:'Lalezar';font-size:22px;margin-bottom:4px;}
 .feedback.good .fb-title{color:var(--green-dark);}
 .feedback.bad .fb-title{color:var(--saffron-dark);}
 .fb-body{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:14px;line-height:2;}
 .fb-answer{background:#fff;border-radius:13px;padding:9px 14px;margin-top:8px;font-weight:700;border:2px solid rgba(0,0,0,.05);}
-.fb-xp{display:inline-block;background:#fff;border-radius:99px;padding:2px 12px;font-weight:800;font-size:13px;color:var(--saffron-dark);margin-right:8px;box-shadow:0 2px 0 rgba(0,0,0,.06);}
+.fb-xp{display:inline-block;background:#fff;border-radius:99px;padding:2px 12px;font-weight:800;font-size:13px;color:var(--saffron-dark);margin-left:8px;box-shadow:0 2px 0 rgba(0,0,0,.06);}
+.fb-combo{display:inline-block;background:#fff;border-radius:99px;padding:2px 12px;font-weight:800;font-size:13px;color:#E2743B;box-shadow:0 2px 0 rgba(0,0,0,.06);}
 .feedback .btn{width:100%;}
 .feedback.good .btn{background:var(--green);box-shadow:0 4px 0 var(--green-dark);color:#fff;}
 .feedback.bad .btn{background:var(--saffron);box-shadow:0 4px 0 var(--saffron-dark);color:#5c4406;}
@@ -235,7 +231,7 @@ body{
 /* ---------- فلش‌کارت ---------- */
 .flash-wrap{perspective:1200px;margin:10px 0 22px;}
 .flash-card{
-  position:relative;width:100%;min-height:280px;
+  position:relative;width:100%;min-height:290px;
   transform-style:preserve-3d;transition:transform .55s cubic-bezier(.3,1.1,.4,1);cursor:pointer;
 }
 .flash-card.flipped{transform:rotateY(180deg);}
@@ -245,16 +241,16 @@ body{
   padding:26px;text-align:center;gap:10px;
 }
 .flash-front{background:var(--card);border:2px solid var(--line);box-shadow:var(--shadow);}
-.flash-front .word{font-size:26px;font-weight:900;line-height:2;}
+.flash-front .word{font-size:22px;font-weight:900;line-height:2.1;}
 .flash-back{
   background:linear-gradient(140deg,#12958D,#0B6560);color:#fff;transform:rotateY(180deg);
   box-shadow:0 14px 30px rgba(14,122,116,.3);
 }
-.flash-back .word{font-size:19px;font-weight:700;line-height:2.1;}
+.flash-back .word{font-size:18px;font-weight:700;line-height:2.1;}
 .flash-hint{font-size:12px;color:var(--muted);font-weight:600;}
 .flash-back .flash-hint{color:rgba(255,255,255,.7);}
 .flash-grade{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.flash-dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px;}
+.flash-dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px;flex-wrap:wrap;}
 .fdot{width:9px;height:9px;border-radius:99px;background:#D8E8E6;transition:all .3s;}
 .fdot.on{background:var(--firoozeh);transform:scale(1.25);}
 .fdot.done{background:var(--saffron);}
@@ -262,28 +258,21 @@ body{
 /* ---------- نتیجه ---------- */
 .result{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:26px;}
 .result .mascot{width:110px;height:110px;margin-bottom:6px;}
-.result h2{font-family:'Lalezar';font-size:34px;margin:6px 0 2px;color:var(--firoozeh-dark);}
+.result h2{font-family:'Lalezar';font-size:32px;margin:6px 0 2px;color:var(--firoozeh-dark);}
 .result p{color:var(--muted);font-weight:600;margin:0 0 22px;font-size:14.5px;}
 .result-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-bottom:26px;}
 .res-card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 3px 0 var(--line);}
-.res-card .val{font-family:'Lalezar';font-size:30px;line-height:1.2;}
+.res-card .val{font-family:'Lalezar';font-size:28px;line-height:1.2;}
 .res-card .lbl{font-size:12px;color:var(--muted);font-weight:700;}
 .res-card.gold .val{color:var(--saffron-dark);}
 .res-card.teal .val{color:var(--firoozeh-dark);}
 
-/* ---------- آزمون ---------- */
 .timer{font-weight:900;font-size:15px;color:var(--coral-dark);background:var(--coral-soft);border-radius:99px;padding:3px 13px;min-width:64px;text-align:center;font-variant-numeric:tabular-nums;}
 
-/* ---------- کانفتی ---------- */
 .confetti{position:fixed;top:-12px;z-index:99;border-radius:3px;pointer-events:none;animation:fall linear forwards;}
 @keyframes fall{
   0%{transform:translateY(0) rotate(0);opacity:1}
   100%{transform:translateY(105vh) rotate(720deg);opacity:.6}
-}
-
-.empty-note{
-  background:var(--saffron-soft);border:2px dashed #eccf8e;border-radius:16px;
-  padding:14px 16px;font-size:13.5px;font-weight:600;color:#8a6b1e;line-height:2;margin-top:16px;
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -298,81 +287,466 @@ body{
 <div id="app"></div>
 <script>
 /* ==========================================================================
-   ✦ سَمباد — سازمان مدیریت بحران آزمون رها ✦
-
-   📌 راهنمای واردکردن داده (برای ایزدیار):
-   فقط آرایه‌های DATA را پر کن؛ بقیهٔ اپ خودکار سؤال، فلش‌کارت و مرور می‌سازد.
-
-   ▸ vocab (معنی کلمه):        { w:'واژه', m:'معنی' }
-   ▸ verses (معنی شعر):        { v:'بیت / جمله', m:'معنی' }
-   ▸ history (تاریخ ادبیات):    { q:'پرسش/اثر', a:'پاسخ/پدیدآورنده' }
-   ▸ concepts (مفهوم درس):     { q:'مفهوم بیت/درسِ ...', a:'مفهوم' }
-   ▸ grammar / araye / negaresh / samples:
-        حالت تستی:  { q:'صورت سؤال', options:['گزینه۱','گزینه۲','گزینه۳','گزینه۴'], answer:0, explain:'توضیح (اختیاری)' }
-        حالت ساده:  { q:'پرسش', a:'پاسخ' }   ← اپ خودش گزینه‌های انحرافی می‌سازد
-   نکته: گزینه‌ها در هر تکرار به‌صورت خودکار جابه‌جا می‌شوند.
+   ✦ سَمبار — سازمان مدیریت بحران آزمون رها ✦
+   داده‌ها از جزوه‌های شب امتحان فارسی یازدهم استخراج شده‌اند.
+   قالب‌ها:  vocab {w,m} · history/concepts {q,a} · araye {v,a} یا {q,a}
+             grammar {q,a} یا {q,options,answer,explain}
    ========================================================================== */
 
 const DATA = {
-  vocab: [ /* ⬇︎ داده‌های نمونه — با داده‌های واقعی جایگزین شود */
-    {w:'زنهار', m:'بر حذر باش، آگاه باش'},
-    {w:'شوکت', m:'شکوه، بزرگی و عظمت'},
-    {w:'طریقت', m:'راه و روش، مسلک'},
-    {w:'محمل', m:'کجاوه‌ای که بر شتر می‌بندند'},
-    {w:'وقب', m:'گودی و فرورفتگی اندام'},
-    {w:'صولت', m:'هیبت، شکوهِ ترس‌آور'},
-    {w:'بدسگال', m:'بداندیش، بدخواه'},
-    {w:'مروت', m:'جوانمردی'},
-  ],
-  verses: [
-    {v:'ای مِهر تو در دل‌ها، وی مُهر تو بر لب‌ها', m:'ای کسی که محبتت در دل همه است و نامت بر زبان همه جاری است'},
-    {v:'به جز از علی که گوید به پسر که قاتل من / چو اسیر توست اکنون به اسیر کن مدارا', m:'جز علی (ع) چه کسی به فرزندش می‌گوید با قاتلِ اسیرشده‌ی من مدارا کن؟'},
-    {v:'چو سرو باش که با هر نسیم نخروشد', m:'مانند سرو استوار باش که با هر باد و حادثه‌ای آشفته نمی‌شود'},
-    {v:'توانا بود هر که دانا بود / ز دانش دل پیر برنا بود', m:'هر که دانش دارد تواناست و دانش دل سالخورده را جوان می‌کند'},
-  ],
-  history: [
-    {q:'«قابوس‌نامه» اثر کیست؟', a:'عنصرالمعالی کیکاووس'},
-    {q:'«تاریخ بیهقی» اثر کیست؟', a:'ابوالفضل بیهقی'},
-    {q:'«اتاق آبی» اثر کیست؟', a:'سهراب سپهری'},
-    {q:'«قصه‌های مجید» اثر کیست؟', a:'هوشنگ مرادی کرمانی'},
-  ],
-  concepts: [
-    {q:'مفهوم کلی درسِ «همت و اراده» چیست؟', a:'با تلاش و پشتکار می‌توان بر سختی‌ها پیروز شد'},
-    {q:'مفهوم بیتِ «چو سرو باش...» چیست؟', a:'پایداری و آرامش در برابر سختی‌ها'},
-  ],
-  grammar: [
-    {q:'در جملهٔ «رها کتاب را خواند»، نقش «کتاب» چیست؟', options:['مفعول','نهاد','متمم','مسند'], answer:0, explain:'نشانهٔ «را» پس از واژه، نقش مفعولی را نشان می‌دهد.'},
-    {q:'فعل «می‌رفتم» از نظر زمان چه نوع فعلی است؟', options:['ماضی استمراری','ماضی ساده','مضارع اخباری','ماضی نقلی'], answer:0, explain:'«می» + بن ماضی + شناسه = ماضی استمراری.'},
-    {q:'در ترکیب «دلِ دریا»، «دریا» چه نقشی دارد؟', options:['مضافٌ‌الیه','صفت','بدل','قید'], answer:0},
-  ],
-  araye: [
-    {q:'در مصراعِ «دیده‌ام دریای غم شد»، کدام آرایه دیده می‌شود؟', options:['تشبیه','تضاد','تلمیح','مجاز'], answer:0, explain:'دیده (چشم) به دریا تشبیه شده است.'},
-    {q:'«سرو چمان» یادآور کدام آرایه است؟', options:['استعاره','واج‌آرایی','تضمین','اغراق'], answer:0, explain:'سروِ خرامان استعاره از یارِ بلندبالاست.'},
-    {q:'به کاربردن دو واژهٔ متضاد در کلام، کدام آرایه است؟', options:['تضاد','جناس','سجع','کنایه'], answer:0},
-  ],
-  negaresh: [
-    {q:'نخستین گام در نوشتنِ یک متن چیست؟', options:['انتخاب موضوع و طرح پرسش','پاک‌نویس','ویرایش','انتخاب عنوان زیبا'], answer:0},
-    {q:'در «بازنویسی حکایت»، چه چیزی نباید تغییر کند؟', options:['پیام و درون‌مایه','واژه‌های کهن','طول متن','لحن نوشته'], answer:0},
-  ],
-  samples: [
-    {q:'معنی واژهٔ «زنهار» در کدام گزینه درست آمده است؟', options:['بر حذر باش','زندان','آرامش','فریاد'], answer:0},
-    {q:'کدام گزینه دربارهٔ «تاریخ بیهقی» درست است؟', options:['اثر ابوالفضل بیهقی است','اثری منظوم است','در قرن دهم نوشته شده','ترجمه از عربی است'], answer:0},
-    {q:'در کدام گزینه آرایهٔ «تشبیه» وجود دارد؟', options:['دیده‌ام دریای غم شد','باران بارید','او آمد و رفت','هوا سرد بود'], answer:0},
-  ],
+vocab: [
+  {w:'ادبار', m:'بدبختی، سیه‌روزی؛ متضادّ اقبال'},
+  {w:'اقبال', m:'خوشبختی، سعادت'},
+  {w:'توفیق', m:'موافق کردن اسباب از سوی خدا تا خواهش بنده به نتیجه برسد'},
+  {w:'تیره‌رایی', m:'بداندیشی، گمراهی'},
+  {w:'چاشنی‌بخش', m:'آنچه برای اثربخشی بیشتر کلام به آن افزوده می‌شود'},
+  {w:'حلاوت', m:'شیرینی'},
+  {w:'نژند', m:'خوار و زبون'},
+  {w:'جیب', m:'گریبان، یقه'},
+  {w:'چنگ', m:'نوعی ساز که سرِ آن خمیده است و تارها دارد'},
+  {w:'حمیّت', m:'غیرت، جوانمردی، مردانگی'},
+  {w:'خُطوات', m:'جمعِ خُطوه؛ گام‌ها، قدم‌ها'},
+  {w:'دَغَل', m:'ناراست، حیله‌گر'},
+  {w:'راغ', m:'دامنهٔ سبز کوه، صحرا'},
+  {w:'روضه', m:'باغ، گلزار'},
+  {w:'دون‌همّت', m:'کوتاه‌همت، دارای طبع پست و کوتاه‌اندیشه'},
+  {w:'زَنَخدان', m:'چانه'},
+  {w:'شغال', m:'جانوری پستاندار از تیرهٔ سگان و رستهٔ گوشتخواران'},
+  {w:'شَل', m:'دست‌وپا ازکارافتاده'},
+  {w:'شوریده‌رنگ', m:'آشفته‌حال'},
+  {w:'غرامت‌زده', m:'تاوان‌زده، پشیمان'},
+  {w:'غیب', m:'پنهان، نهان از چشم؛ عالمی که فرشتگان در آن‌اند'},
+  {w:'فراغ', m:'آسایش، آسودگی'},
+  {w:'فروماندن', m:'متحیّر شدن'},
+  {w:'فیروزه‌فام', m:'به رنگ فیروزه'},
+  {w:'قُوت', m:'رزق روزانه، خوراک، غذا'},
+  {w:'متقارب', m:'نزدیک به هم، در کنار هم'},
+  {w:'مرغزار', m:'سبزه‌زار، زمینِ دارای علف‌های خودرو'},
+  {w:'اذن', m:'اجازه، رخصت'},
+  {w:'اعطا', m:'واگذاری، بخشش، عطا کردن'},
+  {w:'افراط', m:'از حد درگذشتن، زیاده‌روی؛ مقابلِ تفریط'},
+  {w:'التهاب', m:'شعله‌ور شدن؛ مجازاً ناآرامی و اضطراب'},
+  {w:'اهتزاز', m:'حرکت، جنبش'},
+  {w:'بَختک', m:'کابوس؛ سیاهی‌ای که بر شخصِ خوابیده می‌افتد'},
+  {w:'تحت‌الحمایگی', m:'زیر حمایت کشوری نیرومند بودن؛ شکلی از استعمار'},
+  {w:'تسخیر', m:'تصرّف کردن جایی معمولاً با زور'},
+  {w:'تفریط', m:'کوتاهی کردن در کاری'},
+  {w:'توازن', m:'تعادل، برابری'},
+  {w:'جنون', m:'شیفتگی، شیدایی، شوریدگی'},
+  {w:'چنبره زدن', m:'حلقه زدن، خمیده و حلقه‌وار جمع شدن'},
+  {w:'خصال', m:'جمعِ خصلت؛ خوی‌ها، چه نیک چه بد'},
+  {w:'دارالسّلطنه', m:'پایتخت؛ شهرِ اقامت شاهزاده در دورهٔ قاجار'},
+  {w:'درایت', m:'آگاهی، دانش، بینش'},
+  {w:'دهشت‌بار', m:'ترس‌آور، هراس‌انگیز'},
+  {w:'زبونی', m:'فرومایگی، درماندگی'},
+  {w:'زنبورک', m:'نوعی توپ جنگی کوچک که روی شتر می‌بستند'},
+  {w:'شایق', m:'آرزومند، مشتاق'},
+  {w:'صفیر', m:'صدای بلند و تیز'},
+  {w:'طاقت‌فرسا', m:'توان‌فرسا، سخت و تحمل‌ناپذیر'},
+  {w:'کورسو', m:'نور اندک، روشنایی کم'},
+  {w:'معبد', m:'پرستشگاه، محلّ عبادت'},
+  {w:'مقرّر', m:'معلوم، تعیین‌شده'},
+  {w:'موعد', m:'هنگام، زمان'},
+  {w:'موزون', m:'هماهنگ، خوش‌نوا'},
+  {w:'نهیب', m:'فریاد بلند، به‌ویژه برای ترساندن یا اخطار'},
+  {w:'وجد', m:'سرور، شادمانی و خوشی'},
+  {w:'ولایات', m:'جمعِ ولایت؛ معادل شهرستان امروزی'},
+  {w:'پرورده', m:'پرورش‌یافته'},
+  {w:'جمله', m:'همه، سراسر'},
+  {w:'جهانگیر', m:'گیرندهٔ عالم، فتح‌کنندهٔ دنیا'},
+  {w:'جهد', m:'کوشش، تلاش، سعی'},
+  {w:'چاره‌گری', m:'تدبیر، مصلحت‌اندیشی'},
+  {w:'خنیده', m:'مشهور، معروف، نامدار'},
+  {w:'رایت', m:'بیرق، پرچم، دِرَفش'},
+  {w:'سرشت', m:'فطرت، آفرینش، طبع'},
+  {w:'سست‌عناصر', m:'بی‌اراده، بی‌غیرت'},
+  {w:'غایت', m:'پایان، فرجام، نهایت'},
+  {w:'گزاف‌کاری', m:'زیاده‌روی، بیهوده‌کاری'},
+  {w:'محمل', m:'کجاوه‌ای که بر شتر می‌بندند؛ مهد'},
+  {w:'مشعشع', m:'درخشان، تابان'},
+  {w:'موسم', m:'زمان، هنگام'},
+  {w:'آغوز', m:'نخستین شیرِ مادر به نوزاد، سرشار از موادّ مقوّی'},
+  {w:'آماس', m:'وَرَم؛ آماس کردن: گنجایش پیدا کردن'},
+  {w:'استسقا', m:'بیماری‌ای که بیمار در آن آبِ بسیار می‌خواهد'},
+  {w:'انعطاف', m:'نرمش، آمادگی برای سازگاری با محیط و شرایط'},
+  {w:'پالیز', m:'باغ، جالیز'},
+  {w:'تحفه', m:'ارمغان، هدیه'},
+  {w:'تمکّن', m:'توانگری، ثروت'},
+  {w:'شاب', m:'بُرنا، جوان'},
+  {w:'شائبه', m:'عیب و نقص؛ بی‌شائبه: خالص و پاک'},
+  {w:'فرط', m:'بسیاری'},
+  {w:'لطایف', m:'جمعِ لطیفه؛ نکته‌های دقیق و ظریف'},
+  {w:'مشیّت', m:'اراده و خواست خداوند'},
+  {w:'نکبت‌بار', m:'شوم و ایجادکنندهٔ بدبختی و خواری'},
+  {w:'آدینه', m:'روز جمعه، آخرین روز هفته'},
+  {w:'انکار', m:'باور نکردن، نپذیرفتن، نفی کردن'},
+  {w:'بار', m:'اجازهٔ ورود؛ بارِ عام: پذیرایی همگانی'},
+  {w:'تابناک', m:'درخشان، نورانی'},
+  {w:'روحانی', m:'منسوب به روح؛ معنوی، ملکوتی'},
+  {w:'سترگ', m:'بزرگ، عظیم'},
+  {w:'سیمینه', m:'ساخته‌شده از سیم یا نقره'},
+  {w:'کلاف', m:'نخ و ریسمانِ گِردکرده'},
+  {w:'محوّطه', m:'پهنه، میدانگاه، صحن'},
+  {w:'مدار', m:'مسیری معمولاً دایره‌ای که چیزی گِرد چیز دیگر می‌چرخد'},
+  {w:'مرهم', m:'دارویی که روی زخم گذارند؛ التیام‌بخش'},
+  {w:'منکر', m:'انکارکننده، ناباور'},
+  {w:'آوری', m:'بی‌گمان، بی‌تردید، به‌طور قطع'},
+  {w:'اژدهاپیکر', m:'در شکل و هیئتِ اژدها، دارای نقش اژدها'},
+  {w:'اساطیر', m:'جمعِ اسطوره؛ افسانه‌های خدایان و پهلوانانِ ملل قدیم'},
+  {w:'الحاح', m:'اصرار، پافشاری کردن'},
+  {w:'بازارگاه', m:'جای خرید و فروش'},
+  {w:'پایمردان دیو', m:'دستیارانِ حکومت، توجیه‌کنندگانِ حکومتِ بیداد'},
+  {w:'پایمردی', m:'خواهشگری، میانجی‌گری، شفاعت'},
+  {w:'پور', m:'فرزند مذکر، پسر'},
+  {w:'تَرگ', m:'کلاه‌خود'},
+  {w:'تفرّج', m:'گشت‌وگذار، تماشا، سیر'},
+  {w:'خجسته', m:'فرخنده، مبارک'},
+  {w:'خوالیگر', m:'آشپز'},
+  {w:'درفش کاویان', m:'درفش ملّی ایران در عهد ساسانی، منسوب به کاوه'},
+  {w:'دژم', m:'خشمگین'},
+  {w:'زخمِ درای', m:'ضربهٔ پتک؛ درای در اصل زنگِ کاروان است'},
+  {w:'سپُردن', m:'پایمال کردن و زیر پا گذاشتن'},
+  {w:'سپهبَد', m:'فرمانده و سردار سپاه'},
+  {w:'سَبُک', m:'سریع و شتابان'},
+  {w:'سروش', m:'فرشتهٔ پیام‌آور'},
+  {w:'شمار گرفتن', m:'حساب پس دادن'},
+  {w:'غو', m:'نعره، فریاد، بانگ و خروش'},
+  {w:'فایق', m:'دارای برتری، مسلّط، چیره'},
+  {w:'کیش', m:'آیین، دین، مذهب'},
+  {w:'گُرز گاوسر', m:'گُرزی که سرِ آن شبیه سرِ گاو بوده است'},
+  {w:'گیهان‌خدیو', m:'خدای جهان'},
+  {w:'لاف', m:'سخن بی‌پایه، ادعای باطل؛ لاف زدن: خودستایی'},
+  {w:'مجرّد', m:'صِرف، تنها'},
+  {w:'محضر', m:'استشهادنامه‌ای که ضحّاک برای تبرئهٔ خود به امضای بزرگان رساند'},
+  {w:'موبد', m:'روحانی زردشتی؛ مجازاً دانشمند و دانا'},
+  {w:'نفیر', m:'صدای بلند، فریاد'},
+  {w:'هنر', m:'فضیلت، استعداد، شایستگی، لیاقت'},
+  {w:'یکایک', m:'ناگهان'},
+  {w:'اختلاف', m:'رفت‌وآمد'},
+  {w:'استخلاص', m:'رهایی جُستن، رهایی دادن'},
+  {w:'التفات', m:'توجّه'},
+  {w:'اِمام', m:'راهنما، پیشوا'},
+  {w:'اولی‌تر', m:'شایسته‌تر، سزاوارتر'},
+  {w:'اهمال', m:'کوتاهی، سهل‌انگاری کردن'},
+  {w:'براثر', m:'به دنبال؛ اثر: ردّپا'},
+  {w:'تخلّص', m:'رهایی'},
+  {w:'تعاون', m:'یکدیگر را یاری کردن، یاری‌رسانی'},
+  {w:'تکفّل', m:'عهده‌دار شدن'},
+  {w:'تگ', m:'دویدن'},
+  {w:'تیمار', m:'مواظبت، مراقبت'},
+  {w:'ثِقَت', m:'اطمینان، خاطرجمعی'},
+  {w:'جال', m:'دام و تور'},
+  {w:'حَبّه', m:'دانه'},
+  {w:'خایب', m:'ناامید، بی‌بهره'},
+  {w:'دَها', m:'زیرکی و هوشمندی'},
+  {w:'راه تافتن', m:'راه را کج کردن، تغییر مسیر دادن'},
+  {w:'ریاحین', m:'جمعِ ریحان؛ گیاهان خوشبو'},
+  {w:'زُمرّد', m:'سنگ قیمتی به رنگ سبز'},
+  {w:'زهاب', m:'آبی که از سنگ یا زمین می‌جوشد؛ مجازاً اشک'},
+  {w:'ستیزه‌روی', m:'گستاخ و پُررو'},
+  {w:'سیادت', m:'سروری، بزرگی'},
+  {w:'شکاری', m:'صید، نخجیر'},
+  {w:'صافی', m:'پاک، بی‌غش، خالص'},
+  {w:'صواب', m:'صلاح و درست'},
+  {w:'طاعن', m:'سرزنشگر، عیب‌جو'},
+  {w:'عقده', m:'گره'},
+  {w:'قفا', m:'پشت گردن؛ دنبال و پی'},
+  {w:'گُرازان', m:'خرامان، با ناز و تکبّر راه‌رونده'},
+  {w:'گَشن', m:'انبوه، پُرشاخ‌وبرگ'},
+  {w:'مُتَصَیَّد', m:'شکارگاه'},
+  {w:'متواتر', m:'پی‌درپی، پیاپی'},
+  {w:'مجادله', m:'جدال و ستیزه'},
+  {w:'مطاوعت', m:'فرمان‌بری'},
+  {w:'مطلق', m:'رهاشده، آزاد'},
+  {w:'مُطَوَّقه', m:'طوق‌دار'},
+  {w:'مظاهرت', m:'یاری کردن، پشتیبانی'},
+  {w:'معونت', m:'یاری'},
+  {w:'ملالت', m:'آزردگی، به ستوه آمدن'},
+  {w:'ملامت', m:'سرزنش'},
+  {w:'ملول', m:'سست و ناتوان، آزرده'},
+  {w:'مناصحت', m:'اندرز دادن'},
+  {w:'منقطع', m:'بریده، قطع‌شده'},
+  {w:'مواجب', m:'جمعِ موجب؛ وظایفی که انجامشان واجب است'},
+  {w:'مواضع', m:'جمعِ موضع؛ جای‌ها'},
+  {w:'موافق', m:'همراه، همفکر'},
+  {w:'موالات', m:'دوستی و پیوستگی داشتن'},
+  {w:'مودّت', m:'دوستی، محبّت'},
+  {w:'ناحیت', m:'ناحیه، سرزمین'},
+  {w:'نَزِه', m:'باصفا، خوش‌آب‌وهوا، خرّم'},
+  {w:'همگنان', m:'همگان، همه'},
+  {w:'ورطه', m:'مهلکه، خطر و دشواری'},
+  {w:'وقیعت', m:'بدگویی، عیب‌جویی'},
+  {w:'برّ', m:'خشکی، بیابان'},
+  {w:'برزیگر', m:'دهقان، کشاورز'},
+  {w:'خوان', m:'سفره یا طَبَقی که در آن غذا می‌گذاشتند'},
+  {w:'رَستن', m:'نجات یافتن، رها شدن'},
+  {w:'مبدّل ساختن', m:'دگرگون ساختن، تغییر دادن'},
+  {w:'معتبر', m:'محترم، ارزشمند'},
+  {w:'مُفِرّح', m:'شادی‌بخش، نشاط‌آور'},
+  {w:'مُمد', m:'مددکننده، یاری‌دهنده'},
+  {w:'الهام', m:'القای امری از سوی خدا به دلِ کسی'},
+  {w:'اِنعام', m:'نعمت دادن، بخشش، دَهِش'},
+  {w:'فضل', m:'بخشش، دانش، فزونی'},
+],
+history: [
+  {q:'منظومهٔ «فرهاد و شیرین» اثر کیست؟', a:'وحشی بافقی'},
+  {q:'«بوستان» اثر کیست؟', a:'سعدی'},
+  {q:'«گلستان» (آمیخته به نظم و نثر) اثر کیست؟', a:'سعدی'},
+  {q:'«بهارستان» اثر کیست؟', a:'جامی'},
+  {q:'شعر «زاغ و کبک» از کدام کتاب است؟', a:'تحفةالاحرارِ جامی'},
+  {q:'«تاریخ بیهقی» اثر کیست؟', a:'ابوالفضل بیهقی'},
+  {q:'ابوالفضل بیهقی شاگرد و دبیرِ کدام استاد در دربار غزنوی بود؟', a:'بونصر مشکان'},
+  {q:'چهارپارهٔ «در امواج سند» اثر کیست؟', a:'مهدی حمیدی شیرازی'},
+  {q:'شعر «در امواج سند» دربارهٔ مبارزهٔ چه کسی با مغول‌هاست؟', a:'جلال‌الدین محمد خوارزمشاه'},
+  {q:'داستان «عباس‌میرزا، آغازگری تنها» نوشتهٔ کیست؟', a:'مجید واعظی'},
+  {q:'«فرهنگ فارسی» اثر کیست؟', a:'محمد معین'},
+  {q:'«لیلی و مجنون» اثر کیست؟', a:'نظامی گنجه‌ای'},
+  {q:'«تذکرة‌الاولیا» (نثر) اثر کیست؟', a:'عطار نیشابوری'},
+  {q:'«منطق‌الطیر» اثر کیست؟', a:'عطار نیشابوری'},
+  {q:'عطار در نیشابور کدام کتابِ خود را به مولویِ خردسال هدیه داد؟', a:'اسرارنامه'},
+  {q:'زندگی‌نامهٔ مولوی نوشتهٔ کیست؟', a:'بدیع‌الزمان فروزانفر'},
+  {q:'«غزلیات شمس» اثر کیست؟', a:'مولوی'},
+  {q:'مولوی در چه شهری متولد شد؟', a:'بلخ (قرن هفتم)'},
+  {q:'پدر مولوی که بود؟', a:'محمد بن حسین خطیبی، معروف به بهاءالدین ولد'},
+  {q:'مولوی به علت اقامت طولانی در قونیه به چه نامی مشهور است؟', a:'رومی یا مولانای روم'},
+  {q:'مولوی در ۳۸ سالگی مریدِ چه کسی شد؟', a:'شمس‌الدین تبریزی'},
+  {q:'چه کسی از مولوی خواست مثنوی معنوی را بنویسد؟', a:'حسام‌الدین چلبی'},
+  {q:'دو شاعر معاصر مولوی که با او دیدار داشتند چه کسانی بودند؟', a:'سعدی و فخرالدین عراقی'},
+  {q:'«مرصادالعباد» اثر کیست؟', a:'نجم‌الدین رازی (دایه)'},
+  {q:'«الهی‌نامه» (نظم) اثر کیست؟', a:'سنایی'},
+  {q:'«اسرارالتوحید» اثر کیست؟', a:'محمد بن منور'},
+  {q:'«روزها» که به ویژگی‌های شعر سعدی می‌پردازد، اثر کیست؟', a:'محمدعلی اسلامی ندوشن'},
+  {q:'«میثاق دوستی» اثر کیست؟', a:'لطفعلی صورتگر'},
+  {q:'«بانگ جرس» اثر کیست؟', a:'حمید سبزواری'},
+  {q:'«به یاد ۲۲ بهمن» اثر کیست؟', a:'سید ضیاءالدین شفیعی'},
+  {q:'«هم‌صدا با حلق اسماعیل» اثر کیست؟', a:'سید حسن حسینی'},
+  {q:'غزل «صبح بی‌تو» اثر کیست؟', a:'قیصر امین‌پور'},
+  {q:'«شاهنامه» اثر کیست؟', a:'فردوسی'},
+  {q:'ضحّاک فرزند چه کسی بود؟', a:'مرداس'},
+  {q:'فریدون فرزند چه کسانی بود؟', a:'آبتین و فرانک'},
+  {q:'فریدون در کودکی از شیر کدام گاو تغذیه می‌کرد؟', a:'گاو برمایه'},
+  {q:'ضحّاک پس از شکست در کجا زندانی شد؟', a:'کوه دماوند'},
+  {q:'«چشمهٔ روشن» که نقدی بر داستان کاوه دارد، اثر کیست؟', a:'غلامحسین یوسفی'},
+  {q:'«روضهٔ خلد» اثر کیست؟', a:'مجد خوافی'},
+  {q:'«حملهٔ حیدری» (داستان نبرد امام علی و عمرو بن عبدود) اثر کیست؟', a:'باذل مشهدی'},
+  {q:'شعر «وطن» اثر کیست؟', a:'نظام وفا'},
+  {q:'«کلیله و دمنه» ترجمهٔ کیست؟', a:'ابوالمعالی نصرالله منشی'},
+  {q:'داستان «کبوتر طوق‌دار» از کدام کتاب است؟', a:'کلیله و دمنه'},
+  {q:'«جوامع‌الحکایات و لوامع‌الروایات» اثر کیست؟', a:'محمد عوفی'},
+  {q:'«شلوارهای وصله‌دار» اثر کیست؟', a:'رسول پرویزی'},
+  {q:'دو کتابِ مربوط به تعزیه‌خوانی کدام‌اند؟', a:'زادالمعاد و کتاب جودی'},
+  {q:'«سه دیدار» (شرح دیدار مدرس و امام خمینی) اثر کیست؟', a:'نادر ابراهیمی'},
+  {q:'«ماه نو و مرغان آواره» اثر کیست؟', a:'رابیندرانات تاگور'},
+  {q:'«پیامبر و دیوانه» اثر کیست؟', a:'جبران خلیل جبران'},
+  {q:'«دیوان غربی-شرقی» اثر کیست؟', a:'گوته'},
+  {q:'گوته شیفتهٔ شعر کدام شاعر ایرانی بود؟', a:'حافظ'},
+  {q:'«پرنده‌ای به نام آذرباد» نوشتهٔ کیست؟', a:'ریچارد باخ، ترجمهٔ سودابه پرتوی'},
+],
+concepts: [
+  {q:'مفهوم بخش «ستایش» چیست؟', a:'بدون توفیق و لطف خدا هیچ کاری به سرانجام نمی‌رسد'},
+  {q:'مفهوم درس «نیکی» چیست؟', a:'تلاش همراه با توکل، نه توکلِ تنبلانه؛ از تو حرکت، از خدا برکت'},
+  {q:'مفهوم گنج حکمت «همّت» چیست؟', a:'مردان بار را به نیروی همّت می‌کشند، نه به قوّت تن'},
+  {q:'مفهوم شعرخوانی «زاغ و کبک» چیست؟', a:'پیامدِ تقلید کورکورانه'},
+  {q:'مفهوم اصلی درس «آغازگری تنها» چیست؟', a:'پیشرفت باید همه‌جانبه باشد؛ هم علم و هم اخلاق'},
+  {q:'عبارت «جنگ با افکار پوسیده...» در درس آغازگری تنها یعنی چه؟', a:'مبارزه با جهلِ درونی از جنگ رودررو دشوارتر است'},
+  {q:'«مردمی که به خانه‌های تاریک عادت کرده‌اند از پنجره‌های باز گریزان‌اند» یعنی چه؟', a:'مردمِ خوگرفته به جهل، از علم و آگاهی می‌گریزند'},
+  {q:'مفهوم گنج حکمت «چو سرو باش» چیست؟', a:'آزادگی و بی‌نیازی'},
+  {q:'مفهوم درس «پروردهٔ عشق» چیست؟', a:'عشق سرشتِ مجنون است؛ در کعبه دعا کرد عشقش بیشتر شود'},
+  {q:'مفهوم گنج حکمت «مردان واقعی» چیست؟', a:'هنر آن است که میان بازار باشی و از حق غافل نشوی'},
+  {q:'مفهوم شعرخوانی «آفتاب حسن» مولوی چیست؟', a:'جست‌وجوی انسان کامل'},
+  {q:'بیت «دی شیخ با چراغ همی‌گشت گِرد شهر» چه آرایه و مفهومی دارد؟', a:'تلمیح؛ جست‌وجوی انسان کامل'},
+  {q:'درس «ذوق لطیف» دربارهٔ چیست؟', a:'خاطرهٔ نویسنده از خاله‌اش و آشناییِ او با سعدی'},
+  {q:'ویژگی سبک سعدی در درس «ذوق لطیف» چیست؟', a:'سهلِ ممتنع؛ سخنش به همه شبیه است و به هیچ‌کس شبیه نیست'},
+  {q:'مفهوم گنج حکمت «چنان باش» چیست؟', a:'حکایت‌نویس مباش؛ چنان باش که از تو حکایت کنند'},
+  {q:'مفهوم درس «یاران عاشق» چیست؟', a:'بزرگداشت شهدا و دعوت به بیعت با راه آنان'},
+  {q:'در ادبیات پایداری، «لاله» نماد چیست؟', a:'شهید'},
+  {q:'مفهوم غزل «صبح بی‌تو» چیست؟', a:'انتظارِ موعود (امام زمان)'},
+  {q:'مفهوم کلی درس «کاوهٔ دادخواه» چیست؟', a:'قیام مردمی علیه ستم'},
+  {q:'در داستان کاوه، ضحّاک نماد چیست؟', a:'ستم و خوی اهریمنی'},
+  {q:'مارهای روی دوش ضحّاک نماد چیست؟', a:'بیداد و منشِ خبیث'},
+  {q:'«پایمردان دیو» در داستان کاوه چه کسانی‌اند؟', a:'بزرگانی که با امضای محضر، حکومت ضحّاک را توجیه کردند'},
+  {q:'مفهوم گنج حکمت «کاردانی» چیست؟', a:'علم بر زورِ بازو مقدّم است'},
+  {q:'مفهوم شعرخوانی «وطن» چیست؟', a:'دفاع از وطن، کیشِ مردانگی است'},
+  {q:'مفهوم درس «کبوتر طوق‌دار» چیست؟', a:'اتحاد و تعاون؛ رهبرِ فداکار و وفاداری به یاران'},
+  {q:'چرا مطوّقه اول بندِ یارانش را گشود؟', a:'رهبرِ فداکار نخست به فکر یاران است'},
+  {q:'مفهوم گنج حکمت «مهمان ناخوانده» چیست؟', a:'قناعت باید در عمل باشد نه در حرف'},
+  {q:'مفهوم درس «خوان عدل» گوته چیست؟', a:'عدل الهی؛ شکر خدا هم در رنج و هم در رهایی'},
+  {q:'مفهوم گنج حکمت «تجسّم عشق» چیست؟', a:'کار، تجسّمِ عشق است؛ کارِ بی‌عشق تهی است'},
+],
+araye: [
+  /* تعریف‌ها */
+  {q:'یکسانیِ حرف‌های چند واژه، درحالی‌که از نظر معنا متفاوت‌اند', a:'جناس'},
+  {q:'تکرار یک کلمه در عبارت با معنای متفاوت', a:'جناس همسان'},
+  {q:'کلمهٔ تکرارشده با تلفظِ متفاوت (مثل مِهر و مُهر)', a:'جناس ناهمسان حرکتی'},
+  {q:'چند کلمهٔ شبیه که فقط در یک حرف اختلاف دارند', a:'جناس ناهمسان اختلافی'},
+  {q:'چند کلمهٔ شبیه که یکی یک حرف بیشتر دارد', a:'جناس ناهمسان افزایشی'},
+  {q:'تکرار یک یا چند واج برای ایجاد موسیقی در کلام', a:'واج‌آرایی'},
+  {q:'هماهنگی واژه‌های هم‌قافیه یا هم‌وزن در پایان جمله‌ها', a:'سجع'},
+  {q:'بزرگ‌نمایی در وصف', a:'اغراق'},
+  {q:'ادعای همانندی میان دو چیز', a:'تشبیه'},
+  {q:'به‌کاربردن کلمه در معنایی دیگر؛ «قرض گرفتنِ» واژه', a:'استعاره'},
+  {q:'نسبت‌دادن ویژگی‌های مشبهٌ‌به به مشبه؛ اضافهٔ استعاری و جان‌بخشی', a:'استعارهٔ عبارت (جان‌بخشی)'},
+  {q:'به‌کاربردن واژه در معنای غیرواقعی با علاقه‌هایی مثل جزء و کل', a:'مجاز'},
+  {q:'تغییر معنای جمله به‌خاطر فعل؛ معنای دور و نزدیک', a:'کنایه'},
+  {q:'آمیختن چند حسِ متفاوت به صورت غیرواقعی', a:'حس‌آمیزی'},
+  {q:'علتِ زیبا و غیرواقعی آوردن برای اتفاقی واقعی', a:'حسن تعلیل'},
+  {q:'اشارهٔ گذرا به آیه، حدیث، داستان یا واقعهٔ تاریخی', a:'تلمیح'},
+  {q:'آوردن جمله‌ای کامل از شخصی دیگر در سخن (نشانه: گیومه)', a:'تضمین'},
+  {q:'کنار هم آوردن چند کلمهٔ مرتبط از یک مجموعه', a:'مراعات نظیر (تناسب)'},
+  {q:'واژه‌ای که مخاطب را در معنای قطعی‌اش به تردید می‌اندازد و هر دو معنا مورد نظر است', a:'ایهام'},
+  {q:'واژه‌ای که فقط یک معنایش مدّ نظر است اما معنای دیگرش با واژه‌های بیت تناسب دارد', a:'ایهام تناسب'},
+  {q:'دو کلمه که یکدیگر را نفی می‌کنند', a:'تضاد'},
+  {q:'تضادی غیرواقعی و ناممکن که در آن جمع دو امر متضاد ادعا می‌شود', a:'متناقض‌نما (پارادوکس)'},
+  {q:'یک مصراع توضیح یا تصویری برای مصراع دیگر؛ هر دو مصراع مستقل', a:'اسلوب معادله'},
+  {q:'اگر کلمات تکراریِ عبارت هم‌معنا باشند، این آرایه ساخته می‌شود', a:'آرایهٔ تکرار'},
+  /* مثال‌ها */
+  {v:'زاغی از آنجا که فراغی گزید / رخت خود از باغ به راغی کشید', a:'جناس ناهمسان اختلافی'},
+  {v:'نه من از پرده تقوا به در افتادم و بس / پدر نیز بهشت ابد از دست بهشت', a:'جناس همسان'},
+  {v:'مگر می‌نبینی که دد را و دام / نینداخت جز حرص خوردن به دام', a:'جناس همسان'},
+  {v:'سعدی که داد وصف همه نیکوان به داد / عاجز بماند در تو زبان فصاحتش', a:'جناس همسان'},
+  {v:'در دل ندهم ره پس از این مهر بتان را / مهر لب او بر در این خانه نهادیم', a:'جناس ناهمسان حرکتی'},
+  {v:'ای گدایان خرابات خدا یار شماست / چشم انعام مدارید ز انعامی چند', a:'جناس ناهمسان حرکتی'},
+  {v:'گرم باز آمدی محبوب سیم‌اندام سنگین‌دل / گل از خارم برآوردی و خار از پا و پای از گل', a:'جناس ناهمسان حرکتی'},
+  {v:'گر دست دهد که آستینش گیرم / ورنه بروم بر آستانش میرم', a:'جناس ناهمسان اختلافی'},
+  {v:'باد بگذار بپیچد با شب / بید بگذار برقصد با باد', a:'جناس ناهمسان اختلافی'},
+  {v:'کفر است در طریقت ما کینه داشتن / آیین ماست سینه چو آیینه داشتن', a:'جناس ناهمسان افزایشی'},
+  {v:'بنده حلقه به گوش ار ننوازی برود / لطف کن لطف که بیگانه شود حلقه به گوش', a:'آرایهٔ تکرار'},
+  {v:'آن ابر دُرربار ز دریا که برآید / پر کرده ز دُر و درم و دانه دهان را', a:'واج‌آرایی'},
+  {v:'شب است و شاهد و شمع و شراب و شیرینی / غنیمت است چنین شب که دوستان بینی', a:'واج‌آرایی'},
+  {v:'هر که را زر در ترازوست، زور در بازوست', a:'سجع'},
+  {v:'خبری که دانی دلی بیازارد، تو خاموش باش تا دیگری بیارد', a:'سجع'},
+  {v:'هنر چشمهٔ زاینده است و دولت پاینده', a:'سجع'},
+  {v:'در هوای عالم از گرد سوارانت نشان / بر جبین عالم از نعل سوارانت اثر', a:'اغراق'},
+  {v:'سینه گو شعلهٔ آتشکدهٔ فارس بکش / دیده گو آب رخ دجلهٔ بغداد ببر', a:'اغراق'},
+  {v:'جوی خون می‌رود از چشمهٔ چشمم بر خاک', a:'اغراق'},
+  {v:'هزار جهد بکردم که یار من باشی / قراربخش دل بی‌قرار من باشی', a:'اغراق'},
+  {v:'رنگ از عارض گلگون تو گیرد لاله / بوی از طرهٔ مشکین تو دارد عنبر', a:'تشبیه'},
+  {v:'به انتقام گهر از دهن فروریزم / نهند بر جگرم تیغ ار به سان صدف', a:'تشبیه'},
+  {v:'پرتو عمر چراغی است که در بزم وجود / به نسیم مژه برهم زدنی خاموش است', a:'تشبیه'},
+  {v:'صبا به لطف بگو آن غزال رعنا را / که سر به کوه و بیابان تو داده‌ای ما را', a:'استعاره'},
+  {v:'ماهم این هفته برون رفت و به چشمم سالی است', a:'استعاره'},
+  {v:'شربت قند و گلاب از لب یارم فرمود / نرگس او که طبیب دل بیمار من است', a:'استعاره'},
+  {v:'گم بود در عمیق زمین شانهٔ بهار / بی تو ولی زمینه پیدا شدن نداشت', a:'استعارهٔ عبارت (جان‌بخشی)'},
+  {v:'نماند تیری در ترکش قضا که فلک / سوی دلم به سرانگشت امتحان نگشود', a:'استعارهٔ عبارت (جان‌بخشی)'},
+  {v:'گل چو بر نالهٔ مرغان چمن خنده زند / چه کند بلبل شب‌خیز که سودا نکند', a:'استعارهٔ عبارت (جان‌بخشی)'},
+  {v:'یک جمع پراکنده آن سنبل پیچان / یک شهر جگرخسته آن نرگس بیمار', a:'مجاز'},
+  {v:'عالمی تخته به طوفان و شکاف امواج / چون نهنگان به تهاجم که شکاری گیرند', a:'مجاز'},
+  {v:'عشق تو تا حلقه‌ای کشید به گوشم / گوش مرا کی سر شنیدن پند است', a:'مجاز'},
+  {v:'فرمان رسید این خانه از دشمن بگیرید / تخت و نگین از دست اهریمن بگیرید', a:'مجاز'},
+  {v:'دستم نداد قوت رفتن به پیش دوست / چندی به پای رفتم و چندی به سر شدم', a:'کنایه'},
+  {v:'تا خط تو را دیدم، دادی رقم خونم / تا مهر تو ورزیدم، بستی کمر کینم', a:'کنایه'},
+  {v:'چو بی تو آه شرربار برکشم از دل / علاج خرمن گردون به یک اشاره کنم', a:'کنایه'},
+  {v:'چه شد که از همه جا بوی درد می‌آید؟ / ز هر که می‌شنوم آه سرد می‌آید', a:'حس‌آمیزی'},
+  {v:'از جواب تلخ گوشم چون دهان مار شد', a:'حس‌آمیزی'},
+  {v:'آن بلبلم که چون کشم از دل صفیر گرم / بوی محبت از نفسم می‌توان شنید', a:'حس‌آمیزی'},
+  {v:'خورشید فروزنده شبی پرده‌نشین شد / کآمد به در از پرده مه چاردهٔ تو', a:'حسن تعلیل'},
+  {v:'عجب نیست از خاک اگر گل شکفت / که چندین گل‌اندام در خاک خفت', a:'حسن تعلیل'},
+  {v:'خاک بغداد ز مرگ خلفا می‌گرید / ورنه این شط روان چیست که در بغداد است', a:'حسن تعلیل'},
+  {v:'تا چشم تو ریخت خون عشاق / زلف تو گرفت رنگ ماتم', a:'حسن تعلیل'},
+  {v:'تنور لاله چنان برفروخت باد بهار / که غنچه غرق عرق گشت و گل به جوش آمد', a:'حسن تعلیل'},
+  {v:'خرم دل آن که همچو حافظ / جامی ز میِ الست گیرد', a:'تلمیح'},
+  {v:'مشو درهم، رخت گر شد کبود از سیلی اخوان / که بی این نیل از چشم خریداران خطر داری', a:'تلمیح'},
+  {v:'گاه سفر شد باره بر دامن برانیم / تا بوسه‌گاه وادی ایمن برانیم', a:'تلمیح'},
+  {v:'این مه که چون منیژه سر چاه می‌نشست / گریان به تازیانهٔ افراسیاب رفت', a:'تلمیح'},
+  {v:'شهریارا غزل خواجه چه خوش بذرافشان / «هر کسی آن درود عاقبت کار که کشت»', a:'تضمین'},
+  {v:'ورد صاحب‌نظران فاتحهٔ روی تو باد / قل هو الله احد حرز دو ابروی تو باد', a:'تضمین'},
+  {v:'خاک درگاه مذلت ز چه اکسیر کم است / کیمیا گو مس بی‌قدر مرا زر نکند', a:'مراعات نظیر (تناسب)'},
+  {v:'دیشب صدای تیشه از بیستون نیامد / گویی به خواب شیرین فرهاد رفته باشد', a:'ایهام'},
+  {v:'هنر بیار و زبان‌آوری مکن سعدی / چه حاجت است که گوید شکر که شیرینم', a:'ایهام تناسب'},
+  {v:'یار بیگانه مشو تا نبری از خویشم / غم اغیار نخور تا نکنی ناشادم', a:'ایهام تناسب'},
+  {v:'شیرین ننماید به دهانش شکر وصل / آن را که فلک زهر جدایی بچشاند', a:'تضاد'},
+  {v:'قناعت می‌کنم با درد چون درمان نمی‌یابم / تحمل می‌کنم با زخم چون مرهم نمی‌بینم', a:'تضاد'},
+  {v:'شور فرهادم به پرسش سر به زیر افکنده بود / ای لب شیرین جواب تلخ سر بالا چرا', a:'تضاد'},
+  {v:'چنان کاندر پریشانی سرافرازی کند زلفش / توانایی چشم ساحرش در ناتوانی بود', a:'متناقض‌نما (پارادوکس)'},
+  {v:'بی‌برگی ما برگ نشاط است چمن را / شیرازهٔ گلزار بود خار و خس ما', a:'متناقض‌نما (پارادوکس)'},
+  {v:'خامشی از کرده‌های بد به فریادم رسید / بی‌زبانی‌ها زبان عذرخواهی شد مرا', a:'متناقض‌نما (پارادوکس)'},
+  {v:'روشندلان خوشامد شاهان نگفته‌اند / آیینه عیب‌پوش سکندر نمی‌شود', a:'اسلوب معادله'},
+  {v:'از تهی‌مغزی است امید گشاد از ماه عید / ناخن تنها برای پشت سر خاریدن است', a:'اسلوب معادله'},
+  {v:'دعوی عشق ز هر بوالهوسی می‌آید / دست بر سر زدن از هر مگسی می‌آید', a:'اسلوب معادله'},
+  {v:'نیست پروا عاشقان را از نگاه تلخ یار / دود خشک شمع ریحان تر پروانه است', a:'اسلوب معادله'},
+],
+grammar: [
+  /* قاعده‌ها */
+  {q:'فعلی که به‌جز نهاد فقط «مسند» می‌پذیرد و جملهٔ سه‌جزئی با مسند می‌سازد', a:'فعل اسنادی'},
+  {q:'«استن، بودن، باش» در معنای «وجود داشتن / قرار داشتن» چه نوع فعلی است؟', a:'غیراسنادی (فعل کامل)'},
+  {q:'«شدن» در معنای «رفتن» چه نوع فعلی است؟', a:'غیراسنادی (فعل کامل)'},
+  {q:'فرمول ساخت فعل مجهول چیست؟', a:'صفت مفعولی + صرفِ مصدر «شدن»'},
+  {q:'در جملهٔ مجهول، چه چیزهایی حذف می‌شوند؟', a:'نهادِ جملهٔ معلوم و نشانهٔ مفعولی «را»'},
+  {q:'حذفی که نشانه‌اش در جملهٔ قبلی یا بعدی آمده باشد', a:'حذف به قرینهٔ لفظی'},
+  {q:'حذفی که قرینه‌اش معنای جمله است', a:'حذف به قرینهٔ معنوی'},
+  {q:'تعداد جمله‌ها برابر است با...', a:'تعداد افعال (موجود و محذوف) + شبه‌جمله‌ها'},
+  {q:'بعد از حروف اضافه (به، با، بر، از، در، جز...) چه نقشی می‌آید؟', a:'متمم'},
+  {q:'بعد از کسره ( ـِ ) چه نقشی می‌آید؟', a:'مضاف‌الیه یا صفت پسین'},
+  {q:'کلمات دارای تنوین نصب (مثلاً، ابداً) چه نقشی دارند؟', a:'قید'},
+  {q:'بعد از حروف ندا (ای، آی، یا) چه نقشی می‌آید؟', a:'منادا'},
+  {q:'«را»یی که معنای «به / برای / از» می‌دهد', a:'رای متممی (حرف اضافه)'},
+  {q:'«را»یی که بلافاصله بعد از گروه مفعولی می‌آید', a:'رای مفعولی'},
+  {q:'«را»یی که جای مضاف و مضاف‌الیه را عوض می‌کند', a:'رای فک اضافه'},
+  {q:'ضمایر متصل (پیوسته) کدام‌اند؟', a:'م، ت، ش، مان، تان، شان'},
+  {q:'اگر قبل از معادلِ جدای ضمیر متصل «به / برای» بگذاریم، ضمیر چه نقشی دارد؟', a:'متمم'},
+  {q:'اگر بعد از معادلِ جدای ضمیر متصل «را» بگذاریم، ضمیر چه نقشی دارد؟', a:'مفعول'},
+  {q:'اگر قبل از معادلِ جدای ضمیر متصل کسره بگذاریم، ضمیر چه نقشی دارد؟', a:'مضاف‌الیه'},
+  {q:'پاسخِ پرسش «چگونه؟» از فعل اسنادی چه نقشی است؟', a:'مسند'},
+  {q:'پاسخِ پرسش «چه چیز را / چه کس را؟» از فعل چه نقشی است؟', a:'مفعول'},
+  {q:'پاسخِ پرسش «چه چیز / چه کس؟» از فعل چه نقشی است؟', a:'نهاد'},
+  {q:'پاسخِ پرسش «چه وقت؟» از فعل چه نقشی است؟', a:'قید زمان'},
+  {q:'پاسخِ پرسش «کجا؟» از فعل چه نقشی است؟', a:'قید مکان'},
+  {q:'پاسخِ پرسش «چطور؟» از فعل غیراسنادی چه نقشی است؟', a:'قید حالت'},
+  {q:'پاسخِ پرسش «چقدر؟» از فعل چه نقشی است؟', a:'قید مقدار'},
+  {q:'نقش‌های تبعی کدام‌اند؟', a:'معطوف، تکرار، بدل'},
+  {q:'گروه اسمیِ بعد از حروف عطف (و، یا) چه نقشی دارد؟', a:'معطوف'},
+  {q:'گروه اسمی‌ای که گروهِ قبل از خودش را توضیح می‌دهد', a:'بدل'},
+  {q:'هستهٔ گروه اسمی چگونه پیدا می‌شود؟', a:'اولین واژه‌ای که کسره یا نشانهٔ نکره بگیرد؛ وگرنه آخرین واژه'},
+  {q:'کلمه‌ای بدون کسره که جایگاه اجتماعیِ کلمهٔ دیگر را نشان می‌دهد', a:'شاخص'},
+  {q:'صفات پیشین کدام‌اند؟', a:'اشاره، پرسشی، تعجبی، مبهم، عالی، شمارشی اصلی و ترتیبی'},
+  {q:'وابسته‌های پسین کدام‌اند؟', a:'صفات پسین (شمارشی، برتر، بیانی) و مضاف‌الیه'},
+  {q:'ویژگی صفت بیانی چیست؟', a:'قبل از خودش کلمهٔ «بسیار» می‌پذیرد'},
+  {q:'ویژگی مضاف‌الیه چیست؟', a:'کلمهٔ معناداری که قبل از خودش «بسیار» نمی‌پذیرد'},
+  {q:'ساختِ «مصدر + ی» (مثل دیدنی) چه صفتی می‌سازد؟', a:'صفت لیاقت'},
+  {q:'ساختِ «بن مضارع + نده» (مثل نویسنده) چه صفتی می‌سازد؟', a:'صفت فاعلی'},
+  {q:'ساختِ «بن ماضی + ه» (مثل نوشته) چه صفتی می‌سازد؟', a:'صفت مفعولی'},
+  {q:'ساختِ «اسم + ین / ی / انه» (مثل زرین، ایرانی) چه صفتی می‌سازد؟', a:'صفت نسبی'},
+  {q:'جملهٔ تک‌فعلی که بدون حرف ربطِ وابسته‌ساز ساخته می‌شود', a:'جملهٔ ساده'},
+  {q:'جملهٔ چندفعلی که با حرف ربطِ وابسته‌ساز ساخته می‌شود', a:'جملهٔ غیرساده (مرکب)'},
+  {q:'در جملهٔ مرکب، جمله‌ای که حرف ربط وابسته‌ساز دارد چه نام دارد؟', a:'جملهٔ وابسته (پیرو)'},
+  {q:'حروف ربط وابسته‌ساز کدام‌اند؟', a:'که، اگر، زیرا، تا، چو، چون و هم‌معناهایشان'},
+  {q:'حروف ربط همپایه‌ساز کدام‌اند؟', a:'و، یا، اما'},
+  /* تست‌های نمونه از جزوه */
+  {q:'در بیت «اگر لطفش قرین حال گردد / همه ادبارها اقبال گردد» فعل «گردد» چه نوع فعلی است؟', options:['اسنادی','غیراسنادی','مجهول','پیشوندی'], answer:0, explain:'می‌توان به‌جای آن «شود» گذاشت و جمله مسند دارد.'},
+  {q:'در «در این بود درویش شوریده‌رنگ / که شیری برآمد شغالی به چنگ» فعل «بود» چه نوعی است؟', options:['غیراسنادی (وجود داشتن)','اسنادی','مجهول','کمکی'], answer:0, explain:'«بود» در معنای «قرار داشتن» است، نه ربط دادنِ مسند.'},
+  {q:'مجهولِ فعل «دید» کدام است؟', options:['دیده شد','دیده بود','می‌دید','دیده است'], answer:0},
+  {q:'مجهولِ فعل «می‌بیند» کدام است؟', options:['دیده می‌شود','دیده شد','دیده شده است','دیده می‌شد'], answer:0},
+  {q:'مجهولِ فعل «خواهد دید» کدام است؟', options:['دیده خواهد شد','دیده می‌شود','دیده شده بود','خواهد دیده شد'], answer:0},
+  {q:'جملهٔ مجهولِ «سعدی گلستان را در قرن ۷ نوشته بود» کدام است؟', options:['گلستان در قرن ۷ نوشته شده بود','گلستان در قرن ۷ نوشته بود','سعدی در قرن ۷ نوشته شده بود','گلستان را در قرن ۷ نوشته شده بود'], answer:0, explain:'نهاد و «را» حذف؛ فعل مجهول؛ مطابقت نهاد و شناسه.'},
+  {q:'در بیت «زاغ چو دید آن ره و رفتار را / و آن روش و جنبش و رفتار را» چه چیزی به قرینهٔ لفظی حذف شده است؟', options:['فعل «دید»','نهاد «زاغ»','مفعول','حرف اضافه'], answer:0},
+  {q:'در «برو ای گدای مسکین در خانهٔ علی زن» نقش «گدای مسکین» چیست؟', options:['منادا','نهاد','مفعول','بدل'], answer:0, explain:'بعد از حرف ندای «ای» منادا می‌آید.'},
+  {q:'در «حساب خود اینجا کن آسوده‌دل شو / میفکن به روز جزا کار خود را»، «را» چه نوعی است؟', options:['رای مفعولی','رای فک اضافه','رای متممی','حرف ربط'], answer:0},
+  {q:'در «شما را چو باور به یزدان بود»، «را» چه نوعی است؟', options:['رای فک اضافه','رای مفعولی','رای متممی','نشانهٔ ندا'], answer:0, explain:'باورِ شما ← جای مضاف و مضاف‌الیه عوض شده.'},
+  {q:'در «علی ای همای رحمت تو چه آیتی خدا را»، «را» چه نوعی است؟', options:['رای متممی (به معنی «برای»)','رای مفعولی','رای فک اضافه','رای زائد'], answer:0},
+  {q:'در «خواجه عبدالکریم، خادم خاص شیخ ما، ابوسعید بود» نقش «خادم خاص شیخ ما» چیست؟', options:['بدل','معطوف','تکرار','مسند'], answer:0},
+  {q:'در «بارها از تو گفته‌ام از تو» نقش «از تو»ی دوم چیست؟', options:['تکرار','بدل','معطوف','متمم جدید'], answer:0},
+  {q:'در «فتحعلی‌شاه به سفارش آغامحمدخان...»، «شاه» چه نقشی دارد؟', options:['شاخص','بدل','صفت','مضاف‌الیه'], answer:1, explain:'دقت کن! «فتحعلی» با کسره به «شاه» می‌چسبد؛ اما واژه‌هایی مثل «خان» و «آغا» بدون کسره شاخص‌اند.'},
+  {q:'«دیدنی» چه نوع صفتی است؟', options:['لیاقت','فاعلی','مفعولی','نسبی'], answer:0},
+  {q:'«نویسنده» چه نوع صفتی است؟', options:['فاعلی','مفعولی','لیاقت','نسبی'], answer:0},
+  {q:'«نوشته» چه نوع صفتی است؟', options:['مفعولی','فاعلی','نسبی','لیاقت'], answer:0},
+  {q:'«زرین» چه نوع صفتی است؟', options:['نسبی','لیاقت','مفعولی','فاعلی'], answer:0},
+  {q:'در بیت «به ترتیبی نهاده وضع عالم / که نه یک موی باشد بیش و نه کم» پاسخ «چگونه؟» از فعل اسنادی چه نقشی است؟', options:['مسند','قید حالت','متمم','نهاد'], answer:0},
+  {q:'بیت «مجنون چو حدیث عشق بشنید / اول بگریست پس بخندید» چه نوع جمله‌ای است؟', options:['غیرساده (مرکب)','ساده','شبه‌جمله','بی‌فعل'], answer:0, explain:'حرف ربط وابسته‌سازِ «چو» دارد.'},
+],
 };
 
 const CATS = [
-  {id:'vocab',    name:'معنی کلمه',    icon:'📖', c:'#DFF3F1', pair:['w','m'],  fx:'واژه', bx:'معنی'},
-  {id:'verses',   name:'معنی شعر',     icon:'🪶', c:'#FDF0D7', pair:['v','m'],  fx:'بیت',  bx:'معنی'},
-  {id:'history',  name:'تاریخ ادبیات', icon:'🏛️', c:'#EDE7FA', pair:['q','a'],  fx:'اثر',  bx:'پدیدآورنده'},
-  {id:'grammar',  name:'دستور زبان',   icon:'🧩', c:'#E2F6EC', pair:['q','a'],  fx:'پرسش', bx:'پاسخ'},
-  {id:'araye',    name:'آرایهٔ ادبی',   icon:'✨', c:'#FDEAE4', pair:['q','a'],  fx:'پرسش', bx:'پاسخ'},
-  {id:'concepts', name:'مفهوم درس',    icon:'💡', c:'#FFF3E0', pair:['q','a'],  fx:'پرسش', bx:'مفهوم'},
-  {id:'negaresh', name:'نگارش',        icon:'✍️', c:'#E3F2FD', pair:['q','a'],  fx:'پرسش', bx:'پاسخ'},
-  {id:'samples',  name:'سؤالات نمونه', icon:'📝', c:'#F3F7E3', pair:['q','a'],  fx:'سؤال', bx:'پاسخ'},
+  {id:'vocab',    name:'معنی کلمه',    icon:'📖', c:'#DFF3F1'},
+  {id:'history',  name:'تاریخ ادبیات', icon:'🏛️', c:'#EDE7FA'},
+  {id:'grammar',  name:'دستور زبان',   icon:'🧩', c:'#E2F6EC'},
+  {id:'araye',    name:'آرایهٔ ادبی',   icon:'✨', c:'#FDEAE4'},
+  {id:'concepts', name:'مفهوم درس',    icon:'💡', c:'#FFF3E0'},
 ];
-
-/* ---------- ابزارها ---------- */
+</script>
+<script>
+/* ==========================================================================
+   موتور سَمبار — ابزارها، ذخیره‌سازی ابری، مرور فاصله‌دار، ساخت سؤال
+   ========================================================================== */
 const $ = s => document.querySelector(s);
 const app = $('#app');
 const faDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
@@ -381,13 +755,18 @@ const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floo
 const pick = a => a[Math.floor(Math.random()*a.length)];
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const clean = s => String(s).replace(/\u200c/g,'').replace(/\s+/g,' ').trim();
+const getF = it => it.w ?? it.v ?? it.q;
+const getB = it => it.options ? it.options[it.answer] : (it.m ?? it.a);
+const tokens = s => clean(s).split(/[،؛:؟\s()«»؛.]+/).filter(t=>t.length>=3);
+const overlaps = (a,b) => { const tb=new Set(tokens(b)); return tokens(a).some(t=>tb.has(t)); };
 
-const PRAISE = ['آفرین رها! 🌟','دقیقاً همینه! ✨','عالی بود! 💚','ترکوندی! 🎉','ایول! همین‌طوری ادامه بده 🚀','چه حافظه‌ای! 🧠','فوق‌العاده! 🌈','یه قدم به قبولی نزدیک‌تر! 🏆'];
-const GENTLE = ['اشکالی نداره؛ همین که تلاش کردی مهمه 💛','نزدیک بود! این سؤال دوباره میاد تا قشنگ تو ذهنت بشینه 🌱','هیچ‌کس یک‌شبه استاد نشده؛ بریم بعدی 🌼','مغز با همین اشتباه‌ها یاد می‌گیره! 💪','آروم آروم؛ داری پیشرفت می‌کنی 🍀'];
-const KINDS = {mc:'چهارگزینه‌ای', fill:'جای خالی', asm:'سرهم‌کردنی', letters:'حرف‌چینی'};
+const PRAISE = ['آفرین رها! 🌟','دقیقاً همینه! ✨','عالی بود! 💚','ترکوندی! 🎉','ایول! همین‌طوری ادامه بده 🚀','چه حافظه‌ای! 🧠','فوق‌العاده! 🌈','یه قدم به قبولی نزدیک‌تر! 🏆','معلم فارسی‌ت بهت افتخار می‌کنه 😎','این یکی رو دیگه هیچ‌وقت فراموش نمی‌کنی!'];
+const GENTLE = ['اشکالی نداره؛ همین که تلاش کردی مهمه 💛','نزدیک بود! این سؤال دوباره میاد تا قشنگ تو ذهنت بشینه 🌱','هیچ‌کس یک‌شبه استاد نشده؛ بریم بعدی 🌼','مغز با همین اشتباه‌ها یاد می‌گیره! 💪','آروم آروم؛ داری پیشرفت می‌کنی 🍀','سؤال سختی بود؛ دفعهٔ بعد مال خودته ✨'];
+const KINDS = {mc:'چهارگزینه‌ای', quiz:'چهارگزینه‌ای', tf:'درست یا نادرست', match:'جفت‌سازی', letters:'حرف‌چینی'};
+const FB_LABEL = {vocab:['واژه','معنی'], history:['پرسش','پاسخ'], grammar:['پرسش','پاسخ'], araye:['بیت / توصیف','آرایه'], concepts:['پرسش','مفهوم']};
 
-/* ---------- طوطی/هدهد سَمباد (نشان اپ) ---------- */
-function mascotSVG(mood){ /* mood: happy | cheer | soft */
+/* ---------- هدهدِ سَمبار ---------- */
+function mascotSVG(mood){
   const beakY = mood==='soft' ? 2 : 0;
   const eye = mood==='cheer'
     ? '<path d="M38 44 q5 -6 10 0" stroke="#1E3A41" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M60 44 q5 -6 10 0" stroke="#1E3A41" stroke-width="3.4" fill="none" stroke-linecap="round"/>'
@@ -407,7 +786,7 @@ function mascotSVG(mood){ /* mood: happy | cheer | soft */
   </svg>`;
 }
 
-/* ---------- صدا (وب‌اودیو، بسیار لطیف) ---------- */
+/* ---------- صدا ---------- */
 let audioCtx = null;
 function tone(freq, t=0.12, delay=0, type='sine', vol=0.05){
   if(!state.sound) return;
@@ -424,32 +803,37 @@ function tone(freq, t=0.12, delay=0, type='sine', vol=0.05){
 }
 const sTap = () => tone(660,0.06,0,'triangle',0.03);
 const sGood = () => { tone(659,0.14,0,'sine',0.06); tone(880,0.2,0.1,'sine',0.06); };
+const sPair = () => { tone(740,0.1,0,'sine',0.05); tone(988,0.14,0.07,'sine',0.05); };
 const sSoft = () => tone(300,0.22,0,'sine',0.045);
 const sWin = () => { [523,659,784,1047].forEach((f,i)=>tone(f,0.22,i*0.11,'sine',0.055)); };
 
-/* ---------- وضعیت و ذخیره‌سازی ---------- */
+/* ---------- وضعیت و ذخیره‌سازی ابری (مشترک بین همهٔ دستگاه‌ها) ---------- */
+const SKEY = 'sambad-raha-v2';
 let state = { items:{}, xp:0, streak:0, lastDay:null, sound:true, sessions:0 };
 let saveTimer = null;
 
 async function loadState(){
   try{
-    const r = await window.storage.get('sambad-state-v1');
+    const r = await window.storage.get(SKEY, true);
     if(r && r.value) state = Object.assign(state, JSON.parse(r.value));
-  }catch(e){ /* نخستین اجرا */ }
+  }catch(e){ /* نخستین اجرا: هنوز چیزی ذخیره نشده */ }
 }
 function saveState(){
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(async ()=>{
-    try{ await window.storage.set('sambad-state-v1', JSON.stringify(state)); }catch(e){}
-  }, 400);
+  saveTimer = setTimeout(flushState, 350);
 }
+async function flushState(){
+  clearTimeout(saveTimer);
+  try{ await window.storage.set(SKEY, JSON.stringify(state), true); }catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) flushState(); });
 
-/* جعبه‌های مرور فاصله‌دار (لایتنر) */
+/* ---------- مرور فاصله‌دار (لایتنر) ---------- */
 const INTERVALS = [5*60e3, 30*60e3, 8*3600e3, 24*3600e3, 3*24*3600e3, 7*24*3600e3, 14*24*3600e3];
 const MASTER_BOX = 4;
 const itemId = (cat,i) => cat+':'+i;
 function itemState(id){
-  if(!state.items[id]) state.items[id] = {box:0, due:0, seen:0};
+  if(!state.items[id]) state.items[id] = {box:0, due:0, seen:0, lastV:''};
   return state.items[id];
 }
 function gradeItem(id, ok){
@@ -461,13 +845,17 @@ function gradeItem(id, ok){
   saveState();
 }
 function catStats(catId){
-  const n = DATA[catId].length;
-  let mastered = 0, seen = 0;
+  const n = DATA[catId].length, now = Date.now();
+  let mastered=0, seen=0, due=0;
   for(let i=0;i<n;i++){
     const it = state.items[itemId(catId,i)];
-    if(it){ if(it.seen>0) seen++; if(it.box>=MASTER_BOX) mastered++; }
+    if(it && it.seen>0){
+      seen++;
+      if(it.box>=MASTER_BOX) mastered++;
+      if(it.due<=now) due++;
+    }
   }
-  return {n, mastered, seen, pct: n? mastered/n : 0};
+  return {n, mastered, seen, due, pct: n? mastered/n : 0};
 }
 function totalStats(){
   let n=0, m=0;
@@ -482,8 +870,6 @@ function touchStreak(){
   state.lastDay = today;
   saveState();
 }
-
-/* انتخاب آیتم‌ها برای یک جلسه: اول موعددارها، بعد جدیدها، بعد ضعیف‌ترها */
 function pickSessionItems(catId, count){
   const n = DATA[catId].length, now = Date.now();
   const due=[], fresh=[], rest=[];
@@ -511,80 +897,111 @@ function confetti(n=26){
 }
 
 /* ==========================================================================
-   ساخت سؤال — در هر تکرار، قالبِ سؤال و چینش گزینه‌ها تغییر می‌کند
+   ساخت سؤال — در هر تکرار، قالب سؤال عوض می‌شود و گزینه‌ها جابه‌جا می‌شوند
    ========================================================================== */
-function distractors(catId, key, correct, count=3){
-  let pool = DATA[catId].map(x=>x[key]).filter(v=>v && clean(v)!==clean(correct));
-  if(pool.length < count){
-    CATS.forEach(c=>{
-      if(c.id!==catId) pool = pool.concat(DATA[c.id].map(x=>x[c.pair[1]]||'').filter(Boolean));
-    });
-    pool = pool.filter(v=>clean(v)!==clean(correct));
+function pickDistractB(catId, correct, n){
+  const vals = DATA[catId].filter(it=>!it.options || catId==='grammar').map(getB);
+  let pool = [...new Set(vals)].filter(v=> clean(v)!==clean(correct) && !overlaps(v, correct));
+  pool = shuffle(pool);
+  if(pool.length < n){
+    const extra = shuffle([...new Set(vals)].filter(v=> clean(v)!==clean(correct) && !pool.includes(v)));
+    pool = pool.concat(extra);
   }
-  return shuffle([...new Set(pool)]).slice(0,count);
+  return pool.slice(0, n);
+}
+function pickDistractF(catId, item, n){
+  const b = clean(getB(item));
+  let pool = DATA[catId].filter(it=> it!==item && !it.options && clean(getB(it))!==b).map(getF);
+  pool = [...new Set(pool)].filter(f=> clean(f)!==clean(getF(item)));
+  return shuffle(pool).slice(0, n);
+}
+function matchPartners(catId, idx){
+  const item = DATA[catId][idx];
+  if(item.options) return null;
+  const ok = it => !it.options && getF(it).length<=48 && getB(it).length<=42;
+  if(!ok(item)) return null;
+  const chosen = [{f:getF(item), b:getB(item), idx}];
+  const cands = shuffle(DATA[catId].map((it,i)=>({it,i})).filter(x=> x.i!==idx && ok(x.it)));
+  for(const c of cands){
+    if(chosen.length===4) break;
+    const b = getB(c.it);
+    if(chosen.every(p=> clean(p.b)!==clean(b) && !overlaps(p.b, b))){
+      chosen.push({f:getF(c.it), b, idx:c.i});
+    }
+  }
+  return chosen.length===4 ? chosen : null;
+}
+function variantsFor(catId, idx){
+  const item = DATA[catId][idx];
+  if(item.options) return ['quiz'];
+  const v = ['mc','tf'];
+  if(catId!=='concepts') v.push('mcRev');
+  if(catId==='vocab'){
+    const L = Array.from(getF(item).replace(/\u200c/g,'')).filter(ch=>ch!==' ');
+    if(L.length>=3 && L.length<=9) v.push('letters');
+  }
+  if(matchPartners(catId, idx)) v.push('match');
+  return v;
 }
 
-function makeQuestion(catId, idx){
+function makeQuestion(catId, idx, examMode=false){
   const item = DATA[catId][idx];
-  const cat = CATS.find(c=>c.id===catId);
   const id = itemId(catId, idx);
-  const seen = itemState(id).seen;
+  const st = itemState(id);
+  const F = getF(item), B = getB(item);
 
-  /* آیتم‌های تستیِ آماده (options دارند) */
-  if(item.options){
-    const opts = item.options.map((t,i)=>({t, ok:i===item.answer}));
-    return {id, kind:'mc', prompt:item.q, options:shuffle(opts), explain:item.explain||'', answerText:item.options[item.answer]};
+  let avail = variantsFor(catId, idx);
+  if(examMode) avail = avail.filter(x=>['quiz','mc','tf'].includes(x));
+  let v;
+  if(st.seen===0) v = avail.includes('quiz') ? 'quiz' : 'mc';   /* بار اول: آشنایی ساده */
+  else {
+    const opts = avail.length>1 ? avail.filter(x=>x!==st.lastV) : avail;
+    v = pick(opts);
+  }
+  st.lastV = v;
+
+  /* تست‌های آمادهٔ جزوه */
+  if(v==='quiz'){
+    const opts = shuffle(item.options.map((t,i)=>({t, ok:i===item.answer})));
+    return {id, kind:'mc', v, prompt:item.q, options:opts, answerText:B, explain:item.explain||''};
   }
 
-  const [fk, bk] = cat.pair;
-  const front = item[fk], back = item[bk];
+  const isBayt = !!item.v;
 
-  if(catId==='vocab'){
-    const variants = ['mc','mcRev','letters'];
-    const v = variants[(seen + Math.floor(Math.random()*2)) % variants.length];
-    if(v==='letters'){
-      const letters = Array.from(front.replace(/\u200c/g,'')).filter(ch=>ch!==' ');
-      if(letters.length>=3 && letters.length<=9){
-        return {id, kind:'letters', prompt:`واژه‌ای به معنی «${back}» را حرف‌به‌حرف بساز:`, chips:shuffle(letters.map((t,i)=>({t,i}))), answerSeq:letters, answerText:front, joinWith:''};
-      }
-    }
-    if(v==='mcRev'){
-      const opts = shuffle([{t:front,ok:true}, ...distractors(catId, fk, front).map(t=>({t,ok:false}))]);
-      return {id, kind:'mc', prompt:`کدام واژه به معنای «${back}» است؟`, options:opts, answerText:front};
-    }
-    const opts = shuffle([{t:back,ok:true}, ...distractors(catId, bk, back).map(t=>({t,ok:false}))]);
-    return {id, kind:'mc', prompt:`معنی واژهٔ «${front}» چیست؟`, options:opts, answerText:back};
+  if(v==='mc'){
+    const opts = shuffle([{t:B,ok:true}, ...pickDistractB(catId, B, 3).map(t=>({t,ok:false}))]);
+    if(catId==='vocab') return {id, kind:'mc', v, prompt:`معنی واژهٔ «${F}» چیست؟`, options:opts, answerText:B};
+    if(catId==='araye') return {id, kind:'mc', v, prompt: isBayt?'کدام آرایه در بیت زیر دیده می‌شود؟':'این توصیف مربوط به کدام آرایه است؟', verse:F, options:opts, answerText:B, explain:item.explain||''};
+    return {id, kind:'mc', v, prompt:F, options:opts, answerText:B, explain:item.explain||''};
   }
 
-  if(catId==='verses'){
-    const words = front.split(/\s+/).filter(w=>w!=='/');
-    const variants = words.length<=9 ? ['mc','fill','asm'] : ['mc','fill'];
-    const v = variants[(seen + Math.floor(Math.random()*2)) % variants.length];
-    if(v==='asm'){
-      return {id, kind:'asm', prompt:'واژه‌های این بیت را به‌ترتیب بچین:', hint:`معنی: ${back}`, chips:shuffle(words.map((t,i)=>({t,i}))), answerSeq:words, answerText:front, joinWith:' '};
-    }
-    if(v==='fill'){
-      const cands = words.map((w,i)=>({w,i})).filter(x=>x.w.length>=3 && x.w!=='/');
-      const gap = pick(cands.length?cands:words.map((w,i)=>({w,i})));
-      const shown = words.map((w,i)=> i===gap.i ? '____' : w).join(' ');
-      let wrong = [];
-      DATA.verses.forEach((vv,k)=>{ if(k!==idx) wrong.push(...vv.v.split(/\s+/).filter(w=>w.length>=3 && w!=='/')); });
-      wrong = shuffle([...new Set(wrong)].filter(w=>clean(w)!==clean(gap.w))).slice(0,3);
-      while(wrong.length<3) wrong.push(pick(['دل','جان','گل','جهان'].filter(w=>w!==gap.w)));
-      return {id, kind:'mc', prompt:'واژهٔ جاافتاده را پیدا کن:', verse:shown, options:shuffle([{t:gap.w,ok:true}, ...wrong.map(t=>({t,ok:false}))]), answerText:gap.w, grid:true};
-    }
-    const opts = shuffle([{t:back,ok:true}, ...distractors(catId, bk, back).map(t=>({t,ok:false}))]);
-    return {id, kind:'mc', prompt:'معنی بیت زیر چیست؟', verse:front, options:opts, answerText:back};
+  if(v==='mcRev'){
+    const opts = shuffle([{t:F,ok:true}, ...pickDistractF(catId, item, 3).map(t=>({t,ok:false}))]);
+    if(catId==='vocab') return {id, kind:'mc', v, prompt:`کدام واژه به معنای «${B}» است؟`, options:opts, answerText:F};
+    if(catId==='araye') return {id, kind:'mc', v, prompt:`کدام مورد، نمونه یا توصیفی از «${B}» است؟`, options:opts, answerText:F};
+    return {id, kind:'mc', v, prompt:`«${B}» پاسخِ کدام پرسش است؟`, options:opts, answerText:F};
   }
 
-  /* جفت‌های ساده: تاریخ ادبیات، مفهوم، و آیتم‌های {q,a} */
-  const flip = seen>0 && Math.random()<0.4 && catId==='history';
-  if(flip){
-    const opts = shuffle([{t:front,ok:true}, ...distractors(catId, fk, front).map(t=>({t,ok:false}))]);
-    return {id, kind:'mc', prompt:`کدام گزینه با «${back}» مرتبط است؟`, options:opts, answerText:front};
+  if(v==='tf'){
+    const wrongs = pickDistractB(catId, B, 1);
+    const isTrue = wrongs.length ? Math.random()<0.5 : true;
+    const cand = isTrue ? B : wrongs[0];
+    const opts = shuffle([{t:'✅ درست', ok:isTrue},{t:'❌ نادرست', ok:!isTrue}]);
+    let prompt, verse;
+    if(catId==='vocab'){ prompt='درست یا نادرست؟'; verse=`«${F}» یعنی: ${cand}`; }
+    else if(catId==='araye' && isBayt){ prompt=`در این بیت آرایهٔ «${cand}» به‌کار رفته؛ درست یا نادرست؟`; verse=F; }
+    else { prompt=F; verse=`پاسخ: ${cand}`; }
+    return {id, kind:'mc', v, grid:true, tfStyle:!(catId==='araye'&&isBayt), prompt, verse, options:opts, answerText:B};
   }
-  const opts = shuffle([{t:back,ok:true}, ...distractors(catId, bk, back).map(t=>({t,ok:false}))]);
-  return {id, kind:'mc', prompt:front, options:opts, answerText:back, explain:item.explain||''};
+
+  if(v==='letters'){
+    const letters = Array.from(F.replace(/\u200c/g,'')).filter(ch=>ch!==' ');
+    return {id, kind:'letters', v, prompt:`واژه‌ای به معنی «${B}» را حرف‌به‌حرف بساز:`, chips:shuffle(letters.map((t,i)=>({t,i}))), answerSeq:letters, answerText:F};
+  }
+
+  /* match */
+  const pairs = matchPartners(catId, idx);
+  return {id, kind:'match', v, prompt:'هر مورد را به جفتِ درستش وصل کن:', pairs, answerText:''};
 }
 
 /* ==========================================================================
@@ -594,14 +1011,11 @@ function renderHome(){
   const T = totalStats();
   const pct = Math.round(T.pct*100);
   const tilesN = 48, on = Math.round(T.pct*tilesN);
-  const hasData = T.n > 0;
 
   app.innerHTML = `
   <div class="screen">
     <div class="topbar">
-      <div class="brand">
-        <div><h1>سَمباد</h1><small>سازمان مدیریت بحران آزمون رها</small></div>
-      </div>
+      <div class="brand"><div><h1>سَمبار</h1><small>سازمان مدیریت بحران آزمون رها</small><small>برگرفته از خلاقیت و کم خوابی ایزدیار</small></div></div>
       <div class="stats">
         <div class="stat-chip fire">🔥 ${toFa(state.streak)}</div>
         <div class="stat-chip xp">⭐ ${toFa(state.xp)}</div>
@@ -618,35 +1032,37 @@ function renderHome(){
         ${mascotSVG('happy')}
       </div>
       <div class="tiles">${Array.from({length:tilesN},(_,i)=>`<div class="tile ${i<on?'on':''}" style="transition-delay:${i*14}ms"></div>`).join('')}</div>
-      <p class="tiles-caption">هر کاشی که روشن می‌شه یعنی بخشی از فارسی برای همیشه تو ذهنت نشسته ✨</p>
+      <p class="tiles-caption">هر کاشی که روشن میشه یعنی بخشی از فارسی برای همیشه تو ذهنت نشسته ✨</p>
+      <p class="sync-note">☁️ پیشرفتت خودکار ذخیره میشه و روی هر دستگاه و مرورگری از همین جا ادامه پیدا می‌کنه</p>
     </div>
 
     <div class="exam-card" id="examBtn" role="button">
       <div style="font-size:34px">🎯</div>
-      <div class="txt"><b>آزمونک شبیه‌سازی</b><span>${toFa(10)} سؤال ترکیبی با زمان‌سنج — دقیقاً حس‌وحال آزمون واقعی</span></div>
+      <div class="txt"><b>آزمونک شبیه سازی</b><span>${toFa(10)}  سؤال ترکیبی با زمان سنج که دقیقاً حس آزمون واقعی رو میده</span></div>
       <button class="btn btn-saffron" style="padding:10px 16px">شروع</button>
     </div>
 
-    <h2 class="section-title" style="margin-top:24px">موضوع‌ها</h2>
+    <h2 class="section-title" style="margin-top:24px">موضوع ها</h2>
     <div class="cat-grid">
       ${CATS.map(c=>{
         const s = catStats(c.id);
         return `<div class="cat-card">
           <div class="cat-head">
             <div class="cat-icon" style="background:${c.c}">${c.icon}</div>
-            <div><div class="cat-name">${c.name}</div><div class="cat-count">${toFa(s.mastered)} از ${toFa(s.n)} تثبیت‌شده</div></div>
+            <div>
+              <div class="cat-name">${c.name}</div>
+              <div class="cat-count">${toFa(s.mastered)} از ${toFa(s.n)} تثبیت شده</div>
+              ${s.due?`<span class="due-badge">⏰ ${toFa(s.due)} مرورِ امروز</span>`:''}
+            </div>
           </div>
           <div class="mini-bar"><div class="mini-fill" style="width:${s.pct*100}%"></div></div>
           <div class="cat-actions">
-            <button class="btn btn-primary" data-lesson="${c.id}" ${s.n?'':'disabled'}>تمرین</button>
-            <button class="btn btn-ghost" data-flash="${c.id}" ${s.n?'':'disabled'}>🃏 فلش‌کارت</button>
+            <button class="btn btn-primary" data-lesson="${c.id}">تمرین</button>
+            <button class="btn btn-ghost" data-flash="${c.id}">🃏 فلش‌کارت</button>
           </div>
         </div>`;
       }).join('')}
     </div>
-
-    ${hasData?'':''}
-    <div class="empty-note">🛠️ داده‌های فعلی «نمونهٔ آزمایشی» هستند. ایزدیار به‌زودی محتوای کامل کتاب را اضافه می‌کند و همهٔ سؤال‌ها و فلش‌کارت‌ها خودکار ساخته می‌شوند.</div>
   </div>`;
 
   $('#soundBtn').onclick = e => { state.sound=!state.sound; e.target.textContent = state.sound?'🔊':'🔇'; saveState(); sTap(); };
@@ -655,29 +1071,24 @@ function renderHome(){
   document.querySelectorAll('[data-flash]').forEach(b=> b.onclick = () => { sTap(); startFlash(b.dataset.flash); });
 }
 
-/* ---------- جلسهٔ درس ---------- */
+/* ---------- جلسه ---------- */
 let session = null;
 function startLesson(catId){
   const idxs = pickSessionItems(catId, 8);
-  session = {
-    mode:'lesson', catId,
-    queue: idxs.map(i=>({catId, idx:i})),
-    total: idxs.length, done:0, correct:0, wrong:0, xp:0,
-  };
+  session = {mode:'lesson', catId, queue:idxs.map(i=>({catId, idx:i})), total:idxs.length, done:0, correct:0, wrong:0, xp:0, combo:0};
   nextQuestion();
 }
 function startExam(){
   const pool = [];
   CATS.forEach(c=> DATA[c.id].forEach((_,i)=> pool.push({catId:c.id, idx:i})));
   const qs = shuffle(pool).slice(0,10);
-  session = { mode:'exam', queue:qs, total:qs.length, done:0, correct:0, wrong:0, xp:0, deadline:Date.now()+10*60e3 };
+  session = {mode:'exam', queue:qs, total:qs.length, done:0, correct:0, wrong:0, xp:0, combo:0, deadline:Date.now()+10*60e3};
   nextQuestion();
 }
 function nextQuestion(){
-  if(!session.queue.length){ return renderResult(); }
+  if(!session.queue.length) return renderResult();
   const {catId, idx} = session.queue.shift();
-  const q = makeQuestion(catId, idx);
-  renderQuestion(q, catId, idx);
+  renderQuestion(makeQuestion(catId, idx, session.mode==='exam'), catId, idx);
 }
 
 function renderQuestion(q, catId, idx){
@@ -692,13 +1103,12 @@ function renderQuestion(q, catId, idx){
       <div class="qbar"><div class="qbar-fill" style="width:${prog}%"></div></div>
       ${session.mode==='exam' ? '<div class="timer" id="timer">۱۰:۰۰</div>' : `<div class="stat-chip xp" style="font-size:13px">⭐ ${toFa(session.xp)}</div>`}
     </div>
-    <span class="q-kind">${cat.icon} ${cat.name} · ${KINDS[q.kind]||''}</span>
+    <span class="q-kind">${cat.icon} ${cat.name} · ${KINDS[q.v]||KINDS[q.kind]||''}</span>
     <p class="q-prompt">${esc(q.prompt)}</p>
-    ${q.verse ? `<div class="verse-box">${esc(q.verse)}</div>` : ''}
-    ${q.hint ? `<div class="verse-box" style="font-size:14px;font-weight:500">${esc(q.hint)}</div>` : ''}
+    ${q.verse ? `<div class="verse-box ${q.tfStyle?'tf-cand':''}">${esc(q.verse)}</div>` : ''}
     <div id="qBody"></div>
   </div>
-  <div class="check-area"><div class="check-inner">
+  <div class="check-area" id="checkArea"><div class="check-inner">
     <button class="btn btn-primary btn-wide" id="checkBtn" disabled>بررسی</button>
   </div></div>
   <div class="feedback" id="fb"><div class="fb-inner">
@@ -721,7 +1131,19 @@ function renderQuestion(q, catId, idx){
         checkBtn.disabled = false;
       };
     });
-  } else { /* asm یا letters */
+    checkBtn.onclick = () => {
+      const ok = q.options[picked].ok;
+      body.querySelectorAll('.opt').forEach((el,i)=>{
+        el.classList.add('locked');
+        if(q.options[i].ok) el.classList.add('correct');
+        else if(i===picked) el.classList.add('wrong');
+        else el.classList.add('dim');
+      });
+      gradeItem(q.id, ok);
+      finishQuestion(ok, q, catId, idx);
+    };
+  }
+  else if(q.kind==='letters'){
     body.innerHTML = `
       <div class="asm-target" id="target"></div>
       <div class="asm-bank" id="bank">${q.chips.map((c,i)=>`<button class="chip" data-i="${i}">${esc(c.t)}</button>`).join('')}</div>`;
@@ -738,9 +1160,66 @@ function renderQuestion(q, catId, idx){
       sTap(); seq.push(+el.dataset.i); sync();
     });
     sync();
+    checkBtn.onclick = () => {
+      const built = seq.map(i=>q.chips[i].t).join('');
+      const ok = clean(built) === clean(q.answerSeq.join(''));
+      target.querySelectorAll('.chip').forEach(el=>{
+        el.style.pointerEvents='none';
+        el.classList.remove('in-target');
+        el.style.borderColor = ok?'var(--green)':'var(--coral)';
+        el.style.background = ok?'var(--green-soft)':'var(--coral-soft)';
+        el.style.color = ok?'var(--green-dark)':'var(--coral-dark)';
+        el.style.boxShadow = `0 3px 0 ${ok?'var(--green)':'var(--coral)'}`;
+      });
+      gradeItem(q.id, ok);
+      finishQuestion(ok, q, catId, idx);
+    };
+  }
+  else if(q.kind==='match'){
+    checkBtn.style.display='none';
+    const fronts = shuffle(q.pairs.map((p,i)=>({t:p.f, i})));
+    const backs  = shuffle(q.pairs.map((p,i)=>({t:p.b, i})));
+    body.innerHTML = `<div class="match-grid">
+      <div class="mcol" id="colF">${fronts.map(x=>`<button class="mchip" data-i="${x.i}">${esc(x.t)}</button>`).join('')}</div>
+      <div class="mcol" id="colB">${backs.map(x=>`<button class="mchip" data-i="${x.i}">${esc(x.t)}</button>`).join('')}</div>
+    </div>`;
+    let selF=null, selB=null, matched=0;
+    const erred = new Set();
+    const trySolve = () => {
+      if(selF===null || selB===null) return;
+      const fEl = body.querySelector(`#colF .mchip[data-i="${selF}"]`);
+      const bEl = body.querySelector(`#colB .mchip[data-i="${selB}"]`);
+      if(selF===selB){
+        fEl.classList.remove('sel'); bEl.classList.remove('sel');
+        fEl.classList.add('done'); bEl.classList.add('done');
+        matched++; sPair();
+        if(matched===q.pairs.length){
+          const ok = erred.size===0;
+          q.pairs.forEach(p=> gradeItem(itemId(catId, p.idx), !erred.has(p.idx)));
+          setTimeout(()=> finishQuestion(ok, q, catId, idx, true), 450);
+        }
+      } else {
+        erred.add(selF); erred.add(selB);
+        fEl.classList.add('err'); bEl.classList.add('err'); sSoft();
+        setTimeout(()=>{ fEl.classList.remove('sel','err'); bEl.classList.remove('sel','err'); }, 420);
+      }
+      selF=null; selB=null;
+    };
+    body.querySelectorAll('#colF .mchip').forEach(el=> el.onclick = () => {
+      if(el.classList.contains('done')) return;
+      sTap();
+      body.querySelectorAll('#colF .mchip').forEach(x=>x.classList.remove('sel'));
+      el.classList.add('sel'); selF = +el.dataset.i; trySolve();
+    });
+    body.querySelectorAll('#colB .mchip').forEach(el=> el.onclick = () => {
+      if(el.classList.contains('done')) return;
+      sTap();
+      body.querySelectorAll('#colB .mchip').forEach(x=>x.classList.remove('sel'));
+      el.classList.add('sel'); selB = +el.dataset.i; trySolve();
+    });
   }
 
-  /* زمان‌سنج آزمون */
+  /* زمان سنج آزمون */
   if(session.mode==='exam'){
     const tEl = $('#timer');
     const tick = setInterval(()=>{
@@ -752,54 +1231,37 @@ function renderQuestion(q, catId, idx){
     }, 500);
   }
 
-  checkBtn.onclick = () => {
-    let ok;
-    if(q.kind==='mc'){
-      ok = q.options[picked].ok;
-      body.querySelectorAll('.opt').forEach((el,i)=>{
-        el.classList.add('locked');
-        if(q.options[i].ok) el.classList.add('correct');
-        else if(i===picked) el.classList.add('wrong');
-        else el.classList.add('dim');
-      });
-    } else {
-      const built = seq.map(i=>q.chips[i].t).join(q.joinWith);
-      ok = clean(built) === clean(q.answerSeq.join(q.joinWith));
-      $('#target').querySelectorAll('.chip').forEach(el=>{
-        el.style.pointerEvents='none';
-        el.classList.remove('in-target');
-        el.classList.add(ok?'correct':'wrong');
-        el.style.borderColor = ok?'var(--green)':'var(--coral)';
-        el.style.background = ok?'var(--green-soft)':'var(--coral-soft)';
-        el.style.boxShadow = `0 3px 0 ${ok?'var(--green)':'var(--coral)'}`;
-      });
-    }
-    checkBtn.parentElement.parentElement.style.display='none';
-    showFeedback(ok, q, catId, idx);
-  };
-
-  $('#quitBtn').onclick = () => { sTap(); renderHome(); };
+  $('#quitBtn').onclick = () => { sTap(); flushState(); renderHome(); };
 }
 
-function showFeedback(ok, q, catId, idx){
-  gradeItem(q.id, ok);
+function finishQuestion(ok, q, catId, idx, isMatch=false){
   session.done++;
   const fb = $('#fb');
+  const ca = $('#checkArea'); if(ca) ca.style.display='none';
+  fb.classList.remove('good','bad');
   fb.classList.add(ok?'good':'bad');
+
   if(ok){
     session.correct++;
-    const gained = session.mode==='exam' ? 12 : 10;
+    session.combo++;
+    let gained = isMatch ? 14 : (q.kind==='letters' ? 14 : (session.mode==='exam' ? 12 : 10));
+    if(session.combo>0 && session.combo%5===0) gained += 5;
     session.xp += gained; state.xp += gained; saveState();
     $('#fbTitle').innerHTML = `✅ ${pick(PRAISE)}`;
-    $('#fbBody').innerHTML = `<span class="fb-xp">+${toFa(gained)} ⭐</span>${q.explain?`<div class="fb-answer">💡 ${esc(q.explain)}</div>`:''}`;
+    $('#fbBody').innerHTML =
+      `<span class="fb-xp">+${toFa(gained)} ⭐</span>` +
+      (session.combo>=2 ? `<span class="fb-combo">${toFa(session.combo)} تای پشت‌سرهم! 🔥</span>` : '') +
+      (q.explain ? `<div class="fb-answer">💡 ${esc(q.explain)}</div>` : '');
     sGood();
-    if(session.correct%3===0) confetti(16);
+    if(session.combo>0 && session.combo%3===0) confetti(16);
   } else {
     session.wrong++;
-    /* بازگشت سؤال به انتهای صف تا دوباره تمرین شود (فقط در حالت درس) */
+    session.combo = 0;
     if(session.mode==='lesson') session.queue.push({catId, idx});
     $('#fbTitle').innerHTML = `🌱 ${pick(GENTLE)}`;
-    $('#fbBody').innerHTML = `پاسخ درست:<div class="fb-answer">${esc(q.answerText)}</div>${q.explain?`<div class="fb-answer" style="margin-top:6px">💡 ${esc(q.explain)}</div>`:''}`;
+    $('#fbBody').innerHTML = isMatch
+      ? `چندتا جفت قاطی شدن؛ دوباره باهم مرورشون می‌کنیم 💛`
+      : `پاسخ درست:<div class="fb-answer">${esc(q.answerText)}</div>${q.explain?`<div class="fb-answer" style="margin-top:6px">💡 ${esc(q.explain)}</div>`:''}`;
     sSoft();
   }
   requestAnimationFrame(()=> fb.classList.add('show'));
@@ -817,9 +1279,9 @@ function renderFlash(){
   if(at >= list.length) return renderResult();
   const cat = CATS.find(c=>c.id===catId);
   const item = DATA[catId][list[at]];
-  const [fk,bk] = cat.pair;
-  const front = item.options ? item.q : item[fk];
-  const back = item.options ? item.options[item.answer] + (item.explain?`\n💡 ${item.explain}`:'') : item[bk];
+  const front = getF(item);
+  const back = getB(item) + (item.explain ? `\n💡 ${item.explain}` : '');
+  const [fx,bx] = FB_LABEL[catId];
 
   app.innerHTML = `
   <div class="screen">
@@ -832,12 +1294,12 @@ function renderFlash(){
     <div class="flash-wrap">
       <div class="flash-card" id="card">
         <div class="flash-face flash-front">
-          <div class="flash-hint">${esc(cat.fx)}</div>
+          <div class="flash-hint">${esc(fx)}</div>
           <div class="word">${esc(front)}</div>
-          <div class="flash-hint">برای دیدن ${esc(cat.bx)}، لمس کن 👆</div>
+          <div class="flash-hint">برای دیدن ${esc(bx)}، لمس کن 👆</div>
         </div>
         <div class="flash-face flash-back">
-          <div class="flash-hint">${esc(cat.bx)}</div>
+          <div class="flash-hint">${esc(bx)}</div>
           <div class="word">${esc(back).replace(/\n/g,'<br>')}</div>
         </div>
       </div>
@@ -852,13 +1314,13 @@ function renderFlash(){
   card.onclick = () => { sTap(); card.classList.toggle('flipped'); $('#grade').style.visibility='visible'; };
   $('#know').onclick = () => { sGood(); gradeItem(itemId(catId,list[at]), true); state.xp+=5; session.know++; session.at++; saveState(); renderFlash(); };
   $('#notyet').onclick = () => { sTap(); gradeItem(itemId(catId,list[at]), false); session.at++; renderFlash(); };
-  $('#quitBtn').onclick = () => { sTap(); renderHome(); };
+  $('#quitBtn').onclick = () => { sTap(); flushState(); renderHome(); };
 }
 
 /* ---------- نتیجه ---------- */
 function renderResult(timeUp=false){
   touchStreak();
-  state.sessions++; saveState();
+  state.sessions++; saveState(); flushState();
   const isFlash = session.mode==='flash';
   const total = isFlash ? session.list.length : session.total;
   const good = isFlash ? session.know : session.correct;
@@ -866,7 +1328,7 @@ function renderResult(timeUp=false){
   const title = timeUp ? 'وقت تموم شد!' : acc>=80 ? 'درخشیدی رها! 🌟' : acc>=50 ? 'کارت خوب بود!' : 'قدمِ اول برداشته شد!';
   const sub = timeUp ? 'مهم اینه که تمرین کردی؛ دفعهٔ بعد سریع‌تر هم می‌شی ⏱️'
     : acc>=80 ? 'این اطلاعات دارن برای همیشه تو ذهنت تثبیت می‌شن'
-    : 'هر بار که برگردی، سَمباد دقیقاً همون‌هایی رو میاره که لازم داری';
+    : 'هر بار که برگردی، سَمبار دقیقاً همون‌هایی رو میاره که لازم داری';
 
   app.innerHTML = `
   <div class="screen result">
