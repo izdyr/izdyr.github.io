@@ -1327,7 +1327,7 @@ function renderResult(timeUp=false){
   const acc = total ? Math.round(good/total*100) : 0;
   const title = timeUp ? 'وقت تموم شد!' : acc>=80 ? 'درخشیدی رها! 🌟' : acc>=50 ? 'کارت خوب بود!' : 'قدمِ اول برداشته شد!';
   const sub = timeUp ? 'مهم اینه که تمرین کردی؛ دفعهٔ بعد سریع‌تر هم می‌شی ⏱️'
-    : acc>=80 ? 'این اطلاعات دارن برای همیشه تو ذهنت تثبیت می‌شن'
+    : acc>=80 ? 'این اطلاعات دارن برای همیشه تو ذهنت تثبیت میشن'
     : 'هر بار که برگردی، سَمبار دقیقاً همون‌هایی رو میاره که لازم داری';
 
   app.innerHTML = `
@@ -1337,7 +1337,7 @@ function renderResult(timeUp=false){
     <p>${sub}</p>
     <div class="result-cards">
       <div class="res-card gold"><div class="val">+${toFa(isFlash? session.know*5 : session.xp)} ⭐</div><div class="lbl">امتیاز این جلسه</div></div>
-      <div class="res-card teal"><div class="val">${toFa(acc)}٪</div><div class="lbl">${isFlash?'کارت‌های بلد':'پاسخ‌های درست'}</div></div>
+      <div class="res-card teal"><div class="val">${toFa(acc)}٪</div><div class="lbl">${isFlash?'کارت‌های بلد':'پاسخ های درست'}</div></div>
       <div class="res-card"><div class="val">🔥 ${toFa(state.streak)}</div><div class="lbl">روز پیاپی تمرین</div></div>
       <div class="res-card"><div class="val">${toFa(Math.round(totalStats().pct*100))}٪</div><div class="lbl">پیشرفت کل دوره</div></div>
     </div>
