@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>سَمباد — سازمان مدیریت بحران آزمون رها</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F8F7;
+  --card:#FFFFFF;
+  --ink:#1E3A41;
+  --muted:#6C8A90;
+  --line:#DCEAE8;
+  --firoozeh:#14A098;
+  --firoozeh-dark:#0E7A74;
+  --firoozeh-soft:#DFF3F1;
+  --saffron:#F6B93B;
+  --saffron-dark:#D99A1B;
+  --saffron-soft:#FDF0D7;
+  --coral:#F0876F;
+  --coral-dark:#D9694F;
+  --coral-soft:#FDEAE4;
+  --green:#3FBF7F;
+  --green-dark:#2E9A64;
+  --green-soft:#E2F6EC;
+  --tile-empty:#CFE7E4;
+  --radius:18px;
+  --shadow:0 8px 24px rgba(30,58,65,.07);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Vazirmatn',sans-serif;
+  font-size:16px;
+  line-height:1.9;
+  min-height:100vh;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(20,160,152,.06), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(246,185,59,.07), transparent 40%);
+}
+#app{max-width:520px;margin:0 auto;padding:16px 16px 40px;position:relative;}
+.screen{animation:screenIn .38s cubic-bezier(.22,1,.36,1) both;}
+@keyframes screenIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- سربرگ خانه ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 2px 14px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand h1{font-family:'Lalezar',cursive;font-size:30px;margin:0;color:var(--firoozeh-dark);letter-spacing:.5px;line-height:1;}
+.brand small{display:block;font-family:'Vazirmatn';font-size:11px;font-weight:500;color:var(--muted);margin-top:2px;letter-spacing:0;}
+.stats{display:flex;gap:8px;}
+.stat-chip{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:4px 12px;font-weight:800;font-size:14px;display:flex;align-items:center;gap:5px;box-shadow:0 2px 0 var(--line);}
+.stat-chip.fire{color:#E2743B;}
+.stat-chip.xp{color:var(--saffron-dark);}
+.sound-btn{background:var(--card);border:2px solid var(--line);border-radius:14px;width:38px;height:38px;font-size:17px;cursor:pointer;box-shadow:0 2px 0 var(--line);transition:transform .15s;}
+.sound-btn:active{transform:translateY(2px);box-shadow:none;}
+
+/* ---------- هیرو / پیشرفت کل ---------- */
+.hero{
+  background:linear-gradient(140deg,#12958D 0%,#0E7A74 55%,#0B6560 100%);
+  border-radius:26px;
+  padding:22px 22px 20px;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 14px 34px rgba(14,122,116,.28);
+  margin-bottom:22px;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle at 90% -20%, rgba(255,255,255,.16), transparent 55%);
+  pointer-events:none;
+}
+.hero .hello{font-size:15px;font-weight:600;opacity:.9;margin:0;}
+.hero .big{display:flex;align-items:baseline;gap:8px;margin:2px 0 12px;}
+.hero .pct{font-family:'Lalezar';font-size:52px;line-height:1;}
+.hero .pct-label{font-size:13px;font-weight:600;opacity:.85;}
+.hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;}
+.mascot{width:76px;height:76px;flex:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.18));animation:float 3.6s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.tiles{display:grid;grid-template-columns:repeat(12,1fr);gap:7px;padding:4px 2px 0;}
+.tile{
+  width:100%;aspect-ratio:1;
+  background:rgba(255,255,255,.18);
+  transform:rotate(45deg) scale(.72);
+  border-radius:3px;
+  transition:background .4s, box-shadow .4s;
+}
+.tile.on{background:var(--saffron);box-shadow:0 0 10px rgba(246,185,59,.55);}
+.hero .tiles-caption{font-size:11.5px;opacity:.75;margin:10px 2px 0;font-weight:500;}
+
+/* ---------- کارت‌های موضوع ---------- */
+.section-title{font-family:'Lalezar';font-size:22px;color:var(--ink);margin:4px 4px 12px;}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.cat-card{
+  background:var(--card);
+  border:2px solid var(--line);
+  border-radius:var(--radius);
+  padding:14px 14px 12px;
+  box-shadow:0 3px 0 var(--line);
+  display:flex;flex-direction:column;gap:8px;
+  transition:transform .15s, box-shadow .15s;
+}
+.cat-card:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line);}
+.cat-head{display:flex;align-items:center;gap:9px;}
+.cat-icon{
+  width:42px;height:42px;flex:none;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;font-size:21px;
+}
+.cat-name{font-weight:800;font-size:14.5px;line-height:1.4;}
+.cat-count{font-size:11px;color:var(--muted);font-weight:500;}
+.mini-bar{height:8px;background:#EAF3F2;border-radius:99px;overflow:hidden;}
+.mini-fill{height:100%;background:linear-gradient(90deg,var(--firoozeh),#2BC1B8);border-radius:99px;transition:width .6s cubic-bezier(.22,1,.36,1);}
+.cat-actions{display:flex;gap:8px;margin-top:2px;}
+.cat-actions .btn{flex:1;padding:8px 4px;font-size:13px;border-radius:13px;}
+
+/* ---------- دکمه‌ها ---------- */
+.btn{
+  font-family:'Vazirmatn';font-weight:800;font-size:16px;
+  border:none;border-radius:16px;padding:14px 18px;cursor:pointer;
+  transition:transform .12s, box-shadow .12s, filter .15s;
+  user-select:none;
+}
+.btn:disabled{opacity:.45;cursor:default;}
+.btn-primary{background:var(--firoozeh);color:#fff;box-shadow:0 4px 0 var(--firoozeh-dark);}
+.btn-primary:not(:disabled):active{transform:translateY(4px);box-shadow:0 0 0 var(--firoozeh-dark);}
+.btn-saffron{background:var(--saffron);color:#5c4406;box-shadow:0 4px 0 var(--saffron-dark);}
+.btn-saffron:not(:disabled):active{transform:translateY(4px);box-shadow:none;}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-dark);}
+.btn-green:not(:disabled):active{transform:translateY(4px);box-shadow:none;}
+.btn-ghost{background:var(--card);color:var(--firoozeh-dark);border:2px solid var(--line);box-shadow:0 3px 0 var(--line);}
+.btn-ghost:not(:disabled):active{transform:translateY(3px);box-shadow:none;}
+.btn-wide{width:100%;display:block;}
+.exam-card{
+  margin-top:16px;background:linear-gradient(135deg,#FDF3DC,#FBE8BC);
+  border:2px solid #F2D695;border-radius:var(--radius);
+  padding:16px;display:flex;align-items:center;gap:14px;
+  box-shadow:0 3px 0 #ecca82;
+}
+.exam-card .txt{flex:1;}
+.exam-card b{display:block;font-size:16px;}
+.exam-card span{font-size:12.5px;color:#8a6b1e;font-weight:500;line-height:1.6;display:block;}
+
+/* ---------- صفحه‌ی درس ---------- */
+.lesson-top{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.close-x{background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;padding:4px;line-height:1;}
+.qbar{flex:1;height:14px;background:#E2EEEC;border-radius:99px;overflow:hidden;position:relative;}
+.qbar-fill{
+  height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--firoozeh),#2BC1B8);
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+  position:relative;overflow:hidden;
+}
+.qbar-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);
+  animation:shimmer 2.2s infinite;
+}
+@keyframes shimmer{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+.q-kind{font-size:12px;font-weight:700;color:var(--firoozeh-dark);background:var(--firoozeh-soft);display:inline-block;padding:3px 12px;border-radius:99px;margin-bottom:10px;}
+.q-prompt{font-size:18.5px;font-weight:800;margin:0 0 16px;line-height:2;}
+.verse-box{
+  background:var(--card);border:2px solid var(--line);border-radius:16px;
+  padding:14px 18px;margin:0 0 18px;font-size:17px;font-weight:600;line-height:2.3;
+  box-shadow:var(--shadow);position:relative;
+}
+.verse-box::before{content:'❝';position:absolute;top:-2px;left:12px;font-size:26px;color:var(--firoozeh);opacity:.35;}
+.blank{
+  display:inline-block;min-width:74px;border-bottom:3px dashed var(--saffron-dark);
+  text-align:center;color:var(--saffron-dark);font-weight:800;padding:0 6px;
+  transition:all .2s;
+}
+.blank.filled{border-bottom-style:solid;color:var(--firoozeh-dark);border-color:var(--firoozeh);}
+
+.opts{display:flex;flex-direction:column;gap:10px;}
+.opts.grid2{display:grid;grid-template-columns:1fr 1fr;}
+.opt{
+  background:var(--card);border:2px solid var(--line);border-radius:16px;
+  padding:13px 16px;font-family:'Vazirmatn';font-size:15.5px;font-weight:600;text-align:right;
+  cursor:pointer;box-shadow:0 3px 0 var(--line);
+  transition:transform .12s, box-shadow .12s, border-color .15s, background .15s;
+  line-height:1.8;color:var(--ink);
+}
+.opt:not(.locked):active{transform:translateY(3px);box-shadow:none;}
+.opt.selected{border-color:var(--firoozeh);background:var(--firoozeh-soft);box-shadow:0 3px 0 var(--firoozeh);color:var(--firoozeh-dark);}
+.opt.correct{border-color:var(--green);background:var(--green-soft);box-shadow:0 3px 0 var(--green);color:var(--green-dark);animation:pop .35s cubic-bezier(.22,1.4,.36,1);}
+.opt.wrong{border-color:var(--coral);background:var(--coral-soft);box-shadow:0 3px 0 var(--coral);color:var(--coral-dark);animation:shake .4s;}
+.opt.dim{opacity:.5;}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(5px)}50%{transform:translateX(-5px)}75%{transform:translateX(3px)}}
+
+/* ---------- چیپ‌ها (سرهم‌کردنی) ---------- */
+.asm-target{
+  min-height:64px;background:var(--card);border:2px dashed var(--line);border-radius:16px;
+  padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;
+  transition:border-color .2s;
+}
+.asm-target.has{border-style:solid;border-color:var(--firoozeh);}
+.asm-bank{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;}
+.chip{
+  background:var(--card);border:2px solid var(--line);border-radius:13px;
+  padding:8px 15px;font-family:'Vazirmatn';font-size:16px;font-weight:700;cursor:pointer;
+  box-shadow:0 3px 0 var(--line);transition:all .15s;color:var(--ink);
+}
+.chip:active{transform:translateY(3px);box-shadow:none;}
+.chip.in-target{border-color:var(--firoozeh);background:var(--firoozeh-soft);color:var(--firoozeh-dark);box-shadow:0 3px 0 var(--firoozeh);animation:pop .25s;}
+.chip.ghost{opacity:.25;pointer-events:none;}
+
+/* ---------- نوار بررسی و بازخورد ---------- */
+.check-area{position:fixed;bottom:0;right:0;left:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 75%,transparent);z-index:5;}
+.check-inner{max-width:520px;margin:0 auto;}
+.feedback{
+  position:fixed;bottom:0;right:0;left:0;z-index:9;
+  transform:translateY(105%);transition:transform .42s cubic-bezier(.22,1.2,.36,1);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.feedback.show{transform:translateY(0);}
+.fb-inner{max-width:520px;margin:0 auto;border-radius:24px 24px 0 0;padding:20px 20px 22px;box-shadow:0 -8px 30px rgba(30,58,65,.14);}
+.feedback.good .fb-inner{background:var(--green-soft);}
+.feedback.bad .fb-inner{background:var(--saffron-soft);}
+.fb-title{display:flex;align-items:center;gap:10px;font-family:'Lalezar';font-size:23px;margin-bottom:4px;}
+.feedback.good .fb-title{color:var(--green-dark);}
+.feedback.bad .fb-title{color:var(--saffron-dark);}
+.fb-body{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:14px;line-height:2;}
+.fb-answer{background:#fff;border-radius:13px;padding:9px 14px;margin-top:8px;font-weight:700;border:2px solid rgba(0,0,0,.05);}
+.fb-xp{display:inline-block;background:#fff;border-radius:99px;padding:2px 12px;font-weight:800;font-size:13px;color:var(--saffron-dark);margin-right:8px;box-shadow:0 2px 0 rgba(0,0,0,.06);}
+.feedback .btn{width:100%;}
+.feedback.good .btn{background:var(--green);box-shadow:0 4px 0 var(--green-dark);color:#fff;}
+.feedback.bad .btn{background:var(--saffron);box-shadow:0 4px 0 var(--saffron-dark);color:#5c4406;}
+
+/* ---------- فلش‌کارت ---------- */
+.flash-wrap{perspective:1200px;margin:10px 0 22px;}
+.flash-card{
+  position:relative;width:100%;min-height:280px;
+  transform-style:preserve-3d;transition:transform .55s cubic-bezier(.3,1.1,.4,1);cursor:pointer;
+}
+.flash-card.flipped{transform:rotateY(180deg);}
+.flash-face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:26px;text-align:center;gap:10px;
+}
+.flash-front{background:var(--card);border:2px solid var(--line);box-shadow:var(--shadow);}
+.flash-front .word{font-size:26px;font-weight:900;line-height:2;}
+.flash-back{
+  background:linear-gradient(140deg,#12958D,#0B6560);color:#fff;transform:rotateY(180deg);
+  box-shadow:0 14px 30px rgba(14,122,116,.3);
+}
+.flash-back .word{font-size:19px;font-weight:700;line-height:2.1;}
+.flash-hint{font-size:12px;color:var(--muted);font-weight:600;}
+.flash-back .flash-hint{color:rgba(255,255,255,.7);}
+.flash-grade{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.flash-dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px;}
+.fdot{width:9px;height:9px;border-radius:99px;background:#D8E8E6;transition:all .3s;}
+.fdot.on{background:var(--firoozeh);transform:scale(1.25);}
+.fdot.done{background:var(--saffron);}
+
+/* ---------- نتیجه ---------- */
+.result{display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:26px;}
+.result .mascot{width:110px;height:110px;margin-bottom:6px;}
+.result h2{font-family:'Lalezar';font-size:34px;margin:6px 0 2px;color:var(--firoozeh-dark);}
+.result p{color:var(--muted);font-weight:600;margin:0 0 22px;font-size:14.5px;}
+.result-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-bottom:26px;}
+.res-card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 3px 0 var(--line);}
+.res-card .val{font-family:'Lalezar';font-size:30px;line-height:1.2;}
+.res-card .lbl{font-size:12px;color:var(--muted);font-weight:700;}
+.res-card.gold .val{color:var(--saffron-dark);}
+.res-card.teal .val{color:var(--firoozeh-dark);}
+
+/* ---------- آزمون ---------- */
+.timer{font-weight:900;font-size:15px;color:var(--coral-dark);background:var(--coral-soft);border-radius:99px;padding:3px 13px;min-width:64px;text-align:center;font-variant-numeric:tabular-nums;}
+
+/* ---------- کانفتی ---------- */
+.confetti{position:fixed;top:-12px;z-index:99;border-radius:3px;pointer-events:none;animation:fall linear forwards;}
+@keyframes fall{
+  0%{transform:translateY(0) rotate(0);opacity:1}
+  100%{transform:translateY(105vh) rotate(720deg);opacity:.6}
+}
+
+.empty-note{
+  background:var(--saffron-soft);border:2px dashed #eccf8e;border-radius:16px;
+  padding:14px 16px;font-size:13.5px;font-weight:600;color:#8a6b1e;line-height:2;margin-top:16px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001s !important;transition-duration:.05s !important;}
+}
+@media (max-width:380px){
+  .cat-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ==========================================================================
+   ✦ سَمباد — سازمان مدیریت بحران آزمون رها ✦
+
+   📌 راهنمای واردکردن داده (برای ایزدیار):
+   فقط آرایه‌های DATA را پر کن؛ بقیهٔ اپ خودکار سؤال، فلش‌کارت و مرور می‌سازد.
+
+   ▸ vocab (معنی کلمه):        { w:'واژه', m:'معنی' }
+   ▸ verses (معنی شعر):        { v:'بیت / جمله', m:'معنی' }
+   ▸ history (تاریخ ادبیات):    { q:'پرسش/اثر', a:'پاسخ/پدیدآورنده' }
+   ▸ concepts (مفهوم درس):     { q:'مفهوم بیت/درسِ ...', a:'مفهوم' }
+   ▸ grammar / araye / negaresh / samples:
+        حالت تستی:  { q:'صورت سؤال', options:['گزینه۱','گزینه۲','گزینه۳','گزینه۴'], answer:0, explain:'توضیح (اختیاری)' }
+        حالت ساده:  { q:'پرسش', a:'پاسخ' }   ← اپ خودش گزینه‌های انحرافی می‌سازد
+   نکته: گزینه‌ها در هر تکرار به‌صورت خودکار جابه‌جا می‌شوند.
+   ========================================================================== */
+
+const DATA = {
+  vocab: [ /* ⬇︎ داده‌های نمونه — با داده‌های واقعی جایگزین شود */
+    {w:'زنهار', m:'بر حذر باش، آگاه باش'},
+    {w:'شوکت', m:'شکوه، بزرگی و عظمت'},
+    {w:'طریقت', m:'راه و روش، مسلک'},
+    {w:'محمل', m:'کجاوه‌ای که بر شتر می‌بندند'},
+    {w:'وقب', m:'گودی و فرورفتگی اندام'},
+    {w:'صولت', m:'هیبت، شکوهِ ترس‌آور'},
+    {w:'بدسگال', m:'بداندیش، بدخواه'},
+    {w:'مروت', m:'جوانمردی'},
+  ],
+  verses: [
+    {v:'ای مِهر تو در دل‌ها، وی مُهر تو بر لب‌ها', m:'ای کسی که محبتت در دل همه است و نامت بر زبان همه جاری است'},
+    {v:'به جز از علی که گوید به پسر که قاتل من / چو اسیر توست اکنون به اسیر کن مدارا', m:'جز علی (ع) چه کسی به فرزندش می‌گوید با قاتلِ اسیرشده‌ی من مدارا کن؟'},
+    {v:'چو سرو باش که با هر نسیم نخروشد', m:'مانند سرو استوار باش که با هر باد و حادثه‌ای آشفته نمی‌شود'},
+    {v:'توانا بود هر که دانا بود / ز دانش دل پیر برنا بود', m:'هر که دانش دارد تواناست و دانش دل سالخورده را جوان می‌کند'},
+  ],
+  history: [
+    {q:'«قابوس‌نامه» اثر کیست؟', a:'عنصرالمعالی کیکاووس'},
+    {q:'«تاریخ بیهقی» اثر کیست؟', a:'ابوالفضل بیهقی'},
+    {q:'«اتاق آبی» اثر کیست؟', a:'سهراب سپهری'},
+    {q:'«قصه‌های مجید» اثر کیست؟', a:'هوشنگ مرادی کرمانی'},
+  ],
+  concepts: [
+    {q:'مفهوم کلی درسِ «همت و اراده» چیست؟', a:'با تلاش و پشتکار می‌توان بر سختی‌ها پیروز شد'},
+    {q:'مفهوم بیتِ «چو سرو باش...» چیست؟', a:'پایداری و آرامش در برابر سختی‌ها'},
+  ],
+  grammar: [
+    {q:'در جملهٔ «رها کتاب را خواند»، نقش «کتاب» چیست؟', options:['مفعول','نهاد','متمم','مسند'], answer:0, explain:'نشانهٔ «را» پس از واژه، نقش مفعولی را نشان می‌دهد.'},
+    {q:'فعل «می‌رفتم» از نظر زمان چه نوع فعلی است؟', options:['ماضی استمراری','ماضی ساده','مضارع اخباری','ماضی نقلی'], answer:0, explain:'«می» + بن ماضی + شناسه = ماضی استمراری.'},
+    {q:'در ترکیب «دلِ دریا»، «دریا» چه نقشی دارد؟', options:['مضافٌ‌الیه','صفت','بدل','قید'], answer:0},
+  ],
+  araye: [
+    {q:'در مصراعِ «دیده‌ام دریای غم شد»، کدام آرایه دیده می‌شود؟', options:['تشبیه','تضاد','تلمیح','مجاز'], answer:0, explain:'دیده (چشم) به دریا تشبیه شده است.'},
+    {q:'«سرو چمان» یادآور کدام آرایه است؟', options:['استعاره','واج‌آرایی','تضمین','اغراق'], answer:0, explain:'سروِ خرامان استعاره از یارِ بلندبالاست.'},
+    {q:'به کاربردن دو واژهٔ متضاد در کلام، کدام آرایه است؟', options:['تضاد','جناس','سجع','کنایه'], answer:0},
+  ],
+  negaresh: [
+    {q:'نخستین گام در نوشتنِ یک متن چیست؟', options:['انتخاب موضوع و طرح پرسش','پاک‌نویس','ویرایش','انتخاب عنوان زیبا'], answer:0},
+    {q:'در «بازنویسی حکایت»، چه چیزی نباید تغییر کند؟', options:['پیام و درون‌مایه','واژه‌های کهن','طول متن','لحن نوشته'], answer:0},
+  ],
+  samples: [
+    {q:'معنی واژهٔ «زنهار» در کدام گزینه درست آمده است؟', options:['بر حذر باش','زندان','آرامش','فریاد'], answer:0},
+    {q:'کدام گزینه دربارهٔ «تاریخ بیهقی» درست است؟', options:['اثر ابوالفضل بیهقی است','اثری منظوم است','در قرن دهم نوشته شده','ترجمه از عربی است'], answer:0},
+    {q:'در کدام گزینه آرایهٔ «تشبیه» وجود دارد؟', options:['دیده‌ام دریای غم شد','باران بارید','او آمد و رفت','هوا سرد بود'], answer:0},
+  ],
+};
+
+const CATS = [
+  {id:'vocab',    name:'معنی کلمه',    icon:'📖', c:'#DFF3F1', pair:['w','m'],  fx:'واژه', bx:'معنی'},
+  {id:'verses',   name:'معنی شعر',     icon:'🪶', c:'#FDF0D7', pair:['v','m'],  fx:'بیت',  bx:'معنی'},
+  {id:'history',  name:'تاریخ ادبیات', icon:'🏛️', c:'#EDE7FA', pair:['q','a'],  fx:'اثر',  bx:'پدیدآورنده'},
+  {id:'grammar',  name:'دستور زبان',   icon:'🧩', c:'#E2F6EC', pair:['q','a'],  fx:'پرسش', bx:'پاسخ'},
+  {id:'araye',    name:'آرایهٔ ادبی',   icon:'✨', c:'#FDEAE4', pair:['q','a'],  fx:'پرسش', bx:'پاسخ'},
+  {id:'concepts', name:'مفهوم درس',    icon:'💡', c:'#FFF3E0', pair:['q','a'],  fx:'پرسش', bx:'مفهوم'},
+  {id:'negaresh', name:'نگارش',        icon:'✍️', c:'#E3F2FD', pair:['q','a'],  fx:'پرسش', bx:'پاسخ'},
+  {id:'samples',  name:'سؤالات نمونه', icon:'📝', c:'#F3F7E3', pair:['q','a'],  fx:'سؤال', bx:'پاسخ'},
+];
+
+/* ---------- ابزارها ---------- */
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const faDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+const toFa = n => String(n).replace(/\d/g, d => faDigits[d]);
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const clean = s => String(s).replace(/\u200c/g,'').replace(/\s+/g,' ').trim();
+
+const PRAISE = ['آفرین رها! 🌟','دقیقاً همینه! ✨','عالی بود! 💚','ترکوندی! 🎉','ایول! همین‌طوری ادامه بده 🚀','چه حافظه‌ای! 🧠','فوق‌العاده! 🌈','یه قدم به قبولی نزدیک‌تر! 🏆'];
+const GENTLE = ['اشکالی نداره؛ همین که تلاش کردی مهمه 💛','نزدیک بود! این سؤال دوباره میاد تا قشنگ تو ذهنت بشینه 🌱','هیچ‌کس یک‌شبه استاد نشده؛ بریم بعدی 🌼','مغز با همین اشتباه‌ها یاد می‌گیره! 💪','آروم آروم؛ داری پیشرفت می‌کنی 🍀'];
+const KINDS = {mc:'چهارگزینه‌ای', fill:'جای خالی', asm:'سرهم‌کردنی', letters:'حرف‌چینی'};
+
+/* ---------- طوطی/هدهد سَمباد (نشان اپ) ---------- */
+function mascotSVG(mood){ /* mood: happy | cheer | soft */
+  const beakY = mood==='soft' ? 2 : 0;
+  const eye = mood==='cheer'
+    ? '<path d="M38 44 q5 -6 10 0" stroke="#1E3A41" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M60 44 q5 -6 10 0" stroke="#1E3A41" stroke-width="3.4" fill="none" stroke-linecap="round"/>'
+    : '<circle cx="43" cy="44" r="4.4" fill="#1E3A41"/><circle cx="65" cy="44" r="4.4" fill="#1E3A41"/><circle cx="44.6" cy="42.4" r="1.5" fill="#fff"/><circle cx="66.6" cy="42.4" r="1.5" fill="#fff"/>';
+  return `<svg class="mascot" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+    <g stroke-linecap="round">
+      <path d="M54 14 q-2 -10 -10 -12 q6 1 8 5 q0 -6 -3 -9 q7 2 8 10" fill="#F6B93B"/>
+      <circle cx="54" cy="16" r="5" fill="#F6B93B"/><circle cx="43" cy="10" r="4.4" fill="#F0876F"/><circle cx="49" cy="6" r="4.4" fill="#F6B93B"/>
+      <ellipse cx="54" cy="58" rx="34" ry="36" fill="#14A098"/>
+      <ellipse cx="54" cy="70" rx="22" ry="22" fill="#EAF7F5"/>
+      <path d="M22 62 q-10 8 -8 20 q10 -2 16 -10" fill="#0E7A74"/>
+      <path d="M86 62 q10 8 8 20 q-10 -2 -16 -10" fill="#0E7A74"/>
+      ${eye}
+      <path d="M47 ${54+beakY} q7 ${mood==='soft'?4:7} 14 0 l-7 ${mood==='soft'?5:8} z" fill="#F6B93B" stroke="#D99A1B" stroke-width="1.4"/>
+      <path d="M40 94 l0 8 M68 94 l0 8" stroke="#D99A1B" stroke-width="4"/>
+    </g>
+  </svg>`;
+}
+
+/* ---------- صدا (وب‌اودیو، بسیار لطیف) ---------- */
+let audioCtx = null;
+function tone(freq, t=0.12, delay=0, type='sine', vol=0.05){
+  if(!state.sound) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type=type; o.frequency.value=freq;
+    g.gain.setValueAtTime(0, audioCtx.currentTime+delay);
+    g.gain.linearRampToValueAtTime(vol, audioCtx.currentTime+delay+0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+delay+t);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(audioCtx.currentTime+delay); o.stop(audioCtx.currentTime+delay+t+0.05);
+  }catch(e){}
+}
+const sTap = () => tone(660,0.06,0,'triangle',0.03);
+const sGood = () => { tone(659,0.14,0,'sine',0.06); tone(880,0.2,0.1,'sine',0.06); };
+const sSoft = () => tone(300,0.22,0,'sine',0.045);
+const sWin = () => { [523,659,784,1047].forEach((f,i)=>tone(f,0.22,i*0.11,'sine',0.055)); };
+
+/* ---------- وضعیت و ذخیره‌سازی ---------- */
+let state = { items:{}, xp:0, streak:0, lastDay:null, sound:true, sessions:0 };
+let saveTimer = null;
+
+async function loadState(){
+  try{
+    const r = await window.storage.get('sambad-state-v1');
+    if(r && r.value) state = Object.assign(state, JSON.parse(r.value));
+  }catch(e){ /* نخستین اجرا */ }
+}
+function saveState(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    try{ await window.storage.set('sambad-state-v1', JSON.stringify(state)); }catch(e){}
+  }, 400);
+}
+
+/* جعبه‌های مرور فاصله‌دار (لایتنر) */
+const INTERVALS = [5*60e3, 30*60e3, 8*3600e3, 24*3600e3, 3*24*3600e3, 7*24*3600e3, 14*24*3600e3];
+const MASTER_BOX = 4;
+const itemId = (cat,i) => cat+':'+i;
+function itemState(id){
+  if(!state.items[id]) state.items[id] = {box:0, due:0, seen:0};
+  return state.items[id];
+}
+function gradeItem(id, ok){
+  const it = itemState(id);
+  it.seen++;
+  if(ok){ it.box = Math.min(it.box+1, INTERVALS.length); }
+  else  { it.box = Math.max(it.box-2, 0); }
+  it.due = Date.now() + INTERVALS[Math.max(it.box-1,0)];
+  saveState();
+}
+function catStats(catId){
+  const n = DATA[catId].length;
+  let mastered = 0, seen = 0;
+  for(let i=0;i<n;i++){
+    const it = state.items[itemId(catId,i)];
+    if(it){ if(it.seen>0) seen++; if(it.box>=MASTER_BOX) mastered++; }
+  }
+  return {n, mastered, seen, pct: n? mastered/n : 0};
+}
+function totalStats(){
+  let n=0, m=0;
+  CATS.forEach(c=>{ const s=catStats(c.id); n+=s.n; m+=s.mastered; });
+  return {n, m, pct: n? m/n : 0};
+}
+function touchStreak(){
+  const today = new Date().toDateString();
+  if(state.lastDay === today) return;
+  const yest = new Date(Date.now()-864e5).toDateString();
+  state.streak = (state.lastDay === yest) ? state.streak+1 : 1;
+  state.lastDay = today;
+  saveState();
+}
+
+/* انتخاب آیتم‌ها برای یک جلسه: اول موعددارها، بعد جدیدها، بعد ضعیف‌ترها */
+function pickSessionItems(catId, count){
+  const n = DATA[catId].length, now = Date.now();
+  const due=[], fresh=[], rest=[];
+  for(let i=0;i<n;i++){
+    const it = state.items[itemId(catId,i)];
+    if(!it || it.seen===0) fresh.push(i);
+    else if(it.due <= now) due.push(i);
+    else rest.push(i);
+  }
+  rest.sort((a,b)=> itemState(itemId(catId,a)).box - itemState(itemId(catId,b)).box);
+  return [...shuffle(due), ...shuffle(fresh), ...rest].slice(0, count);
+}
+
+/* ---------- کانفتی ---------- */
+function confetti(n=26){
+  const colors=['#14A098','#F6B93B','#F0876F','#3FBF7F','#7E6BD9'];
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');
+    d.className='confetti';
+    const s=6+Math.random()*7;
+    d.style.cssText=`right:${Math.random()*100}vw;width:${s}px;height:${s*1.3}px;background:${pick(colors)};animation-duration:${1.4+Math.random()*1.4}s;animation-delay:${Math.random()*0.25}s;`;
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(), 3200);
+  }
+}
+
+/* ==========================================================================
+   ساخت سؤال — در هر تکرار، قالبِ سؤال و چینش گزینه‌ها تغییر می‌کند
+   ========================================================================== */
+function distractors(catId, key, correct, count=3){
+  let pool = DATA[catId].map(x=>x[key]).filter(v=>v && clean(v)!==clean(correct));
+  if(pool.length < count){
+    CATS.forEach(c=>{
+      if(c.id!==catId) pool = pool.concat(DATA[c.id].map(x=>x[c.pair[1]]||'').filter(Boolean));
+    });
+    pool = pool.filter(v=>clean(v)!==clean(correct));
+  }
+  return shuffle([...new Set(pool)]).slice(0,count);
+}
+
+function makeQuestion(catId, idx){
+  const item = DATA[catId][idx];
+  const cat = CATS.find(c=>c.id===catId);
+  const id = itemId(catId, idx);
+  const seen = itemState(id).seen;
+
+  /* آیتم‌های تستیِ آماده (options دارند) */
+  if(item.options){
+    const opts = item.options.map((t,i)=>({t, ok:i===item.answer}));
+    return {id, kind:'mc', prompt:item.q, options:shuffle(opts), explain:item.explain||'', answerText:item.options[item.answer]};
+  }
+
+  const [fk, bk] = cat.pair;
+  const front = item[fk], back = item[bk];
+
+  if(catId==='vocab'){
+    const variants = ['mc','mcRev','letters'];
+    const v = variants[(seen + Math.floor(Math.random()*2)) % variants.length];
+    if(v==='letters'){
+      const letters = Array.from(front.replace(/\u200c/g,'')).filter(ch=>ch!==' ');
+      if(letters.length>=3 && letters.length<=9){
+        return {id, kind:'letters', prompt:`واژه‌ای به معنی «${back}» را حرف‌به‌حرف بساز:`, chips:shuffle(letters.map((t,i)=>({t,i}))), answerSeq:letters, answerText:front, joinWith:''};
+      }
+    }
+    if(v==='mcRev'){
+      const opts = shuffle([{t:front,ok:true}, ...distractors(catId, fk, front).map(t=>({t,ok:false}))]);
+      return {id, kind:'mc', prompt:`کدام واژه به معنای «${back}» است؟`, options:opts, answerText:front};
+    }
+    const opts = shuffle([{t:back,ok:true}, ...distractors(catId, bk, back).map(t=>({t,ok:false}))]);
+    return {id, kind:'mc', prompt:`معنی واژهٔ «${front}» چیست؟`, options:opts, answerText:back};
+  }
+
+  if(catId==='verses'){
+    const words = front.split(/\s+/).filter(w=>w!=='/');
+    const variants = words.length<=9 ? ['mc','fill','asm'] : ['mc','fill'];
+    const v = variants[(seen + Math.floor(Math.random()*2)) % variants.length];
+    if(v==='asm'){
+      return {id, kind:'asm', prompt:'واژه‌های این بیت را به‌ترتیب بچین:', hint:`معنی: ${back}`, chips:shuffle(words.map((t,i)=>({t,i}))), answerSeq:words, answerText:front, joinWith:' '};
+    }
+    if(v==='fill'){
+      const cands = words.map((w,i)=>({w,i})).filter(x=>x.w.length>=3 && x.w!=='/');
+      const gap = pick(cands.length?cands:words.map((w,i)=>({w,i})));
+      const shown = words.map((w,i)=> i===gap.i ? '____' : w).join(' ');
+      let wrong = [];
+      DATA.verses.forEach((vv,k)=>{ if(k!==idx) wrong.push(...vv.v.split(/\s+/).filter(w=>w.length>=3 && w!=='/')); });
+      wrong = shuffle([...new Set(wrong)].filter(w=>clean(w)!==clean(gap.w))).slice(0,3);
+      while(wrong.length<3) wrong.push(pick(['دل','جان','گل','جهان'].filter(w=>w!==gap.w)));
+      return {id, kind:'mc', prompt:'واژهٔ جاافتاده را پیدا کن:', verse:shown, options:shuffle([{t:gap.w,ok:true}, ...wrong.map(t=>({t,ok:false}))]), answerText:gap.w, grid:true};
+    }
+    const opts = shuffle([{t:back,ok:true}, ...distractors(catId, bk, back).map(t=>({t,ok:false}))]);
+    return {id, kind:'mc', prompt:'معنی بیت زیر چیست؟', verse:front, options:opts, answerText:back};
+  }
+
+  /* جفت‌های ساده: تاریخ ادبیات، مفهوم، و آیتم‌های {q,a} */
+  const flip = seen>0 && Math.random()<0.4 && catId==='history';
+  if(flip){
+    const opts = shuffle([{t:front,ok:true}, ...distractors(catId, fk, front).map(t=>({t,ok:false}))]);
+    return {id, kind:'mc', prompt:`کدام گزینه با «${back}» مرتبط است؟`, options:opts, answerText:front};
+  }
+  const opts = shuffle([{t:back,ok:true}, ...distractors(catId, bk, back).map(t=>({t,ok:false}))]);
+  return {id, kind:'mc', prompt:front, options:opts, answerText:back, explain:item.explain||''};
+}
+
+/* ==========================================================================
+   صفحه‌ها
+   ========================================================================== */
+function renderHome(){
+  const T = totalStats();
+  const pct = Math.round(T.pct*100);
+  const tilesN = 48, on = Math.round(T.pct*tilesN);
+  const hasData = T.n > 0;
+
+  app.innerHTML = `
+  <div class="screen">
+    <div class="topbar">
+      <div class="brand">
+        <div><h1>سَمباد</h1><small>سازمان مدیریت بحران آزمون رها</small></div>
+      </div>
+      <div class="stats">
+        <div class="stat-chip fire">🔥 ${toFa(state.streak)}</div>
+        <div class="stat-chip xp">⭐ ${toFa(state.xp)}</div>
+        <button class="sound-btn" id="soundBtn">${state.sound?'🔊':'🔇'}</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="hero-row">
+        <div>
+          <p class="hello">سلام رها! 👋 بریم که فارسی رو قورت بدیم</p>
+          <div class="big"><span class="pct">${toFa(pct)}٪</span><span class="pct-label">از کل دوره تثبیت شده</span></div>
+        </div>
+        ${mascotSVG('happy')}
+      </div>
+      <div class="tiles">${Array.from({length:tilesN},(_,i)=>`<div class="tile ${i<on?'on':''}" style="transition-delay:${i*14}ms"></div>`).join('')}</div>
+      <p class="tiles-caption">هر کاشی که روشن می‌شه یعنی بخشی از فارسی برای همیشه تو ذهنت نشسته ✨</p>
+    </div>
+
+    <div class="exam-card" id="examBtn" role="button">
+      <div style="font-size:34px">🎯</div>
+      <div class="txt"><b>آزمونک شبیه‌سازی</b><span>${toFa(10)} سؤال ترکیبی با زمان‌سنج — دقیقاً حس‌وحال آزمون واقعی</span></div>
+      <button class="btn btn-saffron" style="padding:10px 16px">شروع</button>
+    </div>
+
+    <h2 class="section-title" style="margin-top:24px">موضوع‌ها</h2>
+    <div class="cat-grid">
+      ${CATS.map(c=>{
+        const s = catStats(c.id);
+        return `<div class="cat-card">
+          <div class="cat-head">
+            <div class="cat-icon" style="background:${c.c}">${c.icon}</div>
+            <div><div class="cat-name">${c.name}</div><div class="cat-count">${toFa(s.mastered)} از ${toFa(s.n)} تثبیت‌شده</div></div>
+          </div>
+          <div class="mini-bar"><div class="mini-fill" style="width:${s.pct*100}%"></div></div>
+          <div class="cat-actions">
+            <button class="btn btn-primary" data-lesson="${c.id}" ${s.n?'':'disabled'}>تمرین</button>
+            <button class="btn btn-ghost" data-flash="${c.id}" ${s.n?'':'disabled'}>🃏 فلش‌کارت</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    ${hasData?'':''}
+    <div class="empty-note">🛠️ داده‌های فعلی «نمونهٔ آزمایشی» هستند. ایزدیار به‌زودی محتوای کامل کتاب را اضافه می‌کند و همهٔ سؤال‌ها و فلش‌کارت‌ها خودکار ساخته می‌شوند.</div>
+  </div>`;
+
+  $('#soundBtn').onclick = e => { state.sound=!state.sound; e.target.textContent = state.sound?'🔊':'🔇'; saveState(); sTap(); };
+  $('#examBtn').onclick = () => { sTap(); startExam(); };
+  document.querySelectorAll('[data-lesson]').forEach(b=> b.onclick = () => { sTap(); startLesson(b.dataset.lesson); });
+  document.querySelectorAll('[data-flash]').forEach(b=> b.onclick = () => { sTap(); startFlash(b.dataset.flash); });
+}
+
+/* ---------- جلسهٔ درس ---------- */
+let session = null;
+function startLesson(catId){
+  const idxs = pickSessionItems(catId, 8);
+  session = {
+    mode:'lesson', catId,
+    queue: idxs.map(i=>({catId, idx:i})),
+    total: idxs.length, done:0, correct:0, wrong:0, xp:0,
+  };
+  nextQuestion();
+}
+function startExam(){
+  const pool = [];
+  CATS.forEach(c=> DATA[c.id].forEach((_,i)=> pool.push({catId:c.id, idx:i})));
+  const qs = shuffle(pool).slice(0,10);
+  session = { mode:'exam', queue:qs, total:qs.length, done:0, correct:0, wrong:0, xp:0, deadline:Date.now()+10*60e3 };
+  nextQuestion();
+}
+function nextQuestion(){
+  if(!session.queue.length){ return renderResult(); }
+  const {catId, idx} = session.queue.shift();
+  const q = makeQuestion(catId, idx);
+  renderQuestion(q, catId, idx);
+}
+
+function renderQuestion(q, catId, idx){
+  const cat = CATS.find(c=>c.id===catId);
+  const prog = session.done / session.total * 100;
+  let picked = null, seq = [];
+
+  app.innerHTML = `
+  <div class="screen" style="padding-bottom:120px">
+    <div class="lesson-top">
+      <button class="close-x" id="quitBtn">✕</button>
+      <div class="qbar"><div class="qbar-fill" style="width:${prog}%"></div></div>
+      ${session.mode==='exam' ? '<div class="timer" id="timer">۱۰:۰۰</div>' : `<div class="stat-chip xp" style="font-size:13px">⭐ ${toFa(session.xp)}</div>`}
+    </div>
+    <span class="q-kind">${cat.icon} ${cat.name} · ${KINDS[q.kind]||''}</span>
+    <p class="q-prompt">${esc(q.prompt)}</p>
+    ${q.verse ? `<div class="verse-box">${esc(q.verse)}</div>` : ''}
+    ${q.hint ? `<div class="verse-box" style="font-size:14px;font-weight:500">${esc(q.hint)}</div>` : ''}
+    <div id="qBody"></div>
+  </div>
+  <div class="check-area"><div class="check-inner">
+    <button class="btn btn-primary btn-wide" id="checkBtn" disabled>بررسی</button>
+  </div></div>
+  <div class="feedback" id="fb"><div class="fb-inner">
+    <div class="fb-title" id="fbTitle"></div>
+    <div class="fb-body" id="fbBody"></div>
+    <button class="btn" id="fbNext">ادامه</button>
+  </div></div>`;
+
+  const body = $('#qBody'), checkBtn = $('#checkBtn');
+
+  if(q.kind==='mc'){
+    body.innerHTML = `<div class="opts ${q.grid?'grid2':''}">${q.options.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o.t)}</button>`).join('')}</div>`;
+    body.querySelectorAll('.opt').forEach(el=>{
+      el.onclick = () => {
+        if(el.classList.contains('locked')) return;
+        sTap();
+        body.querySelectorAll('.opt').forEach(x=>x.classList.remove('selected'));
+        el.classList.add('selected');
+        picked = +el.dataset.i;
+        checkBtn.disabled = false;
+      };
+    });
+  } else { /* asm یا letters */
+    body.innerHTML = `
+      <div class="asm-target" id="target"></div>
+      <div class="asm-bank" id="bank">${q.chips.map((c,i)=>`<button class="chip" data-i="${i}">${esc(c.t)}</button>`).join('')}</div>`;
+    const target = $('#target'), bank = $('#bank');
+    const sync = () => {
+      target.innerHTML = seq.map(i=>`<button class="chip in-target" data-i="${i}">${esc(q.chips[i].t)}</button>`).join('');
+      target.classList.toggle('has', seq.length>0);
+      bank.querySelectorAll('.chip').forEach(el=> el.classList.toggle('ghost', seq.includes(+el.dataset.i)));
+      target.querySelectorAll('.chip').forEach(el=> el.onclick = () => { sTap(); seq = seq.filter(x=>x!==+el.dataset.i); sync(); });
+      checkBtn.disabled = seq.length !== q.answerSeq.length;
+    };
+    bank.querySelectorAll('.chip').forEach(el=> el.onclick = () => {
+      if(el.classList.contains('ghost')) return;
+      sTap(); seq.push(+el.dataset.i); sync();
+    });
+    sync();
+  }
+
+  /* زمان‌سنج آزمون */
+  if(session.mode==='exam'){
+    const tEl = $('#timer');
+    const tick = setInterval(()=>{
+      if(!document.body.contains(tEl)){ clearInterval(tick); return; }
+      const left = Math.max(0, session.deadline - Date.now());
+      const m = Math.floor(left/60000), s = Math.floor(left%60000/1000);
+      tEl.textContent = toFa(String(m).padStart(2,'0'))+':'+toFa(String(s).padStart(2,'0'));
+      if(left<=0){ clearInterval(tick); renderResult(true); }
+    }, 500);
+  }
+
+  checkBtn.onclick = () => {
+    let ok;
+    if(q.kind==='mc'){
+      ok = q.options[picked].ok;
+      body.querySelectorAll('.opt').forEach((el,i)=>{
+        el.classList.add('locked');
+        if(q.options[i].ok) el.classList.add('correct');
+        else if(i===picked) el.classList.add('wrong');
+        else el.classList.add('dim');
+      });
+    } else {
+      const built = seq.map(i=>q.chips[i].t).join(q.joinWith);
+      ok = clean(built) === clean(q.answerSeq.join(q.joinWith));
+      $('#target').querySelectorAll('.chip').forEach(el=>{
+        el.style.pointerEvents='none';
+        el.classList.remove('in-target');
+        el.classList.add(ok?'correct':'wrong');
+        el.style.borderColor = ok?'var(--green)':'var(--coral)';
+        el.style.background = ok?'var(--green-soft)':'var(--coral-soft)';
+        el.style.boxShadow = `0 3px 0 ${ok?'var(--green)':'var(--coral)'}`;
+      });
+    }
+    checkBtn.parentElement.parentElement.style.display='none';
+    showFeedback(ok, q, catId, idx);
+  };
+
+  $('#quitBtn').onclick = () => { sTap(); renderHome(); };
+}
+
+function showFeedback(ok, q, catId, idx){
+  gradeItem(q.id, ok);
+  session.done++;
+  const fb = $('#fb');
+  fb.classList.add(ok?'good':'bad');
+  if(ok){
+    session.correct++;
+    const gained = session.mode==='exam' ? 12 : 10;
+    session.xp += gained; state.xp += gained; saveState();
+    $('#fbTitle').innerHTML = `✅ ${pick(PRAISE)}`;
+    $('#fbBody').innerHTML = `<span class="fb-xp">+${toFa(gained)} ⭐</span>${q.explain?`<div class="fb-answer">💡 ${esc(q.explain)}</div>`:''}`;
+    sGood();
+    if(session.correct%3===0) confetti(16);
+  } else {
+    session.wrong++;
+    /* بازگشت سؤال به انتهای صف تا دوباره تمرین شود (فقط در حالت درس) */
+    if(session.mode==='lesson') session.queue.push({catId, idx});
+    $('#fbTitle').innerHTML = `🌱 ${pick(GENTLE)}`;
+    $('#fbBody').innerHTML = `پاسخ درست:<div class="fb-answer">${esc(q.answerText)}</div>${q.explain?`<div class="fb-answer" style="margin-top:6px">💡 ${esc(q.explain)}</div>`:''}`;
+    sSoft();
+  }
+  requestAnimationFrame(()=> fb.classList.add('show'));
+  $('#fbNext').onclick = () => { sTap(); nextQuestion(); };
+}
+
+/* ---------- فلش‌کارت ---------- */
+function startFlash(catId){
+  const idxs = pickSessionItems(catId, 10);
+  session = {mode:'flash', catId, list:idxs, at:0, know:0};
+  renderFlash();
+}
+function renderFlash(){
+  const {catId, list, at} = session;
+  if(at >= list.length) return renderResult();
+  const cat = CATS.find(c=>c.id===catId);
+  const item = DATA[catId][list[at]];
+  const [fk,bk] = cat.pair;
+  const front = item.options ? item.q : item[fk];
+  const back = item.options ? item.options[item.answer] + (item.explain?`\n💡 ${item.explain}`:'') : item[bk];
+
+  app.innerHTML = `
+  <div class="screen">
+    <div class="lesson-top">
+      <button class="close-x" id="quitBtn">✕</button>
+      <div class="qbar"><div class="qbar-fill" style="width:${at/list.length*100}%"></div></div>
+    </div>
+    <div class="flash-dots">${list.map((_,i)=>`<div class="fdot ${i<at?'done':i===at?'on':''}"></div>`).join('')}</div>
+    <span class="q-kind">${cat.icon} فلش‌کارت ${cat.name}</span>
+    <div class="flash-wrap">
+      <div class="flash-card" id="card">
+        <div class="flash-face flash-front">
+          <div class="flash-hint">${esc(cat.fx)}</div>
+          <div class="word">${esc(front)}</div>
+          <div class="flash-hint">برای دیدن ${esc(cat.bx)}، لمس کن 👆</div>
+        </div>
+        <div class="flash-face flash-back">
+          <div class="flash-hint">${esc(cat.bx)}</div>
+          <div class="word">${esc(back).replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flash-grade" id="grade" style="visibility:hidden">
+      <button class="btn btn-ghost" id="notyet">😅 هنوز نه</button>
+      <button class="btn btn-green" id="know">😎 بلدم!</button>
+    </div>
+  </div>`;
+
+  const card = $('#card');
+  card.onclick = () => { sTap(); card.classList.toggle('flipped'); $('#grade').style.visibility='visible'; };
+  $('#know').onclick = () => { sGood(); gradeItem(itemId(catId,list[at]), true); state.xp+=5; session.know++; session.at++; saveState(); renderFlash(); };
+  $('#notyet').onclick = () => { sTap(); gradeItem(itemId(catId,list[at]), false); session.at++; renderFlash(); };
+  $('#quitBtn').onclick = () => { sTap(); renderHome(); };
+}
+
+/* ---------- نتیجه ---------- */
+function renderResult(timeUp=false){
+  touchStreak();
+  state.sessions++; saveState();
+  const isFlash = session.mode==='flash';
+  const total = isFlash ? session.list.length : session.total;
+  const good = isFlash ? session.know : session.correct;
+  const acc = total ? Math.round(good/total*100) : 0;
+  const title = timeUp ? 'وقت تموم شد!' : acc>=80 ? 'درخشیدی رها! 🌟' : acc>=50 ? 'کارت خوب بود!' : 'قدمِ اول برداشته شد!';
+  const sub = timeUp ? 'مهم اینه که تمرین کردی؛ دفعهٔ بعد سریع‌تر هم می‌شی ⏱️'
+    : acc>=80 ? 'این اطلاعات دارن برای همیشه تو ذهنت تثبیت می‌شن'
+    : 'هر بار که برگردی، سَمباد دقیقاً همون‌هایی رو میاره که لازم داری';
+
+  app.innerHTML = `
+  <div class="screen result">
+    ${mascotSVG(acc>=50?'cheer':'happy')}
+    <h2>${title}</h2>
+    <p>${sub}</p>
+    <div class="result-cards">
+      <div class="res-card gold"><div class="val">+${toFa(isFlash? session.know*5 : session.xp)} ⭐</div><div class="lbl">امتیاز این جلسه</div></div>
+      <div class="res-card teal"><div class="val">${toFa(acc)}٪</div><div class="lbl">${isFlash?'کارت‌های بلد':'پاسخ‌های درست'}</div></div>
+      <div class="res-card"><div class="val">🔥 ${toFa(state.streak)}</div><div class="lbl">روز پیاپی تمرین</div></div>
+      <div class="res-card"><div class="val">${toFa(Math.round(totalStats().pct*100))}٪</div><div class="lbl">پیشرفت کل دوره</div></div>
+    </div>
+    <button class="btn btn-primary btn-wide" id="homeBtn">بازگشت به خانه</button>
+    <div style="height:10px"></div>
+    <button class="btn btn-ghost btn-wide" id="againBtn">یه دور دیگه! 🔁</button>
+  </div>`;
+
+  if(acc>=50 && !timeUp){ sWin(); confetti(40); } else { sGood(); }
+  $('#homeBtn').onclick = () => { sTap(); renderHome(); };
+  $('#againBtn').onclick = () => {
+    sTap();
+    if(session.mode==='exam') startExam();
+    else if(session.mode==='flash') startFlash(session.catId);
+    else startLesson(session.catId);
+  };
+}
+
+/* ---------- شروع ---------- */
+(async function boot(){
+  await loadState();
+  renderHome();
+})();
+</script>
+</body>
+</html>
