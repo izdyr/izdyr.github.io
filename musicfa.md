@@ -4,7 +4,7 @@
 **Prepared as an adversarial due-diligence review, not a pitch deck.**
 Date of analysis: August 2026.
 
-** فارسی:** این سند به‌عنوان یک بررسی دقیق و خصمانه (due-diligence) نوشته شده، نه یک ارائهٔ تبلیغاتی. تاریخ تحلیل: مرداد ۱۴۰۵ (اوت ۲۰۲۶).
+ این سند به‌عنوان یک بررسی دقیق و خصمانه (due-diligence) نوشته شده، نه یک ارائهٔ تبلیغاتی. تاریخ تحلیل: مرداد ۱۴۰۵ (اوت ۲۰۲۶).
 
 **Evidence labelling used throughout:**
 - **[FACT]** — verifiable from a named source, cited.
@@ -27,7 +27,7 @@ Date of analysis: August 2026.
 
 You are proposing to enter a category with a twenty-year graveyard, using a differentiator that has already been tried, that is legally dangerous to promise, and that does not address the actual pain your customers feel.
 
-** فارسی:** **حکم، از همان ابتدا: این ایده را به شکلی که توصیف کرده‌ای نساز.**
+ **حکم، از همان ابتدا: این ایده را به شکلی که توصیف کرده‌ای نساز.**
 
 تو داری پیشنهاد می‌دهی وارد حوزه‌ای شوی که یک گورستان بیست‌ساله دارد، آن هم با یک وجه تمایز که قبلاً امتحان شده، وعده‌دادنش از نظر حقوقی خطرناک است، و به درد واقعی مشتریانت هم نمی‌خورد.
 
@@ -41,15 +41,15 @@ You are proposing to enter a category with a twenty-year graveyard, using a diff
 
 **2. Your exact idea has been operating since 2001 and never got big.** Musika Lessons runs a national network of independent music teachers offering lessons in the student's home, the teacher's studio, or online — the same four-location structure you describe — across roughly 2,600 U.S. cities. It vets teachers, offers a free trial lesson, and has been at it for a quarter century. Teachers on Indeed and Glassdoor describe it taking roughly 50% of tuition and setting below-market online rates. It is a modest referral agency, not a large company. Separately, a 17-year-old U.S. music-lesson marketplace with 16,000+ instructors across 50 metros is currently listed for sale, having delivered ~243,000 lessons in its entire history — roughly 14,000 lessons a year.
 
-** فارسی:** **۲. دقیقاً همین ایدهٔ تو از سال ۲۰۰۱ در حال فعالیت است و هرگز بزرگ نشد.** Musika Lessons یک شبکهٔ سراسری از معلمان مستقل موسیقی را اداره می‌کند که درس را در خانهٔ شاگرد، استودیوی معلم، یا آنلاین ارائه می‌دهند — همان ساختار چهارمکانی که تو توصیف کرده‌ای — در حدود ۲۶۰۰ شهر آمریکا. معلمان را غربال می‌کند، جلسهٔ آزمایشی رایگان می‌دهد، و ربع قرن است این کار را انجام می‌دهد. معلمان در Indeed و Glassdoor می‌گویند این پلتفرم حدود ۵۰٪ شهریه را برمی‌دارد و نرخ‌های آنلاین را زیر بازار تعیین می‌کند. این یک آژانس ارجاع کوچک است، نه یک شرکت بزرگ. جدا از آن، یک بازارگاه ۱۷ سالهٔ آموزش موسیقی در آمریکا با بیش از ۱۶٬۰۰۰ مدرس در ۵۰ کلان‌شهر، هم‌اکنون برای فروش گذاشته شده — با مجموع ~۲۴۳٬۰۰۰ جلسه در کل تاریخش، یعنی حدود ۱۴٬۰۰۰ جلسه در سال.
+ **۲. دقیقاً همین ایدهٔ تو از سال ۲۰۰۱ در حال فعالیت است و هرگز بزرگ نشد.** Musika Lessons یک شبکهٔ سراسری از معلمان مستقل موسیقی را اداره می‌کند که درس را در خانهٔ شاگرد، استودیوی معلم، یا آنلاین ارائه می‌دهند — همان ساختار چهارمکانی که تو توصیف کرده‌ای — در حدود ۲۶۰۰ شهر آمریکا. معلمان را غربال می‌کند، جلسهٔ آزمایشی رایگان می‌دهد، و ربع قرن است این کار را انجام می‌دهد. معلمان در Indeed و Glassdoor می‌گویند این پلتفرم حدود ۵۰٪ شهریه را برمی‌دارد و نرخ‌های آنلاین را زیر بازار تعیین می‌کند. این یک آژانس ارجاع کوچک است، نه یک شرکت بزرگ. جدا از آن، یک بازارگاه ۱۷ سالهٔ آموزش موسیقی در آمریکا با بیش از ۱۶٬۰۰۰ مدرس در ۵۰ کلان‌شهر، هم‌اکنون برای فروش گذاشته شده — با مجموع ~۲۴۳٬۰۰۰ جلسه در کل تاریخش، یعنی حدود ۱۴٬۰۰۰ جلسه در سال.
 
 **3. Verification is not a moat. It is a liability generator.** Care.com is the closest available natural experiment: a trust-branded marketplace in a *higher*-stakes category (unsupervised care of infants). It paid $1M to two California DAs in 2020 over misrepresented background checks, and $8.5M to the FTC in 2024 over deceptive practices. Meanwhile Illinois appellate litigation in 2025 shows courts distinguishing between vague safety puffery (protected) and a platform's *specific undertaking* to screen (potentially actionable). The tighter your verification promise, the more legally exposed you are — and you cannot even deliver the check parents imagine, because private companies generally cannot access FBI fingerprint records; 37 states specifically bar youth-serving organisations from that database.
 
-** فارسی:** **۳. «تأیید صلاحیت» یک خندق دفاعی نیست؛ یک تولیدکنندهٔ مسئولیت حقوقی است.** Care.com نزدیک‌ترین آزمایش طبیعی موجود است: بازارگاهی با برند اعتماد، در حوزه‌ای با ریسک *بالاتر* (مراقبت بدون نظارت از نوزادان). این شرکت در ۲۰۲۰ مبلغ ۱ میلیون دلار به دو دادستان کالیفرنیا بابت ارائهٔ نادرست بررسی‌های سوءپیشینه پرداخت، و در ۲۰۲۴ مبلغ ۸٫۵ میلیون دلار به FTC بابت رویه‌های فریبنده. هم‌زمان، پروندهٔ استینافی در ایلینوی در ۲۰۲۵ نشان می‌دهد دادگاه‌ها بین «ادعاهای کلی دربارهٔ امنیت» (که مصون‌اند) و «تعهد مشخص پلتفرم به غربالگری» (که قابل تعقیب است) تمایز قائل می‌شوند. هرچه وعدهٔ تأیید تو دقیق‌تر باشد، از نظر حقوقی بی‌دفاع‌تری — و اصلاً نمی‌توانی آن بررسی‌ای را که والدین در ذهنشان است انجام دهی، چون شرکت‌های خصوصی عموماً به سوابق انگشت‌نگاری FBI دسترسی ندارند؛ ۳۷ ایالت صراحتاً سازمان‌های کار با نوجوانان را از این پایگاه داده منع کرده‌اند.
+ **۳. «تأیید صلاحیت» یک خندق دفاعی نیست؛ یک تولیدکنندهٔ مسئولیت حقوقی است.** Care.com نزدیک‌ترین آزمایش طبیعی موجود است: بازارگاهی با برند اعتماد، در حوزه‌ای با ریسک *بالاتر* (مراقبت بدون نظارت از نوزادان). این شرکت در ۲۰۲۰ مبلغ ۱ میلیون دلار به دو دادستان کالیفرنیا بابت ارائهٔ نادرست بررسی‌های سوءپیشینه پرداخت، و در ۲۰۲۴ مبلغ ۸٫۵ میلیون دلار به FTC بابت رویه‌های فریبنده. هم‌زمان، پروندهٔ استینافی در ایلینوی در ۲۰۲۵ نشان می‌دهد دادگاه‌ها بین «ادعاهای کلی دربارهٔ امنیت» (که مصون‌اند) و «تعهد مشخص پلتفرم به غربالگری» (که قابل تعقیب است) تمایز قائل می‌شوند. هرچه وعدهٔ تأیید تو دقیق‌تر باشد، از نظر حقوقی بی‌دفاع‌تری — و اصلاً نمی‌توانی آن بررسی‌ای را که والدین در ذهنشان است انجام دهی، چون شرکت‌های خصوصی عموماً به سوابق انگشت‌نگاری FBI دسترسی ندارند؛ ۳۷ ایالت صراحتاً سازمان‌های کار با نوجوانان را از این پایگاه داده منع کرده‌اند.
 
 **4. Music lessons are the worst-shaped transaction for a marketplace.** One match produces 100–200 subsequent weekly sessions with the same person, most of them face-to-face, where the platform contributes nothing marginal. You are trying to charge rent on a relationship you introduced once. Every participant knows it. Disintermediation is not a leak in this model — it is the model's natural end state.
 
-** فارسی:** **۴. درس موسیقی بدترین شکل ممکن از تراکنش برای یک بازارگاه است.** یک بار جفت‌سازی، ۱۰۰ تا ۲۰۰ جلسهٔ هفتگی بعدی با همان فرد تولید می‌کند که بیشترشان حضوری‌اند و پلتفرم در آن‌ها هیچ ارزش افزودهٔ نهایی ندارد. تو داری تلاش می‌کنی از رابطه‌ای که یک بار معرفی‌اش کرده‌ای، اجارهٔ دائمی بگیری. هر دو طرف هم این را می‌دانند. «حذف واسطه» در این مدل یک نشتی نیست — حالت طبیعی و نهایی مدل است.
+ **۴. درس موسیقی بدترین شکل ممکن از تراکنش برای یک بازارگاه است.** یک بار جفت‌سازی، ۱۰۰ تا ۲۰۰ جلسهٔ هفتگی بعدی با همان فرد تولید می‌کند که بیشترشان حضوری‌اند و پلتفرم در آن‌ها هیچ ارزش افزودهٔ نهایی ندارد. تو داری تلاش می‌کنی از رابطه‌ای که یک بار معرفی‌اش کرده‌ای، اجارهٔ دائمی بگیری. هر دو طرف هم این را می‌دانند. «حذف واسطه» در این مدل یک نشتی نیست — حالت طبیعی و نهایی مدل است.
 
 **What survives.** There is a real, unsolved problem buried inside your idea, but it is not "students can't find qualified teachers." It is **attrition**: children (and adults) quit music, and the money already spent is wasted. Nobody owns the outcome. A business built around *placement plus continuity* — get the match right, guarantee a free rematch, and keep the student playing — is defensible in a way "verified badge" is not, because it is a promise about results rather than credentials.
 
@@ -68,7 +68,7 @@ You want to build a U.S. online marketplace where families and adult learners fi
 
 That is a clear, coherent product concept. It is not a clear business.
 
-** فارسی:** می‌خواهی یک بازارگاه آنلاین آمریکایی بسازی که در آن خانواده‌ها و زبان‌آموزان بزرگسال، معلم خصوصی موسیقی پیدا کنند، مقایسه کنند و رزرو کنند. برخلاف یک دایرکتوری باز، هیچ معلمی نمی‌تواند آزادانه خودش را ثبت کند: هر متقاضی از یک دروازهٔ ساختاریافته عبور می‌کند — هویت، مدارک، تحصیلات، ارزیابی موسیقایی/سازی، نمایش تدریس، معرف‌ها و بررسی سوءپیشینه — و فقط تأییدشده‌ها قابل رزرو می‌شوند. جلسات می‌توانند در استودیوی معلم، خانهٔ شاگرد، اتاق تمرین شریک، یا آنلاین برگزار شوند. شاگردها بر اساس ساز، سطح، قیمت، فاصله، زمان در دسترس و تخصص فیلتر می‌کنند، اختیاراً یک جلسهٔ آزمایشی می‌گیرند، بعد به رزروهای تکرارشونده متعهد می‌شوند. پلتفرم زمان‌بندی، پرداخت، تسویه با معلم، پیام‌رسانی، نظرات و (در نهایت) تکالیف و پیگیری پیشرفت را مدیریت می‌کند. معلم‌ها یک پروفایل حرفه‌ای، جریان شاگرد و ابزار اداری می‌گیرند. فرضیه این است که «معلم تأییدشده» یک دایرکتوری معمولی را به یک لایهٔ اعتماد تبدیل می‌کند، و آن اعتماد ارزش کمیسیون دارد و یک خندق دفاعی می‌سازد.
+ می‌خواهی یک بازارگاه آنلاین آمریکایی بسازی که در آن خانواده‌ها و زبان‌آموزان بزرگسال، معلم خصوصی موسیقی پیدا کنند، مقایسه کنند و رزرو کنند. برخلاف یک دایرکتوری باز، هیچ معلمی نمی‌تواند آزادانه خودش را ثبت کند: هر متقاضی از یک دروازهٔ ساختاریافته عبور می‌کند — هویت، مدارک، تحصیلات، ارزیابی موسیقایی/سازی، نمایش تدریس، معرف‌ها و بررسی سوءپیشینه — و فقط تأییدشده‌ها قابل رزرو می‌شوند. جلسات می‌توانند در استودیوی معلم، خانهٔ شاگرد، اتاق تمرین شریک، یا آنلاین برگزار شوند. شاگردها بر اساس ساز، سطح، قیمت، فاصله، زمان در دسترس و تخصص فیلتر می‌کنند، اختیاراً یک جلسهٔ آزمایشی می‌گیرند، بعد به رزروهای تکرارشونده متعهد می‌شوند. پلتفرم زمان‌بندی، پرداخت، تسویه با معلم، پیام‌رسانی، نظرات و (در نهایت) تکالیف و پیگیری پیشرفت را مدیریت می‌کند. معلم‌ها یک پروفایل حرفه‌ای، جریان شاگرد و ابزار اداری می‌گیرند. فرضیه این است که «معلم تأییدشده» یک دایرکتوری معمولی را به یک لایهٔ اعتماد تبدیل می‌کند، و آن اعتماد ارزش کمیسیون دارد و یک خندق دفاعی می‌سازد.
 
 این یک ایدهٔ محصولی روشن و منسجم است. اما یک کسب‌وکار روشن نیست.
 
@@ -104,7 +104,7 @@ That is a clear, coherent product concept. It is not a clear business.
 
 **[JUDGMENT] The severe problems are at the bottom of that table, and verification addresses none of them.** Discovery is largely solved: Google Maps, local music stores, school band directors, and the parent network in any suburb will surface five teachers in an afternoon. What is *not* solved is that the relationship frequently fails and the money is wasted.
 
-** فارسی:** **[قضاوت] مسائل شدید در پایین جدول‌اند، و «تأیید صلاحیت» هیچ‌کدامشان را حل نمی‌کند.** کشف معلم عمدتاً حل شده است: گوگل مپس، فروشگاه‌های موسیقی محلی، رهبران گروه‌های سازی مدارس، و شبکهٔ والدین در هر محله ظرف یک بعدازظهر پنج معلم پیدا می‌کنند. آنچه حل *نشده* این است که این رابطه مکرراً شکست می‌خورد و پول هدر می‌رود.
+ **[قضاوت] مسائل شدید در پایین جدول‌اند، و «تأیید صلاحیت» هیچ‌کدامشان را حل نمی‌کند.** کشف معلم عمدتاً حل شده است: گوگل مپس، فروشگاه‌های موسیقی محلی، رهبران گروه‌های سازی مدارس، و شبکهٔ والدین در هر محله ظرف یک بعدازظهر پنج معلم پیدا می‌کنند. آنچه حل *نشده* این است که این رابطه مکرراً شکست می‌خورد و پول هدر می‌رود.
 
 ### 3.2 How painful, how frequent?
 ### ۳.۲ چقدر دردناک، چقدر پرتکرار؟
@@ -113,7 +113,7 @@ Buying a music teacher is a **low-frequency, high-consideration, high-consequenc
 
 That combination is bad for you in a specific way: **high consequence justifies a trust product, but low frequency destroys the economics of one.** You must reacquire every customer from scratch, forever.
 
-** فارسی:** انتخاب معلم موسیقی یک خرید **کم‌تکرار، پرتأمل و پرپیامد** است. یک خانواده شاید هر ۳ تا ۵ سال یک بار برای هر فرزند این کار را می‌کند. پیامد یک انتخاب بد ۶۰ دلار نیست — ۲۰۰۰ دلار است به‌علاوهٔ کودکی که حالا باور کرده «استعداد موسیقی ندارد».
+ انتخاب معلم موسیقی یک خرید **کم‌تکرار، پرتأمل و پرپیامد** است. یک خانواده شاید هر ۳ تا ۵ سال یک بار برای هر فرزند این کار را می‌کند. پیامد یک انتخاب بد ۶۰ دلار نیست — ۲۰۰۰ دلار است به‌علاوهٔ کودکی که حالا باور کرده «استعداد موسیقی ندارد».
 
 این ترکیب به شکل خاصی برای تو بد است: **پیامد بالا وجود یک محصول اعتماد را توجیه می‌کند، ولی تکرار پایین اقتصاد آن محصول را نابود می‌کند.** تو باید هر مشتری را برای همیشه از صفر دوباره جذب کنی.
 
@@ -130,7 +130,7 @@ That combination is bad for you in a specific way: **high consequence justifies 
 6. **Music-specific online platforms** — Lessonface, Tunelark, Forte, Muzie.
 7. **Direct to independent teacher's own site or Instagram.**
 
-** فارسی:** [واقعیت] در نظرسنجی ۲۰۱۷ بنیاد ملی هنر آمریکا (NEA)، ۹٫۵٪ بزرگسالان آمریکایی (~۲۳ میلیون نفر) نوعی کلاس یا درس هنری گرفته بودند. در نظرسنجی ۲۰۰۸، حدود ۸٪ والدینِ دارای فرزند در سن مدرسه گزارش کردند فرزندشان در سال گذشته درس خصوصی هنر گرفته است. کانال‌های فعلی، تقریباً به ترتیب حجم:
+ [واقعیت] در نظرسنجی ۲۰۱۷ بنیاد ملی هنر آمریکا (NEA)، ۹٫۵٪ بزرگسالان آمریکایی (~۲۳ میلیون نفر) نوعی کلاس یا درس هنری گرفته بودند. در نظرسنجی ۲۰۰۸، حدود ۸٪ والدینِ دارای فرزند در سن مدرسه گزارش کردند فرزندشان در سال گذشته درس خصوصی هنر گرفته است. کانال‌های فعلی، تقریباً به ترتیب حجم:
 
 ۱. **آموزشگاه‌ها و آکادمی‌های موسیقی محلی** — اعتماد بسته‌بندی‌شده، مکان فیزیکی، تداوم کادر.
 ۲. **دهان‌به‌دهان / معرفی توسط رهبر گروه سازی یا ارکستر مدرسه** — پراعتمادترین کانال، کاملاً رایگان، و همانی که باید شکستش بدهی.
@@ -152,7 +152,7 @@ The honest answer: **for most families, existing solutions are sufficient.** Wor
 
 **[JUDGMENT] That last group is your real customer.** They have already proven willingness to pay, they have a specific unmet need, and their problem — "how do I not get this wrong twice" — is one a network can genuinely solve and an individual teacher cannot.
 
-** فارسی:** پاسخ صادقانه: **برای بیشتر خانواده‌ها، راه‌حل‌های فعلی کافی‌اند.** دهان‌به‌دهان به‌علاوهٔ یک جلسهٔ آزمایشی، مسئلهٔ اعتماد را به‌قدر کافی و با هزینهٔ صفر حل می‌کند. کسانی که واقعاً خدمات کافی دریافت نمی‌کنند:
+ پاسخ صادقانه: **برای بیشتر خانواده‌ها، راه‌حل‌های فعلی کافی‌اند.** دهان‌به‌دهان به‌علاوهٔ یک جلسهٔ آزمایشی، مسئلهٔ اعتماد را به‌قدر کافی و با هزینهٔ صفر حل می‌کند. کسانی که واقعاً خدمات کافی دریافت نمی‌کنند:
 
 - خانواده‌هایی که **تازه نقل مکان کرده‌اند** و شبکهٔ محلی ندارند.
 - **سازهای نادر** (باسون، چنگ، عود، تبلا، ارگ) که عرضهٔ محلی‌شان کم است.
@@ -166,14 +166,14 @@ The honest answer: **for most families, existing solutions are sufficient.** Wor
 
 Not "our teachers are verified." Candidly: **"If it doesn't work out, we fix it — free, fast, no awkwardness."** Rematching is the thing a marketplace can uniquely do. Firing your child's piano teacher is socially excruciating; outsourcing that is worth money.
 
-** فارسی:** نه «معلمان ما تأییدشده‌اند». صادقانه: **«اگر جواب نداد، خودمان درستش می‌کنیم — رایگان، سریع، بدون معذوریت.»** جفت‌سازی مجدد تنها کاری است که فقط یک شبکه می‌تواند انجام دهد. اخراج کردن معلم پیانوی بچه‌ات از نظر اجتماعی عذاب‌آور است؛ برون‌سپاری این کار ارزش پول دارد.
+ نه «معلمان ما تأییدشده‌اند». صادقانه: **«اگر جواب نداد، خودمان درستش می‌کنیم — رایگان، سریع، بدون معذوریت.»** جفت‌سازی مجدد تنها کاری است که فقط یک شبکه می‌تواند انجام دهد. اخراج کردن معلم پیانوی بچه‌ات از نظر اجتماعی عذاب‌آور است؛ برون‌سپاری این کار ارزش پول دارد.
 
 ### 3.6 What is the actual product, and what category is this?
 ### ۳.۶ محصول واقعی چیست و این کسب‌وکار در چه دسته‌ای است؟
 
 You have described four businesses stapled together: a local services marketplace (Thumbtack-shaped), an online lesson platform (Preply-shaped), a credentialing body (ABRSM-shaped), and a practice-room booking system (Peerspace-shaped). **[JUDGMENT] It is primarily a local services lead-generation business wearing an education platform's clothes.** That matters enormously, because local services businesses live or die on cost-per-acquired-customer versus the value of one introduction — not on product features.
 
-** فارسی:** تو چهار کسب‌وکار را به هم منگنه کرده‌ای: یک بازارگاه خدمات محلی (شبیه Thumbtack)، یک پلتفرم درس آنلاین (شبیه Preply)، یک نهاد صدور گواهی (شبیه ABRSM)، و یک سیستم رزرو اتاق تمرین (شبیه Peerspace). **[قضاوت] این در اصل یک کسب‌وکار تولید سرنخِ خدمات محلی است که لباس پلتفرم آموزشی پوشیده.** این تمایز فوق‌العاده مهم است، چون کسب‌وکارهای خدمات محلی بر اساس «هزینهٔ جذب هر مشتری در برابر ارزش یک معرفی» زنده می‌مانند یا می‌میرند — نه بر اساس ویژگی‌های محصول.
+ تو چهار کسب‌وکار را به هم منگنه کرده‌ای: یک بازارگاه خدمات محلی (شبیه Thumbtack)، یک پلتفرم درس آنلاین (شبیه Preply)، یک نهاد صدور گواهی (شبیه ABRSM)، و یک سیستم رزرو اتاق تمرین (شبیه Peerspace). **[قضاوت] این در اصل یک کسب‌وکار تولید سرنخِ خدمات محلی است که لباس پلتفرم آموزشی پوشیده.** این تمایز فوق‌العاده مهم است، چون کسب‌وکارهای خدمات محلی بر اساس «هزینهٔ جذب هر مشتری در برابر ارزش یک معرفی» زنده می‌مانند یا می‌میرند — نه بر اساس ویژگی‌های محصول.
 
 ---
 
@@ -190,7 +190,7 @@ You have described four businesses stapled together: a local services marketplac
 
 **[JUDGMENT] Ranking for a first product: C, then B, then A. Your instinct is pointing at A because that's where "verified" feels most valuable — which is precisely why A is the trap: it is where verification is most expensive, most legally dangerous, and least commercially rewarded.**
 
-** فارسی:**
+
 
 **الف. والدین مبتدیان خردسال (۵ تا ۱۱ سال).** بیشترین حجم. بالاترین اضطراب اعتماد. اما: حساس‌ترین به قیمت، بیشترین ریزش، نیازمند انطباق با COPPA، بررسی سوءپیشینه، عملیات ایمنی کودک، و بیمهٔ مسئولیت سوءاستفاده. تصمیم‌گیرنده (والد) ≠ کاربر (کودک)، که نگهداشت را وحشیانه سخت می‌کند.
 
@@ -216,7 +216,7 @@ Two critical caveats:
 - This covers **all fine arts**, not just music. Music is a fraction.
 - It counts **establishments**. The typical private music teacher is a sole proprietor teaching from a spare room and may not appear here at all.
 
-** فارسی:** [واقعیت] IBISWorld درآمد **آموزشگاه‌های هنرهای زیبا** در آمریکا (کد NAICS 61161 — آموزش رقص، هنر، تئاتر *و* موسیقی) را حدود **۷٫۸ میلیارد دلار در ۲۰۲۵** تخمین می‌زند، با نرخ رشد مرکب ۴٫۳٪ در پنج سال، و فقط ۰٫۸٪ رشد پیش‌بینی‌شده برای ۲۰۲۵.
+ [واقعیت] IBISWorld درآمد **آموزشگاه‌های هنرهای زیبا** در آمریکا (کد NAICS 61161 — آموزش رقص، هنر، تئاتر *و* موسیقی) را حدود **۷٫۸ میلیارد دلار در ۲۰۲۵** تخمین می‌زند، با نرخ رشد مرکب ۴٫۳٪ در پنج سال، و فقط ۰٫۸٪ رشد پیش‌بینی‌شده برای ۲۰۲۵.
 
 دو هشدار مهم:
 - این رقم **کل هنرهای زیبا** را پوشش می‌دهد، نه فقط موسیقی. موسیقی کسری از آن است.
@@ -234,7 +234,7 @@ Two critical caveats:
 
 **[JUDGMENT] Treat $10–15B as the plausible range, and treat it as soft.** If your 6% is really 3%, the market halves. **This is an [UNKNOWN] you should test with a cheap consumer survey.**
 
-** فارسی:** **[فرض — هر ورودی برچسب‌دار و قابل مناقشه]**
+ **[فرض — هر ورودی برچسب‌دار و قابل مناقشه]**
 - خانوارهای آمریکا: ~۱۳۲ میلیون.
 - سهمی که سالانه درس خصوصی موسیقی می‌خرند: من **۶٪** می‌گیرم (عمداً محافظه‌کارانه).
 - ← ~۷٫۹ میلیون خانوار.
@@ -254,7 +254,7 @@ Two critical caveats:
 
 **[JUDGMENT] A national average transaction of $50–65 is a safe planning number. And note: Opus 1 already sells your value proposition at a premium, using employees and a physical location rather than a marketplace. That is evidence the *demand* thesis is real and the *marketplace* delivery mechanism is the questionable part.**
 
-** فارسی:** [واقعیت] قیمت‌های فعلی آمریکا، ۲۰۲۶:
+ [واقعیت] قیمت‌های فعلی آمریکا، ۲۰۲۶:
 - نظرسنجی Lessons.com: **ساعتی ۴۰ تا ۹۰ دلار**؛ پیانو ۴۰–۸۰؛ گیتار ۴۵–۷۰؛ ویولن ۵۰–۸۰؛ آنلاین ۳۵–۷۰.
 - Ensemble Schools (۲۰۲۶): **۳۵ تا ۵۰ دلار برای ۳۰ دقیقه، ۷۰ تا ۱۰۰ دلار برای ۶۰ دقیقه**؛ حدود ۱۷۰ دلار در ماه برای جلسات هفتگی ۳۰ دقیقه‌ای.
 - استودیوی Opus 1 (منطقهٔ خلیج): ماهانه ۲۶۵ تا ۵۹۵ دلار؛ جلسهٔ آزمایشی از ۲۵ دلار؛ صراحتاً معلمانی با مدرک هنرستان و سوءپیشینهٔ بررسی‌شده را به‌صورت **کارمند رسمی (W-2)** استخدام می‌کند.
@@ -271,7 +271,7 @@ Two critical caveats:
 
 Supply is **not scarce**. Quality, available, *reliable* supply in a specific neighbourhood at a specific weekday-evening timeslot is scarce.
 
-** فارسی:** [واقعیت] ادارهٔ آمار کار آمریکا (BLS) در ۲۰۲۴ حدود ۱۶۹٬۸۰۰ شغل برای نوازندگان و خوانندگان و ~۴۷٬۳۰۰ برای رهبران و آهنگسازان گزارش می‌دهد، با پیش‌بینی رشد تنها ۱٪ اشتغال نوازندگان از ۲۰۲۴ تا ۲۰۳۴. اما نظرسنجی BLS از **کارفرمایان** است، پس ساختاراً خوداشتغال‌ها را حذف می‌کند — یعنی تقریباً همهٔ معلمان خصوصی موسیقی. این اعداد کف‌اند، نه شمارش.
+ [واقعیت] ادارهٔ آمار کار آمریکا (BLS) در ۲۰۲۴ حدود ۱۶۹٬۸۰۰ شغل برای نوازندگان و خوانندگان و ~۴۷٬۳۰۰ برای رهبران و آهنگسازان گزارش می‌دهد، با پیش‌بینی رشد تنها ۱٪ اشتغال نوازندگان از ۲۰۲۴ تا ۲۰۳۴. اما نظرسنجی BLS از **کارفرمایان** است، پس ساختاراً خوداشتغال‌ها را حذف می‌کند — یعنی تقریباً همهٔ معلمان خصوصی موسیقی. این اعداد کف‌اند، نه شمارش.
 
 **[فرض]** حوضچهٔ واقع‌بینانهٔ بزرگسالان آمریکایی که در ازای پول درس خصوصی موسیقی می‌دهند: **۳۰۰٬۰۰۰ تا ۷۰۰٬۰۰۰ نفر**. **[نامعلوم]** — هیچ شمارش عمومی قابل اتکایی وجود ندارد.
 
@@ -282,7 +282,7 @@ Supply is **not scarce**. Quality, available, *reliable* supply in a specific ne
 
 **[JUDGMENT]** Online is where liquidity is easy and differentiation is impossible (you compete with the entire world, including much cheaper international supply on Preply). In-person is where differentiation is possible and liquidity is brutally hard. **This tension is not resolvable by picking both.**
 
-** فارسی:** **[قضاوت]** آنلاین جایی است که نقدشوندگی آسان و تمایز غیرممکن است (با کل دنیا رقابت می‌کنی، از جمله عرضهٔ بین‌المللی بسیار ارزان‌تر در Preply). حضوری جایی است که تمایز ممکن ولی نقدشوندگی به‌شدت سخت است. **این تنش با «هر دو را انتخاب می‌کنم» حل نمی‌شود.**
+ **[قضاوت]** آنلاین جایی است که نقدشوندگی آسان و تمایز غیرممکن است (با کل دنیا رقابت می‌کنی، از جمله عرضهٔ بین‌المللی بسیار ارزان‌تر در Preply). حضوری جایی است که تمایز ممکن ولی نقدشوندگی به‌شدت سخت است. **این تنش با «هر دو را انتخاب می‌کنم» حل نمی‌شود.**
 
 ---
 
@@ -298,7 +298,7 @@ That is the complete arc of your idea, executed by focused operators for 17 year
 
 *(Note on source quality: at least one content-marketing blog states TakeLessons was acquired by Thumbtack in 2021. That appears to be wrong — CNBC, Wikipedia and Microsoft's own closure documentation all identify Microsoft. Be careful which sources you trust in this space; much of the "TakeLessons alternatives" content on the open web is SEO material written by competitors.)*
 
-** فارسی:** **TakeLessons (۲۰۰۷–۲۰۲۴).** [واقعیت] در سن‌دیه‌گو توسط استیون کاکس تأسیس شد؛ در ۲۰۱۳ مبلغ ۴ میلیون دلار سری A تکمیلی جذب کرد که مجموع سرمایه را به بیش از ۱۲ میلیون دلار رساند؛ تا ۲۰۱۳ بیش از ۱۰ میلیون دلار به معلمان موسیقی پرداخت کرده بود که به شاگردانی در بیش از ۳۰۰۰ شهر خدمت می‌کردند. در سپتامبر ۲۰۲۱ توسط مایکروسافت خریده شد. **در ۱۵ نوامبر ۲۰۲۴ تعطیل شد.** اظهارات معلمان می‌گوید نرخ کمیسیون در مقطعی به حدود ۴۰٪ رسید، که اصلی‌ترین شکایت بود.
+ **TakeLessons (۲۰۰۷–۲۰۲۴).** [واقعیت] در سن‌دیه‌گو توسط استیون کاکس تأسیس شد؛ در ۲۰۱۳ مبلغ ۴ میلیون دلار سری A تکمیلی جذب کرد که مجموع سرمایه را به بیش از ۱۲ میلیون دلار رساند؛ تا ۲۰۱۳ بیش از ۱۰ میلیون دلار به معلمان موسیقی پرداخت کرده بود که به شاگردانی در بیش از ۳۰۰۰ شهر خدمت می‌کردند. در سپتامبر ۲۰۲۱ توسط مایکروسافت خریده شد. **در ۱۵ نوامبر ۲۰۲۴ تعطیل شد.** اظهارات معلمان می‌گوید نرخ کمیسیون در مقطعی به حدود ۴۰٪ رسید، که اصلی‌ترین شکایت بود.
 
 این قوس کامل ایدهٔ توست، که ۱۷ سال توسط اپراتورهای متمرکز و بعد توسط مایکروسافت اجرا شد و به تعطیلی رسید. **[قضاوت] هر طرح کسب‌وکاری که بنویسی باید با توضیح همین موضوع شروع شود، نه با نادیده گرفتنش.**
 
@@ -342,7 +342,7 @@ A U.S. music-lesson marketplace founded in 2008, operating in 50 metros with 16,
 
 **[JUDGMENT] Note the internal inconsistency.** If CAC were genuinely $20 against an LTV of $513 — a 25:1 ratio — you would raise capital and pour it into acquisition, not list the company for sale after 17 years at 14,000 lessons a year. Either the CAC figure excludes most acquisition costs, the LTV figure is gross GMV rather than contribution, or demand is not elastic to spend. **The most likely explanation is that demand does not scale with marketing spend in this category** — which is the single most dangerous possibility for your business.
 
-** فارسی:** یک بازارگاه آموزش موسیقی آمریکایی که در ۲۰۰۸ تأسیس شده، در ۵۰ کلان‌شهر با بیش از ۱۶٬۰۰۰ مدرس فعال است، هم‌اکنون برای فروش گذاشته شده. ارقام ارائه‌شده توسط دلال: **۲۴۳٬۰۰۰ جلسه در مجموع** (~۱۴٬۰۰۰ در سال)، نگهداشت ~۵۵٪ از هر شهریه، ۹ کارمند تمام‌وقت، ادعای هزینهٔ جذب مشتری ۲۰ دلار و ارزش طول عمر ۵۱۳ دلار.
+ یک بازارگاه آموزش موسیقی آمریکایی که در ۲۰۰۸ تأسیس شده، در ۵۰ کلان‌شهر با بیش از ۱۶٬۰۰۰ مدرس فعال است، هم‌اکنون برای فروش گذاشته شده. ارقام ارائه‌شده توسط دلال: **۲۴۳٬۰۰۰ جلسه در مجموع** (~۱۴٬۰۰۰ در سال)، نگهداشت ~۵۵٪ از هر شهریه، ۹ کارمند تمام‌وقت، ادعای هزینهٔ جذب مشتری ۲۰ دلار و ارزش طول عمر ۵۱۳ دلار.
 
 **[قضاوت] به تناقض درونی توجه کن.** اگر واقعاً هزینهٔ جذب ۲۰ دلار در برابر ارزش طول عمر ۵۱۳ دلار بود — نسبت ۲۵ به ۱ — سرمایه جذب می‌کردی و همه را در جذب مشتری می‌ریختی، نه اینکه بعد از ۱۷ سال با ۱۴ هزار جلسه در سال شرکت را بفروشی. یا رقم هزینهٔ جذب بیشتر هزینه‌ها را حذف کرده، یا رقم ارزش طول عمر «حجم ناخالص معامله» است نه سود مشارکتی، یا تقاضا نسبت به خرج کردن کشش ندارد. **محتمل‌ترین توضیح: در این حوزه تقاضا با خرج بازاریابی مقیاس نمی‌گیرد** — که خطرناک‌ترین احتمال ممکن برای کسب‌وکار توست.
 
@@ -381,14 +381,14 @@ A U.S. music-lesson marketplace founded in 2008, operating in 50 metros with 16,
 
 Adult learners select on chemistry, price and schedule fit. A credential badge is a weak tertiary signal against a good intro video and one trial lesson. **[JUDGMENT] Low value.**
 
-** فارسی:** بزرگسالان بر اساس شیمی شخصی، قیمت و تناسب زمانی انتخاب می‌کنند. نشان مدرک در برابر یک ویدیوی معرفی خوب و یک جلسهٔ آزمایشی، سیگنال ضعیف درجه‌سه است. **[قضاوت] ارزش کم.**
+ بزرگسالان بر اساس شیمی شخصی، قیمت و تناسب زمانی انتخاب می‌کنند. نشان مدرک در برابر یک ویدیوی معرفی خوب و یک جلسهٔ آزمایشی، سیگنال ضعیف درجه‌سه است. **[قضاوت] ارزش کم.**
 
 ### 8.2 Would parents care? Yes — but not for the reason you think.
 ### ۸.۲ آیا والدین اهمیت می‌دهند؟ بله — ولی نه به دلیلی که فکر می‌کنی.
 
 Parents care about **safety**, not musicianship. A parent cannot evaluate whether a teacher's Chopin is good, and knows it. What they want is: *this person is not dangerous and will be kind to my child.* Your elaborate music-theory and instrument assessments are optimising the dimension parents cannot judge and do not primarily fear. **[JUDGMENT] You would spend most of your verification budget on the least valued component.**
 
-** فارسی:** والدین به **ایمنی** اهمیت می‌دهند، نه به موسیقی‌دانی. یک والد نمی‌تواند ارزیابی کند شوپن معلم خوب است یا نه، و خودش هم این را می‌داند. چیزی که می‌خواهد این است: *این آدم خطرناک نیست و با بچه‌ام مهربان خواهد بود.* ارزیابی‌های مفصل تئوری موسیقی و ساز، دقیقاً بُعدی را بهینه می‌کنند که والدین نمی‌توانند قضاوتش کنند و اصولاً از آن نمی‌ترسند. **[قضاوت] بیشتر بودجهٔ تأیید صلاحیتت را روی کم‌ارزش‌ترین جزء خرج می‌کنی.**
+ والدین به **ایمنی** اهمیت می‌دهند، نه به موسیقی‌دانی. یک والد نمی‌تواند ارزیابی کند شوپن معلم خوب است یا نه، و خودش هم این را می‌داند. چیزی که می‌خواهد این است: *این آدم خطرناک نیست و با بچه‌ام مهربان خواهد بود.* ارزیابی‌های مفصل تئوری موسیقی و ساز، دقیقاً بُعدی را بهینه می‌کنند که والدین نمی‌توانند قضاوتش کنند و اصولاً از آن نمی‌ترسند. **[قضاوت] بیشتر بودجهٔ تأیید صلاحیتت را روی کم‌ارزش‌ترین جزء خرج می‌کنی.**
 
 ### 8.3 Would good teachers submit to it? The core contradiction.
 ### ۸.۳ آیا معلمان خوب تن به آن می‌دهند؟ تناقض مرکزی.
@@ -397,7 +397,7 @@ Parents care about **safety**, not musicianship. A parent cannot evaluate whethe
 
 You are promising quality while your supply-acquisition mechanism adversely selects against it. Every added verification step worsens this: it raises friction most for the teachers you most want. **[JUDGMENT] This is the deepest flaw in the concept and I do not think you can design your way out of it with process.**
 
-** فارسی:**
+
 
 > **معلمی که استودیوی پر و لیست انتظار دارد، هیچ دلیلی ندارد چند ساعت فرایند تأیید را طی کند و بعد تا ابد ۲۰٪ به تو بدهد. معلمی که جای خالی دارد، همهٔ دلایل را دارد. بنابراین قیف تأیید صلاحیت تو، به‌طور میانگین، معلمانی را انتخاب می‌کند که نمی‌توانند استودیوی خودشان را پر کنند.**
 
@@ -416,7 +416,7 @@ You are promising quality while your supply-acquisition mechanism adversely sele
 
 At a 40% approval rate, **fully loaded cost per approved teacher is $290–550.** Against that, a teacher's lifetime platform revenue in a leaky marketplace may be $200–600. **[JUDGMENT] Verification as specified is roughly cash-flow neutral to negative on its own.**
 
-** فارسی:** **[فرض]** به‌ازای هر متقاضی:
+ **[فرض]** به‌ازای هر متقاضی:
 - احراز هویت: ۱٫۵ تا ۳ دلار
 - بررسی سوءپیشینهٔ تجاری: ۳۰ تا ۶۰ دلار
 - راستی‌آزمایی مدارک/معرف‌ها (۳۰ دقیقه نیروی انسانی): ۱۵ دلار
@@ -437,7 +437,7 @@ Fraud is trivial: borrowed audition videos, inflated degrees from unverifiable f
 
 So: the parent reads "Background Screening Completed" and imagines an FBI check. You performed a commercial database search. **That delta is your entire legal exposure.**
 
-** فارسی:** بررسی هویت، سوءپیشینه و مدارک از طریق API مقیاس می‌گیرد. **ارزیابی موسیقایی و تدریس مقیاس نمی‌گیرد.** چه کسی معلم شاکوهاچی را ارزیابی می‌کند؟ ارگ‌نواز گاسپل را؟ درامر دث‌متال را؟ تخصص ارزیابی بین سازها و ژانرها تعمیم‌پذیر نیست.
+ بررسی هویت، سوءپیشینه و مدارک از طریق API مقیاس می‌گیرد. **ارزیابی موسیقایی و تدریس مقیاس نمی‌گیرد.** چه کسی معلم شاکوهاچی را ارزیابی می‌کند؟ ارگ‌نواز گاسپل را؟ درامر دث‌متال را؟ تخصص ارزیابی بین سازها و ژانرها تعمیم‌پذیر نیست.
 
 تقلب ساده است: ویدیوی اجرای قرض‌گرفته، مدارک متورم از مؤسسات خارجی غیرقابل راستی‌آزمایی، نوازندهٔ قوی که معلم بدی است.
 
@@ -454,7 +454,7 @@ So: the parent reads "Background Screening Completed" and imagines an FBI check.
 
 **[JUDGMENT] Section 230 protects you from what teachers write on their profiles. It does not protect you from what *you* write on the badge.**
 
-** فارسی:**
+
 
 - **مثبت کاذب (کسی را تأیید می‌کنی که به کودکی آسیب می‌زند):** وجودی. نشان «تأییدشده»ی تو مدرک شمارهٔ یک شاکی است.
 - **منفی کاذب (یک معلم عالی را رد می‌کنی):** در یک جامعهٔ حرفه‌ای کوچک و شایعه‌پرداز یک دشمن علنی می‌سازی، و اگر به گزارش اعتبارسنجی مصرف‌کننده تکیه کرده باشی، **تعهدات قانون FCRA برای اقدام نامساعد** بر تو بار می‌شود.
@@ -471,7 +471,7 @@ So: the parent reads "Background Screening Completed" and imagines an FBI check.
 
 **[JUDGMENT] Verification is table stakes, not a moat. Ship the cheap 20% of it (ID + background + reference calls + a recorded teaching sample), state exactly what you did in plain language, and stop there.**
 
-** فارسی:**
+
 
 - **در شش هفته قابل تقلید است.** Tunelark همین حالا غربالگری دستی تبلیغ می‌کند. Musika از ۲۰۰۱ ادعای غربالگری دارد. Lessonface با متقاضیان مصاحبه می‌کند.
 - **برای مشتری قابل راستی‌آزمایی نیست**، پس به یک ادعای بازاریابی فرو می‌کاهد — و ادعاهای بازاریابی را کسی می‌برد که بیشتر خرج می‌کند، نه کسی که سخت‌گیرتر است.
@@ -489,7 +489,7 @@ So: the parent reads "Background Screening Completed" and imagines an FBI check.
 - **Never use "safe," "guaranteed," or "trusted" adjacent to a teacher's name.**
 - **Weight teaching evidence over playing ability.**
 
-** فارسی:**
+
 
 - **توصیف کن، هرگز گواهی نده.** «ما یک کارت شناسایی دولتی را تأیید کردیم، در ۱۲ مارس ۲۰۲۶ جست‌وجوی کیفری ملی و شهرستانی انجام دادیم، با دو معرف صحبت کردیم، و یک نمونهٔ تدریس ۱۰ دقیقه‌ای دیدیم.» نه «تأییدشده ✓ مصوب ✓ ایمن ✓».
 - **همه‌چیز را تاریخ بزن.** یک بررسی، عکس یک لحظه است.
@@ -511,7 +511,7 @@ So: the parent reads "Background Screening Completed" and imagines an FBI check.
 - Professional profile and social proof.
 - Reduces marketing effort.
 
-** فارسی:**
+
 - جای خالی‌اش را پر می‌کند — واقعاً برای آن ~۵۰٪ معلم‌هایی که پر نیستند ارزشمند است.
 - صدور صورتحساب، دنبال کردن پرداخت‌ها و اجرای جریمهٔ غیبت را از دوشش برمی‌دارد.
 - پروفایل حرفه‌ای و اثبات اجتماعی.
@@ -526,7 +526,7 @@ So: the parent reads "Background Screening Completed" and imagines an FBI check.
 - **Verification friction** before any income is proven.
 - **Price control.** Musika teachers publicly complain the platform sets below-market online rates. Any hint of this kills your best supply.
 
-** فارسی:**
+
 - **کمیسیون روی یک رابطهٔ تکرارشونده.** معلمی که هفته‌ای ۶۰ دلار از یک شاگرد می‌گیرد، با نرخ ۲۰٪ در سال اول ۶۲۴ دلار به تو می‌دهد، و در سال دوم دوباره ۶۲۴ دلار — بابت یک معرفی. معلم‌ها این حساب را می‌کنند. دقیقاً همین چیزی است که معلم‌ها را علیه TakeLessons (~۴۰٪)، Preply (۳۳٪ به‌علاوهٔ کل جلسهٔ اول) و Musika (~۵۰٪) برانگیخت.
 - **آن‌ها از قبل یک کسب‌وکار دارند** — آیین‌نامهٔ استودیو، لیست انتظار، وب‌سایت، و مدل شهریهٔ ماهانه که جریان رزرو جلسه‌به‌جلسهٔ تو آن را می‌شکند.
 - **ریسک وابستگی به بازارگاه.** معلم‌ها دیدند TakeLessons در ۲۰۲۴ ناپدید شد و نظرات و اعتبارشان را هم با خودش برد. این خاطره تازه است و جذب معلم را برای تو سخت‌تر از هر کسی قبل از ۲۰۲۴ می‌کند.
@@ -544,7 +544,7 @@ So: the parent reads "Background Screening Completed" and imagines an FBI check.
 
 **[JUDGMENT] Supply is the easy side. Do not confuse the ease of recruiting teachers with progress. TakeLessons had teachers in 3,000+ cities and still died.**
 
-** فارسی:**
+
 
 **۱۰ نفر اول — حضوری، دستچین، بدون نیاز به محصول.** یک کلان‌شهر. فهرست فارغ‌التحصیلان اخیر دانشکده‌های موسیقی، شعبه‌های محلی MTNA، آموزشگاه‌های محلی، فهرست نوازندگان ارکستر. پیشنهاد: **صفر درصد کمیسیون برای ۱۲ ماه**، تو شخصاً شاگرد می‌آوری، آن‌ها ۱۰۰٪ را نگه می‌دارند.
 
@@ -564,7 +564,7 @@ So: the parent reads "Background Screening Completed" and imagines an FBI check.
 
 Brutally: **most won't, unless you are the first result or a person they trust told them to.** "Piano lessons near me" is a solved query with a map pack owned by local music schools with hundreds of Google reviews and years of local SEO. You will be a national domain competing against local entities on a hyper-local query. That is the hardest SEO fight in existence.
 
-** فارسی:** بی‌رحمانه: **بیشترشان نمی‌کنند، مگر اینکه نتیجهٔ اول باشی یا کسی که به او اعتماد دارند تو را معرفی کرده باشد.** «کلاس پیانو نزدیک من» یک جست‌وجوی حل‌شده است با یک بلوک نقشه که مالکش آموزشگاه‌های محلی با صدها نظر گوگل و سال‌ها سئوی محلی‌اند. تو یک دامنهٔ ملی خواهی بود که روی یک عبارت فوق‌محلی با موجودیت‌های محلی می‌جنگد. این سخت‌ترین نبرد سئوی موجود است.
+ بی‌رحمانه: **بیشترشان نمی‌کنند، مگر اینکه نتیجهٔ اول باشی یا کسی که به او اعتماد دارند تو را معرفی کرده باشد.** «کلاس پیانو نزدیک من» یک جست‌وجوی حل‌شده است با یک بلوک نقشه که مالکش آموزشگاه‌های محلی با صدها نظر گوگل و سال‌ها سئوی محلی‌اند. تو یک دامنهٔ ملی خواهی بود که روی یک عبارت فوق‌محلی با موجودیت‌های محلی می‌جنگد. این سخت‌ترین نبرد سئوی موجود است.
 
 ### 10.2 Channel-by-channel
 ### ۱۰.۲ کانال به کانال
@@ -596,14 +596,14 @@ Brutally: **most won't, unless you are the first result or a person they trust t
 
 Not paid ads. **[JUDGMENT] One metro, 15–25 band/orchestra directors and 5–8 music stores as referral partners, plus 30 teachers who each bring their existing 10–20 students onto your billing rails.** That gets you to 300–600 students with near-zero paid CAC. The teachers' own students are not "cheating" — they are the liquidity that makes the platform worth a new family's attention.
 
-** فارسی:** نه تبلیغات پولی. **[قضاوت] یک کلان‌شهر، ۱۵ تا ۲۵ رهبر گروه سازی/ارکستر و ۵ تا ۸ فروشگاه موسیقی به‌عنوان شریک ارجاع، به‌علاوهٔ ۳۰ معلم که هرکدام ۱۰ تا ۲۰ شاگرد فعلی خودشان را روی ریل صورتحساب تو بیاورند.** این تو را به ۳۰۰ تا ۶۰۰ شاگرد با هزینهٔ جذب تقریباً صفر می‌رساند. شاگردان خودِ معلم‌ها «تقلب» نیستند — آن‌ها همان نقدشوندگی‌اند که پلتفرم را ارزشمندِ توجه یک خانوادهٔ جدید می‌کند.
+ نه تبلیغات پولی. **[قضاوت] یک کلان‌شهر، ۱۵ تا ۲۵ رهبر گروه سازی/ارکستر و ۵ تا ۸ فروشگاه موسیقی به‌عنوان شریک ارجاع، به‌علاوهٔ ۳۰ معلم که هرکدام ۱۰ تا ۲۰ شاگرد فعلی خودشان را روی ریل صورتحساب تو بیاورند.** این تو را به ۳۰۰ تا ۶۰۰ شاگرد با هزینهٔ جذب تقریباً صفر می‌رساند. شاگردان خودِ معلم‌ها «تقلب» نیستند — آن‌ها همان نقدشوندگی‌اند که پلتفرم را ارزشمندِ توجه یک خانوادهٔ جدید می‌کند.
 
 ### 10.4 The retention problem nobody mentions
 ### ۱۰.۴ مسئلهٔ نگهداشت که هیچ‌کس نمی‌گوید
 
 **Your** retention is not the student's retention with the teacher — it is whether the *transaction* stays on your rails. Assume a meaningful share of successful matches migrate to Venmo within 90 days. Your economic life with a customer may be far shorter than their musical life.
 
-** فارسی:** نگهداشتِ **تو** یعنی ماندگاری شاگرد با معلم نیست — یعنی اینکه آیا *تراکنش* روی ریل تو می‌ماند یا نه. فرض کن سهم قابل‌توجهی از جفت‌سازی‌های موفق ظرف ۹۰ روز به Venmo (پرداخت مستقیم) مهاجرت می‌کنند. عمر اقتصادی تو با یک مشتری ممکن است خیلی کوتاه‌تر از عمر موسیقایی او باشد.
+ نگهداشتِ **تو** یعنی ماندگاری شاگرد با معلم نیست — یعنی اینکه آیا *تراکنش* روی ریل تو می‌ماند یا نه. فرض کن سهم قابل‌توجهی از جفت‌سازی‌های موفق ظرف ۹۰ روز به Venmo (پرداخت مستقیم) مهاجرت می‌کنند. عمر اقتصادی تو با یک مشتری ممکن است خیلی کوتاه‌تر از عمر موسیقایی او باشد.
 
 ---
 
@@ -623,7 +623,7 @@ Not paid ads. **[JUDGMENT] One metro, 15–25 band/orchestra directors and 5–8
 
 **[JUDGMENT] You are attempting to charge a recurring toll on a one-time service.** Every marketplace in this shape — tutoring, house cleaning, personal training, music — either accepts massive leakage, takes a huge cut on a small volume that survives, or converts into an employer. There is no fourth option and twenty years of attempts have not found one.
 
-** فارسی:**
+
 
 | ویژگی | بازارگاه سالم | درس موسیقی |
 |---|---|---|
@@ -640,7 +640,7 @@ Not paid ads. **[JUDGMENT] One metro, 15–25 band/orchestra directors and 5–8
 
 Cross-side network effects here are **local, per-instrument, per-timeslot**. Adding a tuba teacher in Phoenix does nothing for a piano family in Boston. Your effective network is thousands of tiny disconnected graphs. Same-side effects are **negative**: more teachers means each teacher gets fewer students.
 
-** فارسی:** اثرات شبکه‌ای متقاطع اینجا **محلی، به‌ازای هر ساز، و به‌ازای هر بازهٔ زمانی**اند. اضافه کردن یک معلم توبا در فینیکس هیچ کمکی به یک خانوادهٔ پیانو در بوستون نمی‌کند. شبکهٔ مؤثر تو هزاران گراف کوچک و بی‌ارتباط است. اثرات هم‌سو هم **منفی**اند: معلم بیشتر یعنی هر معلم شاگرد کمتری می‌گیرد.
+ اثرات شبکه‌ای متقاطع اینجا **محلی، به‌ازای هر ساز، و به‌ازای هر بازهٔ زمانی**اند. اضافه کردن یک معلم توبا در فینیکس هیچ کمکی به یک خانوادهٔ پیانو در بوستون نمی‌کند. شبکهٔ مؤثر تو هزاران گراف کوچک و بی‌ارتباط است. اثرات هم‌سو هم **منفی**اند: معلم بیشتر یعنی هر معلم شاگرد کمتری می‌گیرد.
 
 ### 11.3 Cold start — recommended approach
 ### ۱۱.۳ شروع سرد — رویکرد پیشنهادی
@@ -651,7 +651,7 @@ Cross-side network effects here are **local, per-instrument, per-timeslot**. Add
 
 **Solve the harder side first.** Demand is the hard side. Manufacture demand before recruiting supply, using concierge matching (you, on the phone) and a waiting list.
 
-** فارسی:** **در یک کلان‌شهر لانچ کن. یک کلان‌شهر. نه یک ایالت، نه سراسری.** یک کلان‌شهر متراکم، **۲ تا ۳ ساز (پیانو، گیتار، آواز)، فقط استودیو یا آنلاین، بدون درس در خانه.**
+ **در یک کلان‌شهر لانچ کن. یک کلان‌شهر. نه یک ایالت، نه سراسری.** یک کلان‌شهر متراکم، **۲ تا ۳ ساز (پیانو، گیتار، آواز)، فقط استودیو یا آنلاین، بدون درس در خانه.**
 
 **[قضاوت] کدام شهر:** شهری را انتخاب کن که بتوانی فیزیکی در آن حاضر باشی و با رهبران موسیقی مدارس رابطهٔ واقعی بسازی. در این مرحله، حضور بنیان‌گذار از بهینه‌سازی جمعیت‌شناختی مهم‌تر است.
 
@@ -673,7 +673,7 @@ Cross-side network effects here are **local, per-instrument, per-timeslot**. Add
 | **Certification fees** | Low | High | Worsens adverse selection | No |
 | **B2B (schools)** | **High, sticky** | Low | Supply *and* demand | **Strong phase-2 option** |
 
-** فارسی:**
+
 
 | مدل | درآمد | مقاومت کاربر | اثر بر بازارگاه | حکم |
 |---|---|---|---|---|
@@ -700,7 +700,7 @@ Cross-side network effects here are **local, per-instrument, per-timeslot**. Add
 
 **The cost:** revenue per student falls sharply, so you must acquire students very cheaply. That is the honest constraint.
 
-** فارسی:** **یک مدل ترکیبی حول «حق جای‌دهی یک‌باره».**
+ **یک مدل ترکیبی حول «حق جای‌دهی یک‌باره».**
 
 ۱. **حق جای‌دهی از معلم: ۱۰۰٪ شهریهٔ چهار جلسهٔ اول** (~۲۰۰ تا ۲۶۰ دلار)، که فقط بعد از برگزاری و پرداخت جلسهٔ چهارم دریافت می‌شود.
 ۲. **معلم بعد از آن تا ابد ۱۰۰٪ را نگه می‌دارد.** این را بلند اعلام کن.
@@ -750,7 +750,7 @@ Cross-side network effects here are **local, per-instrument, per-timeslot**. Add
 
 **[JUDGMENT] $127 to acquire one student is almost certainly below the paid CAC of a household-decision education purchase in a competitive metro.**
 
-** فارسی:** **[قضاوت] ۱۲۷ دلار برای جذب یک شاگرد تقریباً به‌قطع کمتر از هزینهٔ جذب پولیِ یک خرید آموزشیِ خانوادگی در یک کلان‌شهر رقابتی است.**
+ **[قضاوت] ۱۲۷ دلار برای جذب یک شاگرد تقریباً به‌قطع کمتر از هزینهٔ جذب پولیِ یک خرید آموزشیِ خانوادگی در یک کلان‌شهر رقابتی است.**
 
 ### Model B — placement fee / مدل ب — حق جای‌دهی
 
@@ -766,7 +766,7 @@ Cross-side network effects here are **local, per-instrument, per-timeslot**. Add
 
 Similar contribution, **dramatically lower complexity, zero leakage risk, and radically better supply-side dynamics.**
 
-** فارسی:** سود مشارکتی مشابه، اما **پیچیدگی به‌مراتب کمتر، ریسک نشتی صفر، و دینامیک سمت عرضهٔ به‌مراتب بهتر.**
+ سود مشارکتی مشابه، اما **پیچیدگی به‌مراتب کمتر، ریسک نشتی صفر، و دینامیک سمت عرضهٔ به‌مراتب بهتر.**
 
 ### 13.4 The number that decides the company
 ### ۱۳.۴ عددی که سرنوشت شرکت را تعیین می‌کند
@@ -777,7 +777,7 @@ Similar contribution, **dramatically lower complexity, zero leakage risk, and ra
 
 **If CAC exceeds $150, the paid-acquisition version of this business does not exist.**
 
-** فارسی:** **سود مشارکتی هر شاگرد ≈ ۱۲۵ تا ۱۸۰ دلار. پس هزینهٔ جذب ترکیبی‌ات باید زیر ~۶۰ تا ۹۰ دلار باشد.**
+ **سود مشارکتی هر شاگرد ≈ ۱۲۵ تا ۱۸۰ دلار. پس هزینهٔ جذب ترکیبی‌ات باید زیر ~۶۰ تا ۹۰ دلار باشد.**
 
 **[نامعلوم] هزینهٔ جذب واقعی تو چقدر است؟** با ۱۵۰۰ دلار و سه هفته می‌توانی بفهمی: یک کمپین واقعی گوگل ادز در یک کلان‌شهر روی یک ساز اجرا کن، با یک لندینگ واقعی و یک شمارهٔ تلفن واقعی، و بسنج: هزینهٔ هر کلیک ← هزینهٔ هر استعلام ← هزینهٔ هر جلسهٔ آزمایشی رزروشده ← هزینهٔ هر شاگردی که به جلسهٔ چهارم می‌رسد.
 
@@ -787,7 +787,7 @@ Similar contribution, **dramatically lower complexity, zero leakage risk, and ra
 
 **[ASSUMPTION]** At $178 contribution and ~$180k/year fixed cost (two modest salaries, tooling, insurance, legal), you need roughly **1,000 student placements per year** to break even. **[JUDGMENT] Achievable in 24–36 months with excellent execution; not in year one.**
 
-** فارسی:** **[فرض]** با سود مشارکتی ۱۷۸ دلار و هزینهٔ ثابت سالانهٔ ~۱۸۰ هزار دلار (دو حقوق متوسط، ابزار، بیمه، حقوقی)، برای سربه‌سر شدن به حدود **۱۰۰۰ جای‌دهی شاگرد در سال** نیاز داری. **[قضاوت] با اجرای عالی در ۲۴ تا ۳۶ ماه ممکن است؛ در سال اول نه.**
+ **[فرض]** با سود مشارکتی ۱۷۸ دلار و هزینهٔ ثابت سالانهٔ ~۱۸۰ هزار دلار (دو حقوق متوسط، ابزار، بیمه، حقوقی)، برای سربه‌سر شدن به حدود **۱۰۰۰ جای‌دهی شاگرد در سال** نیاز داری. **[قضاوت] با اجرای عالی در ۲۴ تا ۳۶ ماه ممکن است؛ در سال اول نه.**
 
 ---
 
@@ -796,7 +796,7 @@ Similar contribution, **dramatically lower complexity, zero leakage risk, and ra
 
 **[ASSUMPTION — illustrative only. Do not put these in an investor deck; put your measured CAC in an investor deck.]**
 
-** فارسی:** **[فرض — فقط برای تصویرسازی. این‌ها را در ارائهٔ سرمایه‌گذار نگذار؛ هزینهٔ جذبِ اندازه‌گیری‌شده‌ات را بگذار.]**
+ **[فرض — فقط برای تصویرسازی. این‌ها را در ارائهٔ سرمایه‌گذار نگذار؛ هزینهٔ جذبِ اندازه‌گیری‌شده‌ات را بگذار.]**
 
 ### Conservative / محافظه‌کارانه
 
@@ -843,7 +843,7 @@ A slow bleed. You would stop at year 2. — **** یک خون‌ریزی آهست
 
 **This is not legal advice. Every item below needs a U.S. attorney. Budget $15–25k for a proper pre-launch review and do not skip it.**
 
-** فارسی:** **این مشاورهٔ حقوقی نیست. هر مورد زیر به یک وکیل آمریکایی نیاز دارد. برای یک بررسی درست پیش از لانچ ۱۵ تا ۲۵ هزار دلار بودجه بگذار و از آن نگذر.**
+ **این مشاورهٔ حقوقی نیست. هر مورد زیر به یک وکیل آمریکایی نیاز دارد. برای یک بررسی درست پیش از لانچ ۱۵ تا ۲۵ هزار دلار بودجه بگذار و از آن نگذر.**
 
 ### 15.1 Worker classification — the trap hidden inside your own idea
 ### ۱۵.۱ طبقه‌بندی نیروی کار — تله‌ای که در دل ایدهٔ خودت پنهان است
@@ -854,7 +854,7 @@ A slow bleed. You would stop at year 2. — **** یک خون‌ریزی آهست
 
 **[JUDGMENT] Here is the non-obvious trap: verification is evidence of control.** The more you assess teaching methods, mandate curricula, set or cap prices, require your lesson-note format, enforce cancellation policies, and gate who may work — the more you look like an employer under any test. **Your differentiator and your cost structure are in direct legal tension.** Opus 1 resolves this by simply employing teachers as W-2 staff.
 
-** فارسی:** [واقعیت] در مه ۲۰۲۵ وزارت کار آمریکا بخشنامهٔ FAB 2025-1 را صادر کرد و به بازرسان دستور داد اجرای قانون پیمانکار مستقلِ دورهٔ بایدن (۲۰۲۴) را متوقف کنند و به آزمون سنتی «واقعیت اقتصادی» بازگردند؛ در ۲۶ فوریه ۲۰۲۶ وزارت کار یک پیش‌نویس مقررات منتشر کرد تا قانون ۲۰۲۴ را لغو و یک آزمون دوعاملی متمرکز بر «کنترل» و «فرصت سود/زیان» جایگزین کند. مهلت نظرخواهی در ۲۸ آوریل ۲۰۲۶ بسته شد.
+ [واقعیت] در مه ۲۰۲۵ وزارت کار آمریکا بخشنامهٔ FAB 2025-1 را صادر کرد و به بازرسان دستور داد اجرای قانون پیمانکار مستقلِ دورهٔ بایدن (۲۰۲۴) را متوقف کنند و به آزمون سنتی «واقعیت اقتصادی» بازگردند؛ در ۲۶ فوریه ۲۰۲۶ وزارت کار یک پیش‌نویس مقررات منتشر کرد تا قانون ۲۰۲۴ را لغو و یک آزمون دوعاملی متمرکز بر «کنترل» و «فرصت سود/زیان» جایگزین کند. مهلت نظرخواهی در ۲۸ آوریل ۲۰۲۶ بسته شد.
 
 **اما [واقعیت] قانون ایالتی تغییر نکرده و سخت‌گیرتر است: کالیفرنیا همچنان آزمون ABC را تحت AB 5 اعمال می‌کند، و ماساچوست و نیوجرسی استانداردهای سخت‌گیرانه دارند.**
 
@@ -867,7 +867,7 @@ A slow bleed. You would stop at year 2. — **** یک خون‌ریزی آهست
 
 **[JUDGMENT] Assume §230 protects teacher-authored profile content and does not protect your own verification claims. Draft the badge accordingly.**
 
-** فارسی:** [واقعیت] در *Doe v. Grindr* (دادگاه استیناف حوزهٔ نهم، ۲۰۲۵) دادگاه گفت یک اظهار کلی دربارهٔ ایجاد محیط امن، توصیف سیاست نظارت است و تحت مادهٔ ۲۳۰ مصون. پروندهٔ *Martin v. Care.com* (۲۰۲۵) به تمایز بین آن و **تعهد مشخص پلتفرم به غربالگری** می‌پردازد.
+ [واقعیت] در *Doe v. Grindr* (دادگاه استیناف حوزهٔ نهم، ۲۰۲۵) دادگاه گفت یک اظهار کلی دربارهٔ ایجاد محیط امن، توصیف سیاست نظارت است و تحت مادهٔ ۲۳۰ مصون. پروندهٔ *Martin v. Care.com* (۲۰۲۵) به تمایز بین آن و **تعهد مشخص پلتفرم به غربالگری** می‌پردازد.
 
 **[قضاوت] فرض کن مادهٔ ۲۳۰ محتوای نوشته‌شده توسط معلم را محافظت می‌کند و ادعاهای تأیید صلاحیت خودت را نه. متن نشان را بر همین اساس بنویس.**
 
@@ -875,7 +875,7 @@ A slow bleed. You would stop at year 2. — **** یک خون‌ریزی آهست
 
 If you procure background checks, you are using consumer reports. Obligations include written disclosure and authorisation, permissible purpose, and pre-adverse/adverse action notices with a copy of the report and a summary of rights. **[JUDGMENT] Startups routinely botch this and it is separately actionable.**
 
-** فارسی:** اگر بررسی سوءپیشینه تهیه کنی، داری از «گزارش مصرف‌کننده» استفاده می‌کنی. تعهدات شامل افشا و اجازهٔ کتبی، هدف مجاز، و اطلاعیه‌های پیش از اقدام نامساعد و اقدام نامساعد همراه با نسخه‌ای از گزارش و خلاصهٔ حقوق است. **[قضاوت] استارتاپ‌ها معمولاً این را خراب می‌کنند و به‌تنهایی قابل تعقیب است.**
+ اگر بررسی سوءپیشینه تهیه کنی، داری از «گزارش مصرف‌کننده» استفاده می‌کنی. تعهدات شامل افشا و اجازهٔ کتبی، هدف مجاز، و اطلاعیه‌های پیش از اقدام نامساعد و اقدام نامساعد همراه با نسخه‌ای از گزارش و خلاصهٔ حقوق است. **[قضاوت] استارتاپ‌ها معمولاً این را خراب می‌کنند و به‌تنهایی قابل تعقیب است.**
 
 ### 15.4 Children's privacy — COPPA
 ### ۱۵.۴ حریم خصوصی کودکان — COPPA
@@ -884,7 +884,7 @@ If you procure background checks, you are using consumer reports. Obligations in
 
 **[JUDGMENT] This kills the "record every lesson for quality control" feature for under-13 students without careful, consented design.** Note that state laws stack on top: California requires opt-in for sale/sharing of data for under-16s.
 
-** فارسی:** [واقعیت] قانون اصلاح‌شدهٔ COPPA از ۲۳ ژوئن ۲۰۲۵ لازم‌الاجرا شد و مهلت انطباق کامل **۲۲ آوریل ۲۰۲۶ بود — که گذشته است.** تغییرات کلیدی: **شناسه‌های بیومتریک (از جمله ضبط صدا) حالا اطلاعات شخصی محسوب می‌شوند**؛ اپراتورها باید یک **سیاست مکتوب نگهداری داده** با بازهٔ زمانی مشخص داشته و منتشر کنند؛ برای افشای دادهٔ کودکان به اشخاص ثالث رضایت جداگانهٔ قابل‌احراز والدین لازم است؛ برنامهٔ امنیتی مکتوب با ارزیابی سالانهٔ ریسک الزامی است. FTC اعلام کرده قصد دارد قاطعانه اجرا کند.
+ [واقعیت] قانون اصلاح‌شدهٔ COPPA از ۲۳ ژوئن ۲۰۲۵ لازم‌الاجرا شد و مهلت انطباق کامل **۲۲ آوریل ۲۰۲۶ بود — که گذشته است.** تغییرات کلیدی: **شناسه‌های بیومتریک (از جمله ضبط صدا) حالا اطلاعات شخصی محسوب می‌شوند**؛ اپراتورها باید یک **سیاست مکتوب نگهداری داده** با بازهٔ زمانی مشخص داشته و منتشر کنند؛ برای افشای دادهٔ کودکان به اشخاص ثالث رضایت جداگانهٔ قابل‌احراز والدین لازم است؛ برنامهٔ امنیتی مکتوب با ارزیابی سالانهٔ ریسک الزامی است. FTC اعلام کرده قصد دارد قاطعانه اجرا کند.
 
 **[قضاوت] این، قابلیت «ضبط هر جلسه برای کنترل کیفیت» را برای شاگردان زیر ۱۳ سال — بدون طراحی دقیق و مبتنی بر رضایت — می‌کشد.** توجه کن قوانین ایالتی روی این انباشته می‌شوند: کالیفرنیا برای فروش/اشتراک دادهٔ زیر ۱۶ سال رضایت صریح می‌خواهد.
 
@@ -902,7 +902,7 @@ If you procure background checks, you are using consumer reports. Obligations in
 - **ADA / WCAG accessibility.**
 - **Mandatory reporter status** varies by state.
 
-** فارسی:**
+
 - **قوانین بررسی سوءپیشینه ایالت‌به‌ایالت متفاوت و در حال سخت‌تر شدن‌اند.** فلوریدا از ۱ ژوئیه ۲۰۲۶ برای مربیان سازمان‌های ورزشی خصوصی نوجوانان، غربالگری سطح ۲ مبتنی بر انگشت‌نگاری را الزامی کرده.
 - **بیمه:** مسئولیت عمومی؛ **پوشش سوءاستفاده و آزار معمولاً یک الحاقیهٔ جداگانه است و اغلب به‌صورت پیش‌فرض مستثنی شده.**
 - **درس در خانه، مسائل مسئولیت خودرو را فعال می‌کند.**
@@ -916,7 +916,7 @@ If you procure background checks, you are using consumer reports. Obligations in
 
 **[JUDGMENT] Regulations most likely to materially change the model: (a) a state deciding platform-vetted instructors are employees; (b) COPPA enforcement against a small edtech operator; (c) any state extending mandatory fingerprint screening to private instructors of minors — which would be *good* for a compliant incumbent and terrible for a startup.**
 
-** فارسی:** **[قضاوت] مقرراتی که بیشترین احتمال دارد مدل را اساساً تغییر دهند: (الف) اینکه ایالتی تصمیم بگیرد مدرسان غربال‌شدهٔ پلتفرم کارمند محسوب می‌شوند؛ (ب) اقدام اجرایی COPPA علیه یک اپراتور کوچک آموزشی؛ (ج) اینکه ایالتی غربالگری انگشت‌نگاری اجباری را به مدرسان خصوصی افراد زیر سن قانونی تعمیم دهد — که برای یک بازیگر مستقر و منطبق *خوب* و برای یک استارتاپ فاجعه است.**
+ **[قضاوت] مقرراتی که بیشترین احتمال دارد مدل را اساساً تغییر دهند: (الف) اینکه ایالتی تصمیم بگیرد مدرسان غربال‌شدهٔ پلتفرم کارمند محسوب می‌شوند؛ (ب) اقدام اجرایی COPPA علیه یک اپراتور کوچک آموزشی؛ (ج) اینکه ایالتی غربالگری انگشت‌نگاری اجباری را به مدرسان خصوصی افراد زیر سن قانونی تعمیم دهد — که برای یک بازیگر مستقر و منطبق *خوب* و برای یک استارتاپ فاجعه است.**
 
 ---
 
@@ -985,7 +985,7 @@ If you procure background checks, you are using consumer reports. Obligations in
 
 **Do not build:** practice studio marketplace · studio dashboard · certification programme · AI homework assistant · teacher tiers · anything "gamified" until you have 1,000 students.
 
-** فارسی:**
+
 
 **ضروری (MVP):** پروفایل معلم · جست‌وجو با فیلترهای سخت · رزرو + تقویم · پرداخت و تسویه · حساب‌های متعلق به والد · صف تأیید ادمین · پیام‌رسانی · نظرات پایه.
 
@@ -1002,7 +1002,7 @@ Benefits are real. But they bring unsupervised access to a minor in a private ho
 
 **[JUDGMENT] Add home lessons in year 2, only after you have incident reporting, abuse and molestation coverage, and enough volume that a single incident does not end the company.**
 
-** فارسی:** مزایا واقعی‌اند. اما با خودشان می‌آورند: دسترسی بدون نظارت به یک کودک در خانه‌ای خصوصی، زمان رفت‌وآمدی که بهره‌وری معلم را نابود می‌کند، محدودیت شعاعی که نقدشوندگی را تکه‌تکه می‌کند، مسئولیت خودرو، هرج‌ومرج لغو جلسات، و شدیدترین ریسک دنبالهٔ کل کسب‌وکار.
+ مزایا واقعی‌اند. اما با خودشان می‌آورند: دسترسی بدون نظارت به یک کودک در خانه‌ای خصوصی، زمان رفت‌وآمدی که بهره‌وری معلم را نابود می‌کند، محدودیت شعاعی که نقدشوندگی را تکه‌تکه می‌کند، مسئولیت خودرو، هرج‌ومرج لغو جلسات، و شدیدترین ریسک دنبالهٔ کل کسب‌وکار.
 
 **[قضاوت] درس در خانه را در سال دوم اضافه کن، فقط بعد از اینکه سیستم گزارش حادثه، پوشش بیمهٔ سوءاستفاده، و حجمی داری که یک حادثهٔ منفرد شرکت را تمام نکند.**
 
@@ -1013,7 +1013,7 @@ You would be adding a **third** cold-start problem with its own supply acquisiti
 
 **[JUDGMENT] This is the clearest "delete this" in the entire concept.** If you need neutral third-party space, partner with 3–5 studios per metro on a handshake and a flat monthly rate. Every hour spent on studio supply is an hour not spent on the only question that matters (CAC).
 
-** فارسی:** داری یک مسئلهٔ شروع سردِ **سوم** اضافه می‌کنی، با جذب عرضهٔ خودش، قیمت‌گذاری خودش، اختلافات غیبت و خسارت خودش، و تکه‌تکه‌شدگی جغرافیایی خودش — در ازای یک کارمزد رزرو کم‌حاشیه روی تراکنشی کم‌تکرار.
+ داری یک مسئلهٔ شروع سردِ **سوم** اضافه می‌کنی، با جذب عرضهٔ خودش، قیمت‌گذاری خودش، اختلافات غیبت و خسارت خودش، و تکه‌تکه‌شدگی جغرافیایی خودش — در ازای یک کارمزد رزرو کم‌حاشیه روی تراکنشی کم‌تکرار.
 
 **[قضاوت] این واضح‌ترین «حذفش کن» در کل ایده است.** اگر به فضای خنثای شخص ثالث نیاز داری، در هر کلان‌شهر با ۳ تا ۵ استودیو با یک دست دادن و یک نرخ ماهانهٔ ثابت شریک شو. هر ساعتی که صرف عرضهٔ استودیو کنی، ساعتی است که صرف تنها سؤال مهم (هزینهٔ جذب) نکرده‌ای.
 
@@ -1045,7 +1045,7 @@ You would be adding a **third** cold-start problem with its own supply acquisiti
 
 **[JUDGMENT] If you cannot make this work manually at 20 students, no amount of software makes it work at 2,000. The most common failure mode for technically strong founders is building the marketplace before discovering there is no demand for it. You have the engineering ability to build this whole thing — which is exactly why you must not, yet.**
 
-** فارسی:**
+
 
 **MVP یک بازارگاه نیست. یک لندینگ‌پیج است، یک شمارهٔ تلفن، یک صفحه‌گسترده، و خودت.**
 
@@ -1129,7 +1129,7 @@ It should feel like **a good private school's admissions office**, not like a di
 
 **Anti-patterns:** filter walls, "20 people viewed this profile today" urgency tricks, review-count vanity, enterprise dashboards.
 
-** فارسی:**
+
 
 باید حس **دفتر پذیرش یک مدرسهٔ خصوصی خوب** را بدهد، نه حس یک دایرکتوری.
 
@@ -1160,7 +1160,7 @@ It should feel like **a good private school's admissions office**, not like a di
 
 **[JUDGMENT] Stack: Next.js + Postgres (Supabase/Neon) + Stripe Connect + Vercel. Boring, fast, cheap, hireable. Given your background, you could build this in weeks — treat that as a liability to be managed, not an advantage to be spent.**
 
-** فارسی:**
+
 
 **از روز اول درست طراحی کن:**
 - **مدل داده:** والد ↔ شاگرد ↔ معلم ↔ جلسه ↔ پرداخت به‌عنوان موجودیت‌های درجه‌یک. تفکیک والد/شاگرد را همان اول درست کن — عقب‌گرد برای انطباق با COPPA عذاب است.
@@ -1194,7 +1194,7 @@ Replicate the playbook: 25 band directors, 10 retailers, 40 teachers. Introduce 
 ### Expansion (months 18+)
 Only after CAC < $90 at volume, 90-day retention > 70%, NPS > 50. Then metro #2 — and the honest test is whether it works **without you personally in it.**
 
-** فارسی:**
+
 
 ### پیش از لانچ (هفتهٔ ۱ تا ۶)
 ۲۵ مصاحبه: ۱۵ معلم، ۱۰ والد/بزرگسال. لندینگ‌پیج فعال. بودجهٔ تبلیغاتی کوچک صرفاً برای سنجش هزینهٔ جذب. تماس شخصی با ۳ رهبر موسیقی مدرسه و ۲ فروشگاه موسیقی. **معیار: هزینهٔ هر استعلام واجد شرایط.**
@@ -1274,7 +1274,7 @@ Only after CAC < $90 at volume, 90-day retention > 70%, NPS > 50. Then metro #2 
 
 **[JUDGMENT] Your two real moats are referral-relationship monopolies and teacher-side operational lock-in. Neither is the one you proposed.**
 
-** فارسی:**
+
 
 | خندق نامزد | واقعی؟ | ارزیابی |
 |---|---|---|
@@ -1319,7 +1319,7 @@ Only after CAC < $90 at volume, 90-day retention > 70%, NPS > 50. Then metro #2 
 
 **[JUDGMENT] #1, #4, #5 and #7 are correlated and together represent the most likely death: you build a good product, acquire students expensively in one metro through personal effort, and discover the effort doesn't transfer to metro two.**
 
-** فارسی:**
+
 
 | # | مکانیزم شکست | احتمال | اثر | کاهش ریسک |
 |---|---|---|---|---|
@@ -1411,7 +1411,7 @@ Only after CAC < $90 at volume, 90-day retention > 70%, NPS > 50. Then metro #2 
 6. **Verification becomes quiet hygiene, described not certified.** ID, criminal search, two reference calls, one recorded teaching sample, dated disclosure. Save $150 per teacher and all of the liability.
 7. **Delete:** practice studios, home lessons (year 1), self-serve search, certifications, AI matching, native apps, gamification.
 
-** فارسی:**
+
 
 ۱. **رابط کاربری بازارگاهی را حذف کن.** بدون جست‌وجو، بدون فیلتر، بدون مرور. فرم ورودی ← جفت‌سازی انسانی ← دو پیشنهاد با نام و با دلیل.
 ۲. **درآمدزایی را به حق جای‌دهی یک‌باره تغییر بده.** معلم بعد از جلسهٔ چهارم پرداخت می‌کند، بعد تا ابد ۱۰۰٪ را نگه می‌دارد.
@@ -1463,7 +1463,7 @@ Only after CAC < $90 at volume, 90-day retention > 70%, NPS > 50. Then metro #2 
 | **Failure** | ≥6 of 12 say their problem was finding anyone at all. |
 | **Decision** | Success → build the placement/continuity product. Failure → the discovery thesis may be alive; re-examine. |
 
-** فارسی:**
+
 
 | | |
 |---|---|
@@ -1484,7 +1484,7 @@ Only after CAC < $90 at volume, 90-day retention > 70%, NPS > 50. Then metro #2 
 | **Failure** | <8 say yes to either → supply is not acquirable on any terms you can afford. |
 | **Secondary** | Ask each: *"How many open lesson slots do you have right now?"* This measures whether supply-side pain is real. |
 
-** فارسی:**
+
 
 | | |
 |---|---|
@@ -1505,7 +1505,7 @@ Only after CAC < $90 at volume, 90-day retention > 70%, NPS > 50. Then metro #2 
 | **Failure** | Cost per booked trial > $250 **and** <2 referral partners → no viable acquisition channel exists. |
 | **Decision** | **This is the single go/no-go gate for the whole company.** |
 
-** فارسی:**
+
 
 | | |
 |---|---|
@@ -1525,7 +1525,7 @@ Only after CAC < $90 at volume, 90-day retention > 70%, NPS > 50. Then metro #2 
 | **Failure** | <4 completed trials, or trial→second-lesson conversion <40%. |
 | **Decision** | Success → build the product. Failure → the matching thesis is wrong; stop. |
 
-** فارسی:**
+
 
 | | |
 |---|---|
@@ -1594,7 +1594,7 @@ Ranked by Risk × Uncertainty × Importance. **Test 1, 2 and 3 first.**
 
 **[JUDGMENT] Assumption 7 separates "a good business" from "a venture business," and it is the only one you cannot test cheaply. Every investor will ask about it. Have an honest answer rather than a confident one.**
 
-** فارسی:** به ترتیب ریسک × عدم قطعیت × اهمیت. **اول ۱، ۲ و ۳ را تست کن.**
+ به ترتیب ریسک × عدم قطعیت × اهمیت. **اول ۱، ۲ و ۳ را تست کن.**
 
 | رتبه | فرض | ریسک | عدم قطعیت | اهمیت | تست |
 |---|---|---|---|---|---|
@@ -1690,7 +1690,7 @@ All four are measurable in 30 days for about $2,000. **Go measure them. Do not o
 
 **Not as a verified national teacher marketplace — that idea has a twenty-year graveyard and a differentiator that is neither defensible nor aimed at the real pain — but yes, conditionally, as a single-metro placement-and-continuity service that charges once for the introduction, lets teachers keep everything after, and sells families a guarantee that their child won't quit; build it only if a $2,000 thirty-day test shows you can acquire a student for under $90 and convert trials above 60%.**
 
-** فارسی:** **نه به‌عنوان یک بازارگاه سراسری معلمان تأییدشده — آن ایده یک گورستان بیست‌ساله دارد و وجه تمایزی که نه قابل دفاع است و نه به درد واقعی نشانه رفته — اما بله، مشروطاً، به‌عنوان یک سرویس جای‌دهی و تداوم در یک کلان‌شهر که فقط یک بار بابت معرفی پول می‌گیرد، بعدش همه‌چیز را برای معلم می‌گذارد، و به خانواده‌ها تضمین می‌فروشد که فرزندشان رها نمی‌کند؛ و آن را فقط در صورتی بساز که یک تست ۳۰ روزهٔ ۲۰۰۰ دلاری نشان دهد می‌توانی یک شاگرد را زیر ۹۰ دلار جذب کنی و بالای ۶۰٪ جلسات آزمایشی را تبدیل کنی.**
+ **نه به‌عنوان یک بازارگاه سراسری معلمان تأییدشده — آن ایده یک گورستان بیست‌ساله دارد و وجه تمایزی که نه قابل دفاع است و نه به درد واقعی نشانه رفته — اما بله، مشروطاً، به‌عنوان یک سرویس جای‌دهی و تداوم در یک کلان‌شهر که فقط یک بار بابت معرفی پول می‌گیرد، بعدش همه‌چیز را برای معلم می‌گذارد، و به خانواده‌ها تضمین می‌فروشد که فرزندشان رها نمی‌کند؛ و آن را فقط در صورتی بساز که یک تست ۳۰ روزهٔ ۲۰۰۰ دلاری نشان دهد می‌توانی یک شاگرد را زیر ۹۰ دلار جذب کنی و بالای ۶۰٪ جلسات آزمایشی را تبدیل کنی.**
 
 ---
 
