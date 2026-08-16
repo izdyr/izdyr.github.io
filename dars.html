@@ -1,0 +1,740 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مسیر — نقشه‌ی راه ۱۴۰۵ تا ۱۴۰۷</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#F6F8FF;
+    --card:#FFFFFF;
+    --ink:#161B33;
+    --ink-2:#5B6485;
+    --ink-3:#9AA2BF;
+    --line:#E7EAF6;
+
+    --c1:#FF9A1F;  --c1-s:#FFF3E0;
+    --c2:#12C2B0;  --c2-s:#DFF8F5;
+    --c3:#7B61FF;  --c3-s:#EDE9FF;
+    --c4:#FF4D74;  --c4-s:#FFE7ED;
+    --c5:#08C39A;  --c5-s:#DDF7EF;
+
+    --gold:#FFB800;
+    --sky:#3B8CFF;
+    --r:22px;
+    --shadow:0 2px 4px rgba(22,27,51,.04), 0 12px 28px rgba(22,27,51,.06);
+    --shadow-lift:0 4px 10px rgba(22,27,51,.06), 0 20px 44px rgba(22,27,51,.10);
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; direction:rtl; background:var(--bg); color:var(--ink);
+    font-family:'Vazirmatn',system-ui,sans-serif; font-size:15.5px; line-height:1.85;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .blooms{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden}
+  .bloom{position:absolute; border-radius:50%; filter:blur(90px); opacity:.5}
+  .b1{width:520px;height:520px;background:#FFD8A8;top:-160px;right:-120px}
+  .b2{width:460px;height:460px;background:#C6E4FF;top:34%;left:-160px}
+  .b3{width:520px;height:520px;background:#E2D9FF;top:66%;right:-180px}
+  .b4{width:420px;height:420px;background:#C9F5EA;top:92%;left:-120px}
+
+  .content{position:relative; z-index:1}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px}
+  .fd{font-family:'Fredoka',sans-serif; font-variant-numeric:tabular-nums}
+
+  .kicker{
+    display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:700;
+    letter-spacing:.03em; padding:6px 14px; border-radius:999px;
+    background:#fff; box-shadow:var(--shadow); margin-bottom:16px;
+  }
+  .kicker i{width:7px;height:7px;border-radius:50%;background:var(--c2);display:block}
+
+  /* ═══ HERO ═══ */
+  header{padding:52px 0 30px}
+  .hero{
+    background:var(--card); border-radius:30px; padding:38px 40px;
+    box-shadow:var(--shadow-lift); display:grid;
+    grid-template-columns:1.1fr auto; gap:44px; align-items:center;
+  }
+  h1{font-size:clamp(34px,5vw,52px); font-weight:900; margin:0 0 12px; letter-spacing:-.03em; line-height:1.1}
+  .hero p{margin:0; color:var(--ink-2); font-size:16px; max-width:46ch}
+  .countdown{display:flex; align-items:baseline; gap:10px; margin:0 0 6px}
+  .countdown .n{font-family:'Fredoka',sans-serif; font-weight:700; font-size:58px; line-height:1;
+    background:linear-gradient(135deg,var(--c1),var(--c4) 55%,var(--c3));
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .countdown .u{font-size:15px; color:var(--ink-2); font-weight:600}
+
+  /* rings */
+  .rings{position:relative; width:200px; height:200px; flex:none}
+  .rings svg{transform:rotate(-90deg)}
+  .rings-mid{position:absolute; inset:0; display:grid; place-content:center; text-align:center}
+  .rings-mid .v{font-family:'Fredoka',sans-serif; font-size:30px; font-weight:700; line-height:1}
+  .rings-mid .l{font-size:10.5px; color:var(--ink-3); font-weight:600}
+  .ring-key{display:flex; gap:14px; justify-content:center; margin-top:14px; flex-wrap:wrap}
+  .ring-key span{display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink-2); font-weight:600}
+  .ring-key i{width:9px;height:9px;border-radius:50%}
+
+  /* stat strip */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:18px}
+  .stat{background:var(--card); border-radius:18px; padding:16px 18px; box-shadow:var(--shadow)}
+  .stat .k{font-size:11px; color:var(--ink-3); font-weight:600; margin-bottom:3px}
+  .stat .v{font-size:19px; font-weight:800; line-height:1.3}
+  .stat .v small{font-size:12px; font-weight:600; color:var(--ink-2)}
+
+  /* ═══ sections ═══ */
+  section{padding:52px 0}
+  h2{font-size:clamp(24px,3.2vw,32px); font-weight:900; margin:0 0 8px; letter-spacing:-.025em}
+  .sub{color:var(--ink-2); max-width:68ch; margin:0 0 26px; font-size:15.5px}
+
+  .card{background:var(--card); border-radius:var(--r); padding:26px 28px; box-shadow:var(--shadow)}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+
+  table{width:100%; border-collapse:collapse; font-size:14px}
+  th{text-align:right; font-size:11px; color:var(--ink-3); font-weight:700; padding:0 14px 12px; border-bottom:2px solid var(--line)}
+  td{padding:14px; border-bottom:1px solid var(--line); vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .tw{overflow-x:auto} .tw table{min-width:580px}
+  .pill{display:inline-block; padding:3px 11px; border-radius:999px; font-size:11.5px; font-weight:700}
+  .p-no{background:#FFE7ED; color:#D62E55} .p-ok{background:#DDF7EF; color:#07926F}
+  .p-mid{background:#FFF3E0; color:#C4700A}
+
+  /* highlight card */
+  .flag{
+    background:linear-gradient(135deg,#FFF6E6,#FFFDF7); border-radius:var(--r);
+    padding:26px 28px; box-shadow:var(--shadow); border:2px solid #FFE3AE;
+  }
+  .flag .t{font-weight:800; font-size:17px; margin-bottom:8px; display:flex; gap:9px; align-items:center}
+  .flag .t span{font-size:20px}
+  .flag p{margin:0; color:#6B5220; font-size:14.5px; line-height:1.85}
+  .flag b{color:#3F2E08}
+
+  /* routes */
+  .route{background:var(--card); border-radius:var(--r); padding:26px; box-shadow:var(--shadow); position:relative; overflow:hidden}
+  .route::before{content:''; position:absolute; top:0; inset-inline:0; height:5px}
+  .route.a::before{background:var(--sky)} .route.b::before{background:linear-gradient(90deg,var(--c1),var(--c4),var(--c3))}
+  .route.b{box-shadow:0 6px 14px rgba(123,97,255,.10), 0 24px 48px rgba(123,97,255,.14)}
+  .route h3{margin:8px 0 3px; font-size:19px; font-weight:800}
+  .route .when{font-size:12.5px; color:var(--ink-3); font-weight:600; margin-bottom:16px}
+  .route dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:9px 16px; font-size:13.5px}
+  .route dt{color:var(--ink-3); font-size:11.5px; font-weight:700; align-self:center}
+  .route dd{margin:0; font-weight:600}
+  .meter{height:7px; border-radius:99px; background:var(--line); margin-top:6px; overflow:hidden}
+  .meter i{display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,var(--c1),var(--c4))}
+  .route.a .meter i{background:var(--sky)}
+  .tag-star{position:absolute; top:16px; inset-inline-start:20px; font-size:11px; font-weight:800;
+    background:linear-gradient(135deg,var(--c3),var(--c4)); color:#fff; padding:4px 12px; border-radius:999px}
+
+  /* backpack */
+  .packs{display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:16px}
+  .pack{background:var(--card); border-radius:20px; padding:20px; box-shadow:var(--shadow); transition:transform .25s, box-shadow .25s}
+  .pack:hover{transform:translateY(-4px); box-shadow:var(--shadow-lift)}
+  .pack .emo{font-size:26px; line-height:1; margin-bottom:10px; display:block}
+  .pack .nm{font-weight:800; font-size:15.5px; margin-bottom:4px}
+  .pack .ds{font-size:13px; color:var(--ink-2); line-height:1.7; margin-bottom:12px}
+
+  /* ═══ THE PATH ═══ */
+  .path{position:relative; padding:12px 0 40px}
+  #trail{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:visible}
+  .item{position:relative; z-index:1; display:flex; justify-content:center; margin-bottom:26px}
+
+  .banner{
+    background:var(--card); border-radius:26px; padding:20px 28px; box-shadow:var(--shadow-lift);
+    max-width:640px; width:100%; text-align:center; border-top:6px solid var(--ink);
+  }
+  .banner .st{font-size:11.5px; font-weight:800; letter-spacing:.04em; margin-bottom:4px}
+  .banner h3{margin:0 0 4px; font-size:23px; font-weight:900; letter-spacing:-.02em}
+  .banner .dt{font-size:12.5px; color:var(--ink-3); font-weight:600; margin-bottom:10px}
+  .banner p{margin:0 0 14px; font-size:14px; color:var(--ink-2); line-height:1.8; text-align:right}
+  .banner .prog{display:flex; align-items:center; gap:12px; justify-content:center}
+  .banner .prog .meter{flex:1; max-width:260px; margin:0}
+  .banner .prog .pct{font-family:'Fredoka',sans-serif; font-weight:700; font-size:15px}
+
+  .node-row{position:relative; z-index:1; display:flex; align-items:center; gap:16px; margin-bottom:22px; width:100%}
+  .node{
+    width:62px; height:62px; border-radius:50%; flex:none; cursor:pointer; border:none;
+    display:grid; place-content:center; font-family:'Fredoka',sans-serif; font-weight:700;
+    font-size:22px; color:#fff; position:relative; transition:transform .22s cubic-bezier(.34,1.6,.64,1), box-shadow .22s;
+    background:#DFE3F2; box-shadow:0 5px 0 #C7CDE4;
+  }
+  .node:hover{transform:translateY(-3px)}
+  .node:active{transform:translateY(2px); box-shadow:0 2px 0 #C7CDE4}
+  .node:focus-visible{outline:3px solid var(--sky); outline-offset:4px}
+  .node.done::after{content:'✓'; font-size:26px}
+  .node.due{animation:breathe 2.6s ease-in-out infinite}
+  .node.late{background:#FFD3DE !important; box-shadow:0 5px 0 #FFA9BF !important; color:#D62E55}
+  .node.late::after{content:'!'}
+  @keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+  .node-label{
+    background:var(--card); border-radius:16px; padding:12px 18px; box-shadow:var(--shadow);
+    flex:1; cursor:pointer; transition:transform .2s, box-shadow .2s; min-width:0;
+  }
+  .node-label:hover{transform:translateX(-4px); box-shadow:var(--shadow-lift)}
+  .node-label .tx{font-weight:700; font-size:14.5px; line-height:1.5}
+  .node-label .mt{display:flex; gap:10px; align-items:center; margin-top:3px; flex-wrap:wrap}
+  .node-label .dd{font-size:11.5px; color:var(--ink-3); font-weight:600}
+  .chip-key{font-size:10px; font-weight:800; padding:2px 9px; border-radius:999px; background:var(--c1-s); color:#C4700A}
+  .node-note{
+    margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);
+    font-size:13px; color:var(--ink-2); line-height:1.75; display:none;
+  }
+  .node-label.open .node-note{display:block}
+  .node-row.done .node-label .tx{color:var(--ink-3); text-decoration:line-through; text-decoration-color:var(--ink-3)}
+
+  .gate-row{position:relative; z-index:1; display:flex; justify-content:center; margin-bottom:26px}
+  .gate{
+    background:var(--card); border-radius:24px; padding:22px 26px; max-width:600px; width:100%;
+    box-shadow:var(--shadow); border:2px dashed var(--line); text-align:center; transition:.35s;
+  }
+  .gate.open{border:2px solid var(--gold); background:linear-gradient(135deg,#FFFBF0,#fff);
+    box-shadow:0 6px 16px rgba(255,184,0,.16), 0 22px 44px rgba(255,184,0,.14)}
+  .gate .ic{font-size:30px; line-height:1; margin-bottom:6px}
+  .gate .lb{font-size:11px; font-weight:800; color:var(--ink-3); letter-spacing:.05em}
+  .gate h4{margin:4px 0 8px; font-size:17px; font-weight:800}
+  .gate p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.8; text-align:right}
+  .gate .badge{margin-top:12px; display:inline-block; font-size:12px; font-weight:800; padding:5px 16px; border-radius:999px; background:var(--line); color:var(--ink-3)}
+  .gate.open .badge{background:var(--gold); color:#fff}
+
+  .side{
+    position:relative; z-index:1; max-width:640px; margin:0 auto 26px;
+    background:linear-gradient(135deg,#EAF3FF,#F7FBFF); border-radius:20px; padding:18px 24px;
+    border:1px solid #D3E6FF;
+  }
+  .side .lb{font-size:10.5px; font-weight:800; color:var(--sky); letter-spacing:.05em; margin-bottom:5px}
+  .side h4{margin:0 0 5px; font-size:15.5px; font-weight:800}
+  .side p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.8}
+
+  /* accordion */
+  .qa{background:var(--card); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
+  details{border-bottom:1px solid var(--line)}
+  details:last-child{border-bottom:none}
+  summary{padding:18px 24px; cursor:pointer; list-style:none; display:flex; align-items:center; gap:14px; font-weight:700; font-size:15px}
+  summary::-webkit-details-marker{display:none}
+  summary .em{font-size:20px; flex:none}
+  summary:hover{background:#FAFBFF}
+  summary .arw{margin-inline-start:auto; color:var(--ink-3); transition:transform .3s; flex:none}
+  details[open] summary .arw{transform:rotate(180deg)}
+  .ans{padding:0 24px 22px 68px; font-size:14px; color:var(--ink-2); line-height:1.9}
+  .ans b{color:var(--ink); font-weight:700}
+
+  /* watch out */
+  .warn{background:var(--card); border-radius:20px; padding:24px; box-shadow:var(--shadow); border-top:5px solid var(--c4)}
+  .warn .em{font-size:26px; display:block; margin-bottom:10px}
+  .warn h4{margin:0 0 7px; font-size:16px; font-weight:800}
+  .warn p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.75}
+
+  .now{background:linear-gradient(135deg,var(--c3),#9E7BFF 45%,var(--c4)); border-radius:28px; padding:34px 36px; color:#fff; box-shadow:0 20px 50px rgba(123,97,255,.3)}
+  .now h2{color:#fff; margin-bottom:6px}
+  .now .sub{color:rgba(255,255,255,.9); margin-bottom:20px}
+  .now ol{margin:0; padding-inline-start:22px}
+  .now li{margin-bottom:12px; font-size:15.5px; line-height:1.75}
+  .now li::marker{font-weight:800}
+
+  footer{padding:44px 0 70px; text-align:center; color:var(--ink-3); font-size:12.5px}
+  .reset{background:#fff; border:1px solid var(--line); color:var(--ink-3); padding:9px 20px; border-radius:999px;
+    font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer; margin-top:14px}
+  .reset:hover{border-color:var(--c4); color:var(--c4)}
+
+  .spark{position:fixed; width:9px; height:9px; border-radius:50%; pointer-events:none; z-index:99}
+
+  .rv{opacity:0; transform:translateY(18px)}
+  .rv.in{opacity:1; transform:none; transition:opacity .6s ease, transform .6s cubic-bezier(.22,1,.36,1)}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr; gap:28px; padding:28px 24px; justify-items:center; text-align:center}
+    .hero p{text-align:right}
+    .countdown{justify-content:center}
+    .stats{grid-template-columns:1fr 1fr}
+    .grid2,.grid3{grid-template-columns:1fr}
+    .wrap{padding:0 16px}
+    section{padding:38px 0}
+    .node{width:54px;height:54px;font-size:19px}
+    .ans{padding-inline-start:24px}
+    .banner{padding:18px 20px}
+    #trail{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important; animation:none!important}
+    .rv{opacity:1; transform:none} html{scroll-behavior:auto}
+  }
+</style>
+
+<div class="blooms"><i class="bloom b1"></i><i class="bloom b2"></i><i class="bloom b3"></i><i class="bloom b4"></i></div>
+<div class="content">
+
+<header>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <span class="kicker"><i></i>نقشه‌ی راه · شهریور ۱۴۰۵ تا شهریور ۱۴۰۷</span>
+        <div class="countdown"><span class="n fd" id="cd">—</span><span class="u">روز تا شروع<br>سال اول دانشگاه</span></div>
+        <h1>مسیر</h1>
+        <p>یک هدف، ۳۹ قدم، سه دروازه. هر قدمی که تمام می‌کنی همین‌جا روشن می‌شود. اگر مسیر عوض شد هم اشکالی ندارد — راه‌های جایگزین از قبل کشیده شده‌اند.</p>
+      </div>
+
+      <div>
+        <div class="rings">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="86" fill="none" stroke="var(--c3)" stroke-opacity=".13" stroke-width="17"/>
+            <circle cx="100" cy="100" r="64" fill="none" stroke="var(--c1)" stroke-opacity=".13" stroke-width="17"/>
+            <circle cx="100" cy="100" r="42" fill="none" stroke="var(--c2)" stroke-opacity=".13" stroke-width="17"/>
+            <circle id="rTotal" cx="100" cy="100" r="86" fill="none" stroke="var(--c3)" stroke-width="17" stroke-linecap="round" stroke-dasharray="540" stroke-dashoffset="540"/>
+            <circle id="rPace"  cx="100" cy="100" r="64" fill="none" stroke="var(--c1)" stroke-width="17" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"/>
+            <circle id="rPhase" cx="100" cy="100" r="42" fill="none" stroke="var(--c2)" stroke-width="17" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264"/>
+          </svg>
+          <div class="rings-mid"><div class="v fd" id="ringPct">۰٪</div><div class="l">کل مسیر</div></div>
+        </div>
+        <div class="ring-key">
+          <span><i style="background:var(--c3)"></i>کل</span>
+          <span><i style="background:var(--c1)"></i>به‌موقع بودن</span>
+          <span><i style="background:var(--c2)"></i>فاز جاری</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="k">امروز</div><div class="v" id="sToday">—</div></div>
+      <div class="stat"><div class="k">الان کجایی</div><div class="v" id="sPhase">—</div></div>
+      <div class="stat"><div class="k">دروازه‌ی بعدی</div><div class="v" id="sGate">—</div></div>
+      <div class="stat"><div class="k">قدم‌های عقب‌افتاده</div><div class="v" id="sLate">—</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- WHY -->
+<section class="rv">
+  <div class="wrap">
+    <span class="kicker"><i style="background:var(--c1)"></i>چرا مسیر این شکلی است</span>
+    <h2>یک عدد که همه‌چیز را عوض کرد</h2>
+    <p class="sub">هدف اولیه‌ات پایه‌ی دوازدهم در خارج با بورسیه‌ی کامل بود. وقتی تاریخ‌ها را کنار هم گذاشتیم، یک تعارض ساده بیرون آمد — و همان تعارض، مسیر بهتری را نشان داد.</p>
+
+    <div class="card tw">
+      <table>
+        <thead><tr><th>چه اتفاقی</th><th>چقدر طول می‌کشد</th><th>کِی آماده می‌شود</th></tr></thead>
+        <tbody>
+          <tr><td>آیلتس، از سطح فعلی</td><td class="fd">۶ ماه+</td><td class="fd">اسفند ۱۴۰۵</td></tr>
+          <tr><td>مهلت بورسیه‌های کامل مدارس خصوصی</td><td>—</td><td class="fd">آذر ۱۴۰۵ <span class="pill p-no">زودتر از آیلتس</span></td></tr>
+          <tr><td>مهلت اولویت‌دار بردهای دولتی کانادا</td><td>—</td><td class="fd">دی تا اسفند ۱۴۰۵</td></tr>
+          <tr><td>صدور پذیرش پس از اپلای</td><td class="fd">۴–۸ هفته</td><td class="fd">اردیبهشت ۱۴۰۶</td></tr>
+          <tr><td>اقامت تحصیلی کانادا برای ایرانی‌ها</td><td class="fd">۸–۱۲ هفته + بررسی امنیتی</td><td class="fd">خرداد تا مرداد ۱۴۰۶</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flag" style="margin-top:20px">
+      <div class="t"><span>🔑</span>کلید ماجرا</div>
+      <p>بورسیه‌ی کامل در سطح <b>دبیرستان</b> تقریباً وجود ندارد. در سطح <b>کارشناسی</b> هر سال داده می‌شود. و مهم‌تر: بورسیه‌ی کامل تورنتو (Lester B. Pearson) با اپلای فردی به دست نمی‌آید — <b>مدرسه‌ی خودت باید تو را نامزد کند، و هر مدرسه سالی فقط یک نفر معرفی می‌کند.</b> اگر دوازدهم را در تورنتو بخوانی، برای آن یک جایگاه با ده‌ها نفر رقابت می‌کنی. اگر در مدرسه‌ی خودت بمانی، با Rondo و سَمباد و ۱۱ سال فلوت، نامزد یکتای مدرسه‌ات هستی. یعنی <b>ماندن، شانست را بیشتر می‌کند، نه کمتر.</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- DESTINATIONS -->
+<section class="rv">
+  <div class="wrap">
+    <span class="kicker"><i style="background:var(--c2)"></i>سه مقصد</span>
+    <h2>کجا در دسترس است</h2>
+    <p class="sub">اعداد مربوط به اوت ۲۰۲۶ است. سیاست‌های ویزا سالانه تغییر می‌کنند و باید در هر دروازه دوباره چک شوند.</p>
+    <div class="card tw">
+      <table>
+        <thead><tr><th>مقصد</th><th>ویزا برای ایرانی</th><th>هزینه‌ی سالانه</th><th>شانس بورسیه‌ی کامل</th></tr></thead>
+        <tbody>
+          <tr><td><b>🇺🇸 آمریکا</b></td><td>بسته. فرمان ۱۰۹۹۸ از ژانویه ۲۰۲۶؛ برخلاف ۲۰۱۷، این بار F-1 هم مشمول است. سفارت کشور ثالث راه‌حل نیست. هر ۱۸۰ روز بازبینی می‌شود.</td><td class="fd">$۴۵–۷۰ هزار</td><td><span class="pill p-no">فعلاً بی‌فایده</span></td></tr>
+          <tr><td><b>🇬🇧 انگلستان</b></td><td>باز. ویزای Child Student + قیم مقیم الزامی.</td><td class="fd">£۴۰–۶۷ هزار</td><td><span class="pill p-mid">۱۰٪ تا ۵۰٪ فقط</span></td></tr>
+          <tr><td><b>🇨🇦 کانادا</b></td><td>باز و فعال. بیش از ۲۳ هزار ایرانی با اقامت تحصیلی معتبر. پرونده از آنکارا، معاینه در لندن.</td><td class="fd">$۲۰–۳۲ هزار دولتی</td><td><span class="pill p-ok">کارشناسی: واقعی</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ROUTES -->
+<section class="rv">
+  <div class="wrap">
+    <span class="kicker"><i style="background:var(--c3)"></i>دو مسیر</span>
+    <h2>انتخاب اصلی</h2>
+    <p class="sub">مسیر B محور برنامه است. مسیر A فقط اگر خانواده بودجه‌اش را تأیید کرد اضافه می‌شود — و باید بدانی که به هدف نهایی کمکی نمی‌کند.</p>
+    <div class="grid2">
+      <div class="route a">
+        <h3>🛫 A · دوازدهم در کانادا</h3>
+        <div class="when">سپتامبر ۲۰۲۷ — یک سال زودتر رفتن</div>
+        <dl>
+          <dt>هزینه</dt><dd class="fd">۲۵ تا ۳۲ هزار دلار کانادا</dd>
+          <dt>بورسیه</dt><dd>عملاً هیچ</dd>
+          <dt>گلوگاه</dt><dd>بودجه، نه استعداد</dd>
+          <dt>شانس</dt><dd>۴۵٪<div class="meter"><i style="width:45%"></i></div></dd>
+        </dl>
+      </div>
+      <div class="route b">
+        <span class="tag-star">★ محور</span>
+        <h3>🎓 B · دوازدهم در ایران، کارشناسی با بورسیه‌ی کامل</h3>
+        <div class="when">سپتامبر ۲۰۲۸ — شهریه، کتاب و خوابگاه، چهار سال</div>
+        <dl>
+          <dt>هزینه</dt><dd class="fd">۲ تا ۴ هزار دلار (فقط فرآیند)</dd>
+          <dt>بورسیه</dt><dd>۱۰۰٪ واقعی</dd>
+          <dt>گلوگاه</dt><dd>نامزدی مدرسه + روایت</dd>
+          <dt>شانس</dt><dd>۳۰–۴۰٪ بورسیه · ۸۵٪ پذیرش<div class="meter"><i style="width:38%"></i></div></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BACKPACK -->
+<section class="rv">
+  <div class="wrap">
+    <span class="kicker"><i style="background:var(--c4)"></i>کوله‌پشتی</span>
+    <h2>چیزهایی که همین حالا داری</h2>
+    <p class="sub">معیارهای بورسیه‌های سطح بالا: دستاورد تحصیلی، خلاقیت، رهبری، و تأثیر واقعی بر مدرسه و جامعه. تو بیشترشان را داری — فقط هنوز هیچ‌کدام سند ندارند.</p>
+    <div class="packs">
+      <div class="pack"><span class="emo">📱</span><div class="nm">Rondo</div><div class="ds">اپ iOS کامل با SwiftUI و SwiftData. بیشترین اهرم کل پرونده — به شرط انتشار.</div><span class="pill p-mid">منتشر نشده</span></div>
+      <div class="pack"><span class="emo">📚</span><div class="nm">سَمباد</div><div class="ds">اپ آموزشی که برای کمک به یک هم‌کلاسی ساختی. ۴۲۵ آیتم واقعی. قوی‌ترین داستان تو.</div><span class="pill p-mid">بدون سند</span></div>
+      <div class="pack"><span class="emo">🪈</span><div class="nm">فلوت و آنسامبل</div><div class="ds">۱۱ سال، کنسرت‌های اجراشده، پوستر و طراحی. عمقی که کمتر متقاضی‌ای دارد.</div><span class="pill p-mid">بدون نقش رسمی</span></div>
+      <div class="pack"><span class="emo">🛠️</span><div class="nm">کارنامه‌ی ساخت</div><div class="ds">Lumen، Valeh School، Lozi، Harmonic Field. الگوی تکرارشونده‌ی ساختن برای دیگران.</div><span class="pill p-ok">قوی</span></div>
+      <div class="pack"><span class="emo">🗣️</span><div class="nm">دو زبان</div><div class="ds">فارسی و انگلیسی. آیلتس عددش را رسمی می‌کند.</div><span class="pill p-mid">در راه</span></div>
+      <div class="pack"><span class="emo">📐</span><div class="nm">ریاضی‌فیزیک</div><div class="ds">نیازمند اثبات عددی: معدل بالای ۱۹ و حداقل یک مسابقه‌ی معتبر.</div><span class="pill p-mid">اثبات‌نشده</span></div>
+    </div>
+
+    <div class="flag" style="margin-top:22px">
+      <div class="t"><span>🧵</span>یک خط، نه یک فهرست</div>
+      <p>کمیته‌ها فهرست نمی‌خوانند، الگو می‌خوانند. روایت مرکزی‌ات آماده است و کاملاً واقعی: <b>«ابزار می‌سازم تا مسئله‌ی واقعیِ آدم‌های اطرافم را حل کنم.»</b> سَمباد برای امتحان یک دوست، Rondo برای تمرین موسیقی، Valeh School برای یک مدرسه، پوستر برای کنسرت آنسامبل. هر چیز جدیدی که اضافه می‌کنی باید روی همین خط بنشیند.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PATH -->
+<section class="rv">
+  <div class="wrap">
+    <span class="kicker"><i style="background:var(--c5)"></i>نقشه</span>
+    <h2>مسیر</h2>
+    <p class="sub">روی هر دایره بزن تا انجام‌شده علامت بخورد، و روی متن بزن تا جزئیاتش باز شود. دایره‌هایی که نبض می‌زنند نوبتشان الان است. حلقه‌های بالای صفحه با هر قدم به‌روز می‌شوند.</p>
+    <div class="path" id="path"><svg id="trail" preserveAspectRatio="none"></svg></div>
+  </div>
+</section>
+
+<!-- PROTOCOLS -->
+<section class="rv">
+  <div class="wrap">
+    <div class="grid2">
+      <div>
+        <span class="kicker"><i style="background:var(--c2)"></i>هر هفته</span>
+        <h2 style="font-size:25px">ریتم هفتگی</h2>
+        <p class="sub">یک قانون: هیچ هفته‌ای بدون یک خروجی قابل‌نمایش تمام نمی‌شود.</p>
+        <div class="card tw">
+          <table>
+            <tbody>
+              <tr><td style="width:36%"><b>شنبه تا چهارشنبه</b></td><td>۴۵ دقیقه انگلیسی، صبح — ۲۰ دقیقه Reading، ۱۵ دقیقه Listening، ۱۰ دقیقه واژگان</td></tr>
+              <tr><td><b>پنجشنبه</b></td><td>۳ ساعت روی پروژه: کد زدن، نوشتن، یا مستندسازی عمومی کار</td></tr>
+              <tr><td><b>جمعه</b></td><td>یک Writing Task 2 کامل + مرور هفته</td></tr>
+              <tr><td><b>اول هر ماه</b></td><td>برگرد به این صفحه. دروازه‌ی بعدی در مسیر است؟</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <span class="kicker"><i style="background:var(--c4)"></i>خیلی زود شروع کن</span>
+        <h2 style="font-size:25px">پول و تحریم</h2>
+        <p class="sub">این بخش بیشترین پرونده‌ها را از پا درمی‌آورد، چون همیشه دیر به آن رسیدگی می‌شود.</p>
+        <div class="card tw">
+          <table>
+            <tbody>
+              <tr><td style="width:36%"><b>دسترسی ارزی</b></td><td>حساب خارج از ایران یا واسطه‌ی مورد اعتماد خانوادگی. دو ماه قبل از اولین نیاز حل شود.</td></tr>
+              <tr><td><b>موارد ارزی</b></td><td>ثبت‌نام آیلتس، اپلیکیشن فی، ارزیابی مدرک، اقامت تحصیلی، بیمه، بلیت</td></tr>
+              <tr><td><b>ارزیابی مدرک</b></td><td>از ایران ۱۸ تا ۲۰ هفته، به‌جای ۱۲ هفته‌ی استاندارد</td></tr>
+              <tr><td><b>تمکن مالی</b></td><td>سالانه حداقل ۲۳ هزار دلار کانادا برای زندگی، جدا از شهریه. نامه‌ی بورسیه بیشترش را پوشش می‌دهد.</td></tr>
+              <tr><td><b>امنیت</b></td><td>هرگز واسطه‌ی ناشناس اینترنتی. فقط شبکه‌ی خانوادگی.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IF -->
+<section class="rv">
+  <div class="wrap">
+    <span class="kicker"><i style="background:var(--sky)"></i>اگر چیزی طبق نقشه پیش نرفت</span>
+    <h2>هیچ‌کدام پایان مسیر نیست</h2>
+    <p class="sub">برای هر سناریو از قبل یک جواب هست. روی هرکدام بزن.</p>
+    <div class="qa">
+      <details><summary><span class="em">📝</span>آیلتس زیر ۶.۵ شد<span class="arw">⌄</span></summary><div class="ans">آزمون دوم در اردیبهشت ۱۴۰۶ — <b>فرصتش از قبل در برنامه دیده شده و روی نقشه هست</b>. استفاده از آن شکست نیست، بخشی از طراحی است. اگر بار دوم هم نشد، لیست دانشگاه‌ها را به سمت جاهایی می‌بری که آستانه‌ی زبانشان پایین‌تر است یا آزمون داخلی می‌گیرند.</div></details>
+      <details><summary><span class="em">💸</span>خانواده بودجه‌ی مسیر A را نداشت<span class="arw">⌄</span></summary><div class="ans">مسیر A حذف می‌شود و <b>هیچ ضرری به هدف نهایی نمی‌خورد</b>. حتی شانس نامزدی‌ات را بالا می‌برد، چون در دبیرستان خودت باقی می‌مانی. این حذف نویز است، نه شکست.</div></details>
+      <details><summary><span class="em">🏫</span>مدرسه نامزدی را انجام نداد<span class="arw">⌄</span></summary><div class="ans">به همین دلیل لیست دانشگاه‌ها <b>سه‌لایه</b> است. بورسیه‌هایی که به نامزدی مدرسه نیاز ندارند — مثل برنامه‌های کمک‌هزینه‌ی کلان UBC و هم‌رده‌هایش — جایگزین می‌شوند. راه پیشگیری: یادداشت یک‌صفحه‌ای برای مدیر، در فاز ۳، <b>یک سال زودتر از مهلت</b>.</div></details>
+      <details><summary><span class="em">🎯</span>پذیرش گرفتی ولی بورسیه‌ی کامل نه<span class="arw">⌄</span></summary><div class="ans">آن‌وقت گفت‌وگو عوض می‌شود: پذیرش در دست داری و بحث سر مبلغ است، نه سر بله یا نه. کمک‌هزینه‌های جزئی، درخواست تجدیدنظر مالی، و کار پاره‌وقت مجاز دانشجویی روی هم می‌توانند شکاف را ببندند. اگر باز هم نشد، یک سال gap با تمرکز روی انتشار پروژه‌ی دوم و اپلای مجدد با پرونده‌ی قوی‌تر.</div></details>
+      <details><summary><span class="em">🛂</span>اقامت تحصیلی رد شد<span class="arw">⌄</span></summary><div class="ans">رد شدن یک‌بار پایان نیست. دلیل را از GCMS notes بگیر و دقیقاً همان نقطه را ترمیم کن، بعد دوباره اپلای کن. <b>به همین دلیل باید بلافاصله پس از پذیرش اقدام کنی</b> — تا فرصت اپلای دوم قبل از سپتامبر باقی بماند.</div></details>
+      <details><summary><span class="em">🎉</span>ممنوعیت ویزای آمریکا برداشته شد<span class="arw">⌄</span></summary><div class="ans">این سناریوی خوب است و باید برایش آماده باشی. ممنوعیت هر ۱۸۰ روز بازبینی می‌شود. اگر برداشته شد، دانشگاه‌های آمریکایی با سیاست full-need وارد لیست می‌شوند. <b>چون آیلتس، Rondo منتشرشده و توصیه‌نامه‌ها را از قبل داری، در چند هفته می‌توانی اپلای کنی</b> — و آشناهایت آنجا دقیقاً همین‌جا به کار می‌آیند.</div></details>
+      <details><summary><span class="em">🪂</span>هیچ‌کدام نشد<span class="arw">⌄</span></summary><div class="ans">دیپلم و کنکور در ایران به‌عنوان لایه‌ی امن، و اپلای برای کارشناسی ارشد در خارج — که در آن سطح بورسیه‌ی کامل به‌مراتب فراوان‌تر است. <b>داشتن این لایه از امروز، ترس را از کل پروژه برمی‌دارد</b> و به تو اجازه می‌دهد بدون نگرانی ریسک کنی.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- WATCH OUT -->
+<section class="rv">
+  <div class="wrap">
+    <span class="kicker"><i style="background:var(--c1)"></i>حواست باشد</span>
+    <h2>سه چیزی که می‌توانند مسیر را بخوابانند</h2>
+    <p class="sub">هیچ‌کدام به استعداد ربط ندارد. هر سه به رفتار ربط دارند.</p>
+    <div class="grid3">
+      <div class="warn"><span class="em">⏳</span><h4>صبر کردن برای «آماده شدن»</h4><p>Rondo هیچ‌وقت کامل نمی‌شود. یک اپ روی App Store با کاربر واقعی، ادعایی است که می‌شود چک کرد. یک پروژه روی لپ‌تاپ، نیست.</p></div>
+      <div class="warn"><span class="em">🧺</span><h4>جمع کردن فعالیت به‌جای ساختن روایت</h4><p>سه کار با یک خط منسجم از ده کار پراکنده قوی‌تر است. هر فعالیت جدید باید روی همان خط بنشیند، وگرنه اضافه‌بار است.</p></div>
+      <div class="warn"><span class="em">📄</span><h4>دیر رسیدگی به کارهای اداری</h4><p>پاسپورت، ترجمه‌ی ریزنمرات، مسیر پرداخت ارزی. هیچ‌کدام بیش از چند ساعت کار ندارند، و دقیقاً به همین دلیل عقب می‌افتند.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- NOW -->
+<section class="rv">
+  <div class="wrap">
+    <div class="now">
+      <span class="kicker" style="background:rgba(255,255,255,.2); color:#fff; box-shadow:none"><i style="background:#fff"></i>شروع، همین حالا</span>
+      <h2>این هفته</h2>
+      <p class="sub">چهار کار. هیچ‌کدام بیش از یک بعدازظهر وقت نمی‌برد. هر چهار تا ماه‌های بعد را ممکن می‌کنند.</p>
+      <ol>
+        <li>اعتبار پاسپورتت را چک کن. اگر نداری یا زیر سه سال اعتبار دارد، همین هفته اقدام کن.</li>
+        <li>برای Rondo یک تاریخ انتشار روی تقویم بگذار: <b>۳۰ آذر ۱۴۰۵</b>. تاریخ را به کسی بگو تا واقعی شود.</li>
+        <li>مسیر پرداخت ارزی را با خانواده مطرح کن. فقط طرح مسئله، نه حل کامل.</li>
+        <li>یک جلسه با مدیر مدرسه بگیر و بورسیه‌های نامزدی‌محور را معرفی کن.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>اعداد و تاریخ‌ها بر اساس اطلاعات اوت ۲۰۲۶. مهلت‌ها و سیاست‌های ویزا سالانه تغییر می‌کنند — در هر دروازه از منابع رسمی چک کن.</p>
+    <button class="reset" id="reset">پاک کردن همه‌ی علامت‌ها</button>
+  </div>
+</footer>
+</div>
+
+<script>
+const PHASES=[
+{id:'p1',c:'--c1',emo:'🌱',title:'فاز ۱ · زیرساخت',dates:'شهریور تا آذر ۱۴۰۵',
+ theme:'در این فاز هیچ اپلیکیشنی فرستاده نمی‌شود. تمام کار، ساختن چیزهایی است که بعداً به آن‌ها استناد می‌کنی: یک محصول منتشرشده، یک نقش رسمی، مدرک زبان در راه، و یک پرونده‌ی اداری تمیز.',
+ tasks:[
+  {id:'t101',due:'2026-09-11',txt:'اعتبار پاسپورت را چک کن',crit:1,note:'اگر نداری یا اعتبارش زیر سه سال است، همین ماه اقدام کن. این گلوگاه پنهانی است که پرونده‌ها را می‌خواباند.'},
+  {id:'t102',due:'2026-09-23',txt:'کلاس آیلتس با حضور کامل',note:'هدف نهایی: نمره‌ی کل ۷.۰، هیچ مهارتی زیر ۶.۵.'},
+  {id:'t103',due:'2026-10-05',txt:'روتین ۴۵ دقیقه انگلیسی روزانه',note:'۲۰ دقیقه Reading آکادمیک، ۱۵ دقیقه Listening، ۱۰ دقیقه واژگان. خارج از کلاس، صبح.'},
+  {id:'t104',due:'2026-10-12',txt:'شروع مستندسازی عمومی کارها',note:'هفته‌ای یک پست کوتاه از چیزی که ساختی — در کانال تلگرام یا X. این هم رد پای عمومی می‌سازد و هم بعداً مواد اولیه‌ی مقاله‌ات می‌شود.'},
+  {id:'t105',due:'2026-10-20',txt:'شروع حل مسیر پرداخت ارزی',crit:1,note:'کندترین بخش کل پروژه. حالا شروع کن، نه وقتی لازم شد.'},
+  {id:'t106',due:'2026-11-05',txt:'وب‌سایت شخصی + دامنه',note:'نام، پروژه‌ها با اسکرین‌شات، یک صفحه درباره‌ی موسیقی. ساده کافی است.'},
+  {id:'t107',due:'2026-11-15',txt:'گرفتن نقش رسمی در آنسامبل',note:'«عضو آنسامبل» ضعیف است. «مسئول برنامه‌ریزی بخش بادی» قوی است. کتبی بگیر.'},
+  {id:'t108',due:'2026-11-20',txt:'بازخورد کتبی درباره‌ی سَمباد + نتیجه‌ی امتحان',note:'یک کاربر واقعی با یک نتیجه‌ی واقعی. این ستون فقرات مقاله‌ات می‌شود.'},
+  {id:'t109',due:'2026-11-25',txt:'ثبت‌نام در یک المپیاد یا مسابقه',note:'کامپیوتر یا ریاضی. لازم است تا ادعای تحصیلی عدد داشته باشد.'},
+  {id:'t110',due:'2026-12-01',txt:'ساخت پوشه‌ی دائمی مدارک',note:'ریزنمرات هر ترم، گواهی‌ها، اسکن پاسپورت، رسیدها. یکجا، با نسخه‌ی پشتیبان.'},
+  {id:'t111',due:'2026-12-21',txt:'انتشار Rondo روی App Store',crit:1,note:'حتی نسخه‌ی حداقلی. این تک‌آیتم بیشترین اهرم را در کل پرونده‌ات دارد.'},
+  {id:'t112',due:'2027-01-10',txt:'معدل نیمسال اول بالای ۱۹',note:'این عدد بعداً ترجمه و تأیید می‌شود؛ الان ساخته می‌شود.'}],
+ gate:{q:'Rondo منتشر شده و پاسپورت معتبر داری؟',lb:'دروازه‌ی اول · پایان آذر ۱۴۰۵',
+  p:'این دو پیش‌نیاز هر چیزی هستند که بعد می‌آید. اگر هرکدام نه باشد، فاز ۲ عقب می‌افتد و مهلت‌های اسفند از دست می‌روند.',req:['t101','t111']},
+ side:{lb:'در تمام طول برنامه',h:'پایش ماهانه‌ی ویزای آمریکا',p:'اول هر ماه پنج دقیقه وقت بگذار و وضعیت ممنوعیت را چک کن. هر ۱۸۰ روز بازبینی می‌شود. اگر برداشته شد، چون مدارکت آماده است می‌توانی در چند هفته اپلای کنی.'}},
+
+{id:'p2',c:'--c2',emo:'📄',title:'فاز ۲ · مدرک و تصمیم',dates:'دی تا اسفند ۱۴۰۵',
+ theme:'دو خروجی: یک نمره‌ی زبان قابل‌ارائه، و یک تصمیم صریح درباره‌ی مسیر A. تصمیم نگرفتن خودش بدترین حالت است، چون هر دو مسیر را نیمه‌جان نگه می‌دارد.',
+ tasks:[
+  {id:'t201',due:'2027-01-10',txt:'تأیید نهایی مسیر پرداخت ارزی',crit:1,note:'حداقل یک تراکنش آزمایشی موفق قبل از ثبت‌نام آیلتس.'},
+  {id:'t202',due:'2027-01-25',txt:'ترجمه‌ی رسمی ریزنمرات نهم و دهم',note:'زودتر از نیاز. ارزیابی مدرک از ایران ۱۸ تا ۲۰ هفته طول می‌کشد.'},
+  {id:'t203',due:'2027-02-05',txt:'گفت‌وگوی بودجه با خانواده',crit:1,note:'سؤال دقیق: آیا ۲۵ تا ۳۲ هزار دلار کانادا برای یک سال، بدون بورسیه، در دسترس است؟ بله یا خیر. نه «شاید».'},
+  {id:'t204',due:'2027-03-01',txt:'اگر مسیر A فعال شد: اپلای بردهای دولتی',note:'TDSB، VSB، CBE، OCDSB، Peel. برای زیر ۱۸ سال قیم شهروند یا مقیم کانادا الزامی است و تعهدنامه باید در ایران رسمی شود.'},
+  {id:'t205',due:'2027-03-10',txt:'آزمون رسمی آیلتس',crit:1},
+  {id:'t206',due:'2027-03-20',txt:'رزرو فرصت آزمون دوم در صورت نیاز',note:'اردیبهشت ۱۴۰۶. عمداً در برنامه گنجانده شده.'}],
+ gate:{q:'نمره‌ی آیلتس در دست است و مسیر A تعیین تکلیف شده؟',lb:'دروازه‌ی دوم · پایان اسفند ۱۴۰۵',
+  p:'از این نقطه به بعد، ابهام درباره‌ی مسیر A هزینه‌ی واقعی دارد: انرژی و پول را بین دو برنامه تقسیم می‌کند و هیچ‌کدام را کامل نمی‌کند.',req:['t203','t205']},
+ side:{lb:'فقط در صورت تأیید بودجه',h:'مسیر موازی دبیرستان کانادا',p:'شهریه‌ی بردهای دولتی حدود ۹٬۵۰۰ تا ۱۷٬۰۰۰ دلار کانادا، به‌علاوه‌ی ۱۰٬۰۰۰ تا ۱۵٬۰۰۰ هوم‌استی. یادت باشد این مسیر شانس نامزدی‌ات را کم می‌کند — یک هزینه‌ی پنهان که باید در تصمیم لحاظ شود.'}},
+
+{id:'p3',c:'--c3',emo:'🧭',title:'فاز ۳ · ساخت روایت',dates:'فروردین تا شهریور ۱۴۰۶',
+ theme:'مهم‌ترین فاز و کم‌فشارترینش. اینجا چیزی تحویل نمی‌دهی، ولی همه‌چیزِ فاز بعد اینجا ساخته می‌شود — مخصوصاً آماده کردن مدرسه‌ات برای کاری که هرگز انجام نداده است.',
+ tasks:[
+  {id:'t301',due:'2027-04-20',txt:'یادداشت یک‌صفحه‌ای برای مدیر مدرسه',crit:1,note:'بورسیه چیست، مدرسه چه اقدامی باید بکند، مهلت‌ها. اکثر مدارس ایرانی از وجودش بی‌خبرند — این هم فرصت است، هم مسئولیت آموزش دادن فرآیند به آن‌ها.'},
+  {id:'t302',due:'2027-05-01',txt:'لیست نهایی ۱۰ تا ۱۲ دانشگاه در سه لایه',note:'لایه‌ی بورسیه‌ی کامل، لایه‌ی کمک‌هزینه‌ی جزئی، لایه‌ی امن داخل ایران.'},
+  {id:'t303',due:'2027-05-10',txt:'جلسه‌ی رسمی با مدیر درباره‌ی نامزدی',crit:1,note:'یک سال زودتر از مهلت. هدف: وقتی مهر ۱۴۰۶ رسید، مدرسه بداند چه باید بکند.'},
+  {id:'t304',due:'2027-06-10',txt:'آزمون دوم آیلتس در صورت نیاز'},
+  {id:'t305',due:'2027-06-25',txt:'انتشار پروژه‌ی دوم یا آپدیت بزرگ Rondo',note:'یک محصول اتفاقی است. دو محصول یک الگو است. الگو همان چیزی است که کمیته‌ها می‌خرند.'},
+  {id:'t306',due:'2027-07-15',txt:'راستی‌آزمایی مهلت‌ها از سایت رسمی دانشگاه',crit:1,note:'مهلت‌ها سالانه تغییر می‌کنند. تاریخ‌های این صفحه تقریبی‌اند و باید همین‌جا با منبع رسمی جایگزین شوند.'},
+  {id:'t307',due:'2027-08-20',txt:'پروژه‌ی تابستانی با تأثیر بیرونی',note:'پیشنهاد مشخص: یک کارگاه رایگان برنامه‌نویسی یا موسیقی برای نوجوانان، با ثبت تعداد شرکت‌کننده و بازخورد کتبی. دقیقاً همان چیزی که کمیته‌ها دنبالش هستند و تو ابزارش را داری.'},
+  {id:'t308',due:'2027-08-25',txt:'درخواست توصیه‌نامه از سه نفر',crit:1,note:'معلم ریاضی یا فیزیک، مدیر یا معاون، رهبر آنسامبل. شهریور، نه مهر — به آن‌ها وقت بده.'}],
+ gate:{q:'مدرسه در جریان است، لیست نهایی شده، و آیلتس ۷.۰ به بالا در دست است؟',lb:'دروازه‌ی سوم · شهریور ۱۴۰۶',
+  p:'فاز بعد فقط ۹۰ روز است و هیچ فضایی برای ساختن ندارد — فقط برای فرستادن. هر چیزی که تا اینجا آماده نباشد، آنجا آماده نخواهد شد.',req:['t303','t306','t308']},
+ side:null},
+
+{id:'p4',c:'--c4',emo:'🚀',title:'فاز ۴ · ارسال',dates:'مهر تا آذر ۱۴۰۶',
+ theme:'حساس‌ترین ۹۰ روز کل برنامه. هیچ چیز جدیدی ساخته نمی‌شود؛ فقط آنچه از قبل هست فرستاده می‌شود. اگر فازهای قبل درست پیش رفته باشند، این فاز فقط تشریفات است.',
+ tasks:[
+  {id:'t401',due:'2027-10-05',txt:'نامزدی مدرسه',crit:1,note:'مهلت معمولاً اوایل مهر. مدرسه سالی یک نفر معرفی می‌کند.'},
+  {id:'t402',due:'2027-10-10',txt:'جمع‌آوری نهایی توصیه‌نامه‌ها'},
+  {id:'t403',due:'2027-10-15',txt:'اپلیکیشن پذیرش دانشگاه',crit:1,note:'پذیرش و بورسیه دو اپلیکیشن جداگانه‌اند. هر دو باید فرستاده شوند.'},
+  {id:'t404',due:'2027-10-25',txt:'مقاله‌ها — حداقل چهار بازنویسی',crit:1,note:'یک روایت مرکزی، نه فهرست دستاوردها. «ابزار می‌سازم تا مسئله‌ی واقعیِ آدم‌های اطرافم را حل کنم.»'},
+  {id:'t405',due:'2027-11-07',txt:'اپلیکیشن بورسیه + ارسال کامل مدارک',crit:1},
+  {id:'t406',due:'2027-11-30',txt:'اپلای به لایه‌ی دوم دانشگاه‌ها',note:'حتی اگر مطمئنی لایه‌ی اول جواب می‌دهد. هزینه‌اش ناچیز است و ریسک را حذف می‌کند.'}],
+ gate:null,
+ side:{lb:'بعد از ارسال',h:'قانون سکوت',p:'وقتی فرستادی، هیچ کاری برای بهتر کردن پرونده باقی نمانده. انرژی را ببر روی معدل نیمسال آخر و امتحانات نهایی — که هنوز در کنترل توست و اگر لایه‌ی امن فعال شود، تعیین‌کننده است.'}},
+
+{id:'p5',c:'--c5',emo:'🎉',title:'فاز ۵ · فرود',dates:'دی ۱۴۰۶ تا شهریور ۱۴۰۷',
+ theme:'از اینجا نتیجه دست تو نیست، ولی سرعت هست. هر روز تأخیر بین پذیرش و اپلای اقامت، مستقیماً از حاشیه‌ی امن سپتامبر کم می‌کند.',
+ tasks:[
+  {id:'t501',due:'2028-04-15',txt:'دریافت نتایج پذیرش و بورسیه'},
+  {id:'t502',due:'2028-05-01',txt:'اپلای اقامت تحصیلی، بلافاصله پس از پذیرش',crit:1,note:'۸ تا ۱۲ هفته به‌علاوه‌ی بررسی امنیتی. تأخیر اینجا فرصت اپلای دوم را از بین می‌برد.'},
+  {id:'t503',due:'2028-05-10',txt:'اثبات تمکن مالی',note:'سالانه حداقل ۲۳ هزار دلار کانادا برای زندگی، جدا از شهریه.'},
+  {id:'t504',due:'2028-06-01',txt:'معاینه‌ی پزشکی',note:'برای پرونده‌های ایرانی معمولاً در لندن انجام می‌شود.'},
+  {id:'t505',due:'2028-08-01',txt:'بیمه، بلیت، اسکان'}],
+ gate:null,side:null}
+];
+
+/* Jalali */
+function toJ(gy,gm,gd){const m=[0,31,59,90,120,151,181,212,243,273,304,334];let jy=(gy<=1600)?0:979;gy-=(gy<=1600)?621:1600;const g2=(gm>2)?gy+1:gy;
+let d=365*gy+Math.floor((g2+3)/4)-Math.floor((g2+99)/100)+Math.floor((g2+399)/400)-80+gd+m[gm-1];
+jy+=33*Math.floor(d/12053);d%=12053;jy+=4*Math.floor(d/1461);d%=1461;if(d>365){jy+=Math.floor((d-1)/365);d=(d-1)%365;}
+const jm=(d<186)?1+Math.floor(d/31):7+Math.floor((d-186)/30);const jd=1+((d<186)?d%31:(d-186)%30);return[jy,jm,jd];}
+const JM=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const jl=d=>{const[y,m,dd]=toJ(d.getFullYear(),d.getMonth()+1,d.getDate());return `${fa(dd)} ${JM[m-1]} ${fa(y)}`;};
+
+/* storage */
+const KEY='mrs-path-v2';let mem={};
+const store={async get(){try{if(window.storage){const r=await window.storage.get(KEY);return r&&r.value?JSON.parse(r.value):null}}catch(e){}return mem[KEY]||null},
+ async set(v){mem[KEY]=v;try{if(window.storage)await window.storage.set(KEY,JSON.stringify(v))}catch(e){}}};
+
+let done=new Set();
+const TODAY=new Date();TODAY.setHours(0,0,0,0);
+const ALL=PHASES.flatMap(p=>p.tasks);
+const TARGET=new Date('2028-09-01');
+
+function build(){
+  const path=document.getElementById('path');
+  [...path.children].forEach(c=>{if(c.id!=='trail')c.remove()});
+
+  PHASES.forEach((p,pi)=>{
+    const dn=p.tasks.filter(t=>done.has(t.id)).length;
+    const pct=Math.round(dn/p.tasks.length*100);
+    const col=`var(${p.c})`;
+
+    const ban=document.createElement('div');
+    ban.className='item';
+    ban.innerHTML=`<div class="banner" style="border-top-color:${col}">
+      <div class="st" style="color:${col}">${p.emo} مرحله‌ی ${fa(pi+1)}</div>
+      <h3>${p.title.split('· ')[1]}</h3>
+      <div class="dt">${p.dates}</div>
+      <p>${p.theme}</p>
+      <div class="prog"><div class="meter"><i style="width:${pct}%;background:${col}"></i></div><span class="pct" style="color:${col}">${fa(pct)}٪</span></div>
+    </div>`;
+    path.appendChild(ban);
+
+    p.tasks.forEach((t,ti)=>{
+      const d=new Date(t.due), isDone=done.has(t.id), late=!isDone&&d<TODAY;
+      const soon=!isDone&&!late&&(d-TODAY)/864e5<45;
+      const row=document.createElement('div');
+      row.className='node-row'+(isDone?' done':'');
+      const off=Math.sin((ti+pi*2)*0.9)*(window.innerWidth>900?60:0);
+      row.style.transform=`translateX(${off}px)`;
+      row.innerHTML=`
+        <button class="node ${isDone?'done':''} ${late?'late':''} ${soon?'due':''}"
+          style="${isDone?`background:${col};box-shadow:0 5px 0 ${col};filter:brightness(.94)`:''}"
+          data-id="${t.id}" aria-label="${t.txt}">${isDone||late?'':fa(ti+1)}</button>
+        <div class="node-label" data-note="1">
+          <div class="tx">${t.txt}</div>
+          <div class="mt"><span class="dd">${jl(d)}</span>${t.crit?'<span class="chip-key">کلیدی</span>':''}${late?'<span class="chip-key" style="background:#FFE7ED;color:#D62E55">عقب‌افتاده</span>':''}</div>
+          ${t.note?`<div class="node-note">${t.note}</div>`:''}
+        </div>`;
+      path.appendChild(row);
+    });
+
+    if(p.gate){
+      const open=p.gate.req.every(r=>done.has(r));
+      const g=document.createElement('div');
+      g.className='gate-row';
+      g.innerHTML=`<div class="gate ${open?'open':''}">
+        <div class="ic">${open?'🔓':'🔒'}</div>
+        <div class="lb">${p.gate.lb}</div>
+        <h4>${p.gate.q}</h4><p>${p.gate.p}</p>
+        <span class="badge">${open?'باز شد':'هنوز بسته'}</span></div>`;
+      path.appendChild(g);
+    }
+    if(p.side){
+      const s=document.createElement('div');
+      s.className='side';
+      s.innerHTML=`<div class="lb">${p.side.lb}</div><h4>${p.side.h}</h4><p>${p.side.p}</p>`;
+      path.appendChild(s);
+    }
+  });
+
+  path.querySelectorAll('.node').forEach(b=>b.addEventListener('click',e=>{
+    const id=b.dataset.id;
+    if(done.has(id))done.delete(id); else {done.add(id); burst(e.clientX,e.clientY);}
+    store.set([...done]); build(); update();
+  }));
+  path.querySelectorAll('.node-label').forEach(l=>l.addEventListener('click',()=>l.classList.toggle('open')));
+  requestAnimationFrame(drawTrail);
+}
+
+function drawTrail(){
+  const svg=document.getElementById('trail'), path=document.getElementById('path');
+  if(window.innerWidth<=900){svg.innerHTML='';return;}
+  const pr=path.getBoundingClientRect();
+  const pts=[...path.querySelectorAll('.node')].map(n=>{
+    const r=n.getBoundingClientRect();
+    return {x:r.left-pr.left+r.width/2, y:r.top-pr.top+r.height/2, done:n.classList.contains('done')};
+  });
+  if(pts.length<2){svg.innerHTML='';return;}
+  svg.setAttribute('viewBox',`0 0 ${pr.width} ${pr.height}`);
+  svg.setAttribute('width',pr.width); svg.setAttribute('height',pr.height);
+  let d=`M ${pts[0].x} ${pts[0].y}`;
+  for(let i=1;i<pts.length;i++){
+    const a=pts[i-1],b=pts[i], my=(a.y+b.y)/2;
+    d+=` C ${a.x} ${my}, ${b.x} ${my}, ${b.x} ${b.y}`;
+  }
+  svg.innerHTML=`<path d="${d}" fill="none" stroke="#E2E6F5" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 16"/>`;
+}
+
+function burst(x,y){
+  const cols=['#FF9A1F','#12C2B0','#7B61FF','#FF4D74','#08C39A','#FFB800'];
+  for(let i=0;i<14;i++){
+    const s=document.createElement('i');
+    s.className='spark';
+    s.style.cssText=`left:${x}px;top:${y}px;background:${cols[i%cols.length]}`;
+    document.body.appendChild(s);
+    const ang=Math.random()*Math.PI*2, dist=45+Math.random()*70;
+    s.animate([{transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:`translate(${Math.cos(ang)*dist}px,${Math.sin(ang)*dist+40}px) scale(0)`,opacity:0}],
+      {duration:700+Math.random()*350,easing:'cubic-bezier(.2,.8,.3,1)'}).onfinish=()=>s.remove();
+  }
+}
+
+function update(){
+  const total=ALL.length, dn=done.size;
+  const pct=Math.round(dn/total*100);
+  const dueNow=ALL.filter(t=>new Date(t.due)<=TODAY);
+  const late=dueNow.filter(t=>!done.has(t.id)).length;
+  const pace=dueNow.length?Math.round((dueNow.length-late)/dueNow.length*100):100;
+  const cur=PHASES.find(p=>TODAY<=new Date(p.tasks[p.tasks.length-1].due))||PHASES[PHASES.length-1];
+  const cdn=cur.tasks.filter(t=>done.has(t.id)).length;
+  const cpct=Math.round(cdn/cur.tasks.length*100);
+
+  const set=(id,r,v)=>{const c=document.getElementById(id),L=2*Math.PI*r;c.style.strokeDasharray=L;c.style.strokeDashoffset=L*(1-v/100);c.style.transition='stroke-dashoffset .9s cubic-bezier(.22,1,.36,1)';};
+  set('rTotal',86,pct); set('rPace',64,pace); set('rPhase',42,cpct);
+  document.getElementById('ringPct').textContent=fa(pct)+'٪';
+
+  document.getElementById('cd').textContent=fa(Math.max(0,Math.ceil((TARGET-TODAY)/864e5)));
+  document.getElementById('sToday').textContent=jl(TODAY);
+  document.getElementById('sPhase').innerHTML=`${cur.emo} ${cur.title.split('· ')[1]}`;
+
+  const ng=PHASES.filter(p=>p.gate).find(p=>!p.gate.req.every(r=>done.has(r)));
+  if(ng){const days=Math.ceil((new Date(ng.tasks[ng.tasks.length-1].due)-TODAY)/864e5);
+    document.getElementById('sGate').innerHTML=days>0?`${fa(days)} <small>روز</small>`:'<small>سررسید گذشته</small>';}
+  else document.getElementById('sGate').innerHTML='<small>همه باز 🎉</small>';
+
+  document.getElementById('sLate').innerHTML=late?`<span style="color:var(--c4)">${fa(late)}</span> <small>قدم</small>`:'<small>هیچی — عالی</small>';
+}
+
+(async()=>{
+  const s=await store.get(); if(Array.isArray(s))done=new Set(s);
+  build(); update();
+  document.getElementById('reset').addEventListener('click',async()=>{done=new Set();await store.set([]);build();update();});
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.06});
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+  let t; window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{build();update();},180);});
+  setTimeout(drawTrail,400);
+})();
+</script>
