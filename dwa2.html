@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نظرسنجی انجمن صنفی کارفرمایی تولیدکنندگان در و پنجره ایران</title>
+<meta name="description" content="نظرسنجی رسمی انجمن صنفی کارفرمایی تولیدکنندگان در و پنجره ایران">
+<meta name="theme-color" content="#F7F5F0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DWA — Design tokens
+   Palette derived from the association mark:
+   frame red, signal blue, glass tint, paper, ink.
+   ============================================================ */
+:root{
+  --red:#A81C1C;
+  --red-deep:#7C1212;
+  --red-soft:rgba(168,28,28,.10);
+  --blue:#1B34C8;
+  --blue-deep:#122499;
+  --blue-soft:rgba(27,52,200,.08);
+  --glass:#E4EDF3;
+  --glass-2:#F1F6F9;
+  --paper:#F7F5F0;
+  --card:#FFFFFF;
+  --ink:#17191D;
+  --ink-2:#4A4E56;
+  --ink-3:#868B94;
+  --line:rgba(23,25,29,.10);
+  --line-2:rgba(23,25,29,.06);
+
+  --r-lg:22px;
+  --r-md:14px;
+  --r-sm:10px;
+  --shadow-1:0 1px 2px rgba(23,25,29,.04), 0 8px 24px -12px rgba(23,25,29,.14);
+  --shadow-2:0 2px 4px rgba(23,25,29,.05), 0 24px 60px -24px rgba(23,25,29,.24);
+
+  --font:"Vazirmatn", Tahoma, "IRANSans", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, monospace;
+
+  --wrap:min(720px, 100% - 2.5rem);
+  --ease:cubic-bezier(.22,.75,.2,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.75;
+  font-size:16px;
+  min-height:100vh;
+  min-height:100dvh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+/* faint pane grid, the mark's geometry as page texture */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(to right, rgba(168,28,28,.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(168,28,28,.055) 1px, transparent 1px);
+  background-size:96px 96px;
+  mask-image:radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 78%);
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 78%);
+  pointer-events:none; z-index:0;
+}
+button{font:inherit;color:inherit}
+input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2.5px solid var(--blue); outline-offset:3px; border-radius:6px}
+
+.pnum{font-variant-numeric:tabular-nums}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:.68rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--red);
+  direction:ltr;
+  display:inline-block;
+}
+
+/* ============================================================ SCREENS */
+.screen{position:relative; z-index:1}
+.wrap{width:var(--wrap); margin-inline:auto}
+
+/* نظرسنجی روی صفحه باز می‌شود، نه به شکل بخش دوم و اسکرول‌شدنی */
+.overlay{
+  position:fixed; inset:0; z-index:60; display:none;
+  background:var(--paper); overflow-y:auto; overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.overlay::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:
+    linear-gradient(to right, rgba(168,28,28,.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(168,28,28,.05) 1px, transparent 1px);
+  background-size:96px 96px;
+  mask-image:radial-gradient(120% 70% at 50% 0%, #000 20%, transparent 70%);
+  -webkit-mask-image:radial-gradient(120% 70% at 50% 0%, #000 20%, transparent 70%);
+}
+.overlay.is-on{display:block; animation:sheetIn .42s var(--ease)}
+@keyframes sheetIn{from{opacity:0; transform:translateY(20px) scale(.992)} to{opacity:1; transform:none}}
+body.locked{overflow:hidden}
+
+/* دکمه خروج و پرسش تأیید */
+.closeX{
+  position:fixed; top:.72rem; inset-inline-end:max(1rem, calc((100vw - var(--wrap))/2 - .4rem));
+  z-index:75; width:36px; height:36px; border-radius:50%; display:none;
+  place-items:center; background:#fff; border:1px solid var(--line);
+  cursor:pointer; color:var(--ink-2); box-shadow:var(--shadow-1); transition:background .16s, color .16s;
+}
+.closeX.is-on{display:grid}
+.closeX:hover{background:var(--red); color:#fff; border-color:var(--red)}
+.ask{
+  position:fixed; inset:0; z-index:90; display:none; place-items:center; padding:1.25rem;
+  background:rgba(23,25,29,.36); backdrop-filter:blur(4px);
+}
+.ask.is-on{display:grid; animation:glassIn .2s ease}
+.ask .box2{
+  background:#fff; border-radius:var(--r-lg); padding:1.5rem 1.4rem; max-width:340px; width:100%;
+  box-shadow:var(--shadow-2); animation:pop .3s var(--ease);
+}
+.ask b{display:block; font-size:1.05rem; margin-bottom:.4rem}
+.ask p{margin:0 0 1.2rem; font-size:.88rem; color:var(--ink-2)}
+.ask .row2{display:flex; gap:.6rem}
+.ask .row2 .btn{flex:1; padding:.8rem 1rem; font-size:.92rem}
+
+/* ============================================================ HERO */
+#hero{min-height:100vh; min-height:100dvh; display:flex; flex-direction:column}
+.hero-top{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem; padding-block:1.15rem;
+  border-bottom:1px solid var(--line-2);
+}
+.hero-top .org{font-size:.8rem; color:var(--ink-2); font-weight:500}
+.hero-top .since{font-family:var(--mono); font-size:.7rem; color:var(--ink-3); direction:ltr}
+
+.hero-main{
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; text-align:center; padding-block:2.6rem 2rem; gap:0;
+}
+
+/* the mark: four panes, three lettered, one waiting */
+.mark{width:min(290px,62vw); height:auto; display:block; margin-bottom:2.1rem}
+.mark .frame{fill:none; stroke:var(--red); stroke-width:11; }
+.mark .glass{fill:var(--glass-2)}
+.mark .ltr{fill:var(--blue); font-family:var(--font); font-weight:800; font-size:118px; text-anchor:middle}
+.mark .sweep{fill:#fff; opacity:.55}
+
+/* load sequence */
+@keyframes draw{from{stroke-dashoffset:var(--len)} to{stroke-dashoffset:0}}
+@keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+@keyframes pop{from{opacity:0; transform:translateY(-10px) scale(.9)} to{opacity:1; transform:none}}
+@keyframes glassIn{from{opacity:0} to{opacity:1}}
+@keyframes sweep{
+  0%{transform:translateX(-260px) skewX(-14deg); opacity:0}
+  12%{opacity:.5}
+  100%{transform:translateX(260px) skewX(-14deg); opacity:0}
+}
+@keyframes breathe{0%,100%{opacity:.25} 50%{opacity:.75}}
+
+.mark .frame{--len:1200; stroke-dasharray:var(--len); animation:draw 1.05s var(--ease) forwards}
+.mark .glass{opacity:0; animation:glassIn .7s ease forwards .55s}
+.mark .ltr{opacity:0; animation:pop .5s var(--ease) forwards}
+.mark .l1{animation-delay:.72s} .mark .l2{animation-delay:.84s} .mark .l3{animation-delay:.96s}
+.mark .sweep{animation:sweep 2.4s ease-in-out 1.5s infinite}
+.mark .wait{fill:var(--blue); opacity:0; animation:breathe 2.6s ease-in-out 1.4s infinite}
+
+.hero-title{
+  font-size:clamp(1.6rem, 5.4vw, 2.5rem);
+  font-weight:800; line-height:1.5; letter-spacing:-.01em;
+  margin:0 0 .35rem; max-width:22ch;
+  opacity:0; animation:rise .8s var(--ease) forwards 1.05s;
+}
+.hero-title b{color:var(--red); font-weight:800}
+.hero-sub{
+  margin:.6rem 0 0; font-size:clamp(.94rem,2.9vw,1.06rem);
+  color:var(--ink-2); max-width:44ch; font-weight:400;
+  opacity:0; animation:rise .8s var(--ease) forwards 1.2s;
+}
+.hero-eyebrow{opacity:0; animation:rise .7s var(--ease) forwards .95s; margin-bottom:1.1rem}
+.hero-cta{opacity:0; animation:rise .8s var(--ease) forwards 1.35s; margin-top:2.1rem; width:100%; display:flex; flex-direction:column; align-items:center; gap:.85rem}
+.hero-note{font-size:.78rem; color:var(--ink-3)}
+
+/* facts strip — three real things about the association */
+.facts{
+  display:grid; grid-template-columns:repeat(3,1fr);
+  border-top:1px solid var(--line-2); margin-top:auto;
+  opacity:0; animation:rise .9s var(--ease) forwards 1.5s;
+}
+.fact{padding:1.15rem .5rem 1.6rem; text-align:center; position:relative}
+.fact + .fact::before{content:""; position:absolute; inset-block:1.25rem; inset-inline-end:0; width:1px; background:var(--line-2)}
+.fact .n{font-size:1.35rem; font-weight:800; color:var(--red); display:block; line-height:1.3}
+.fact .t{font-size:.74rem; color:var(--ink-3); line-height:1.6}
+
+/* ============================================================ BUTTONS */
+.btn{
+  appearance:none; border:0; cursor:pointer;
+  padding:1.02rem 2.4rem; border-radius:999px;
+  font-weight:700; font-size:1.02rem;
+  background:var(--red); color:#fff;
+  box-shadow:0 1px 0 rgba(255,255,255,.2) inset, 0 10px 24px -12px rgba(168,28,28,.75);
+  transition:transform .18s var(--ease), background .18s ease, box-shadow .18s ease, opacity .18s;
+  display:inline-flex; align-items:center; gap:.6rem; justify-content:center;
+}
+.btn:hover{background:var(--red-deep); transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn[disabled]{opacity:.4; cursor:not-allowed; transform:none; box-shadow:none}
+.btn-ghost{
+  background:transparent; color:var(--ink-2); box-shadow:none;
+  border:1px solid var(--line); padding:.9rem 1.5rem; font-size:.94rem; font-weight:500;
+}
+.btn-ghost:hover{background:#fff; color:var(--ink); border-color:var(--ink-3); transform:none}
+.btn-wide{width:100%; max-width:340px}
+.btn .arw{font-family:var(--mono); font-size:1.1em; line-height:1}
+
+/* ============================================================ TOPBAR + PROGRESS */
+.topbar{
+  position:sticky; top:0; z-index:20;
+  background:rgba(247,245,240,.88);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-2);
+}
+.topbar-in{display:flex; align-items:center; gap:.85rem; padding-block:.7rem}
+/* mini mark: the fourth pane is the progress meter */
+.mini{width:38px; height:38px; flex:0 0 auto}
+.mini .frame{fill:none; stroke:var(--red); stroke-width:9}
+.mini .glass{fill:#fff}
+.mini .ltr{fill:var(--blue); font-family:var(--font); font-weight:800; font-size:112px; text-anchor:middle}
+.mini .fill{fill:var(--blue); transition:transform .55s var(--ease); transform-box:fill-box; transform-origin:center bottom}
+.topbar .meta{flex:1; min-width:0}
+.topbar .meta b{display:block; font-size:.82rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.topbar .meta span{font-size:.72rem; color:var(--ink-3)}
+.bar{height:3px; background:var(--line-2); position:relative; overflow:hidden}
+.bar i{position:absolute; inset-block:0; inset-inline-start:0; width:0; background:var(--red); transition:width .45s var(--ease)}
+
+/* ============================================================ CARDS / FORM */
+.pane{padding-block:1.55rem 3.2rem}
+.card{
+  background:var(--card); border:1px solid var(--line-2);
+  border-radius:var(--r-lg); padding:1.5rem 1.35rem;
+  box-shadow:var(--shadow-1);
+}
+.q-anim{animation:qin .42s var(--ease)}
+@keyframes qin{from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none}}
+
+h1.step-title{font-size:clamp(1.28rem,4.2vw,1.6rem); font-weight:800; line-height:1.6; margin:.35rem 0 .5rem}
+p.step-sub{margin:0 0 1.35rem; color:var(--ink-2); font-size:.9rem}
+
+.field{margin-bottom:.95rem}
+.field > label{display:block; font-size:.86rem; font-weight:600; margin-bottom:.45rem}
+.field .hint{font-size:.76rem; color:var(--ink-3); font-weight:400; margin-inline-start:.35rem}
+.control{
+  width:100%; padding:.92rem 1.05rem;
+  background:#fff; border:1.5px solid var(--line);
+  border-radius:var(--r-md); transition:border-color .18s, box-shadow .18s;
+  font-size:1rem;
+}
+.control::placeholder{color:var(--ink-3); font-weight:300}
+.control:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 4px var(--blue-soft)}
+.control.bad{border-color:var(--red); box-shadow:0 0 0 4px var(--red-soft)}
+select.control{appearance:none; background-image:linear-gradient(transparent,transparent); cursor:pointer;
+  background-repeat:no-repeat; background-position:left 1rem center; padding-inline-start:2.4rem}
+.select-wrap{position:relative}
+.select-wrap::after{
+  content:""; position:absolute; inset-inline-start:1.05rem; top:50%; margin-top:-2px;
+  width:9px; height:9px; border-inline-start:2px solid var(--ink-3); border-bottom:2px solid var(--ink-3);
+  transform:rotate(-45deg); pointer-events:none;
+}
+input.control[type="tel"]{direction:ltr; text-align:left; font-family:var(--mono); letter-spacing:.06em}
+.err{color:var(--red); font-size:.78rem; margin-top:.4rem; display:none}
+.err.is-on{display:block}
+
+/* audience choice */
+.pick{display:grid; gap:.55rem; margin-bottom:1.1rem}
+.pick button{
+  text-align:start; cursor:pointer; background:#fff;
+  border:1.5px solid var(--line); border-radius:var(--r-md);
+  padding:.85rem 1rem; display:flex; gap:.8rem; align-items:flex-start;
+  transition:border-color .18s, background .18s, transform .18s var(--ease);
+}
+.pick button:hover{border-color:var(--ink-3); transform:translateY(-1px)}
+.pick button[aria-pressed="true"]{border-color:var(--blue); background:var(--blue-soft)}
+.pick .ic{
+  flex:0 0 auto; width:34px; height:34px; border-radius:9px;
+  background:var(--glass); display:grid; place-items:center; margin-top:.15rem;
+}
+.pick button[aria-pressed="true"] .ic{background:#fff}
+.pick .tx b{display:block; font-size:.97rem; font-weight:700; line-height:1.6}
+.pick .tx span{display:block; font-size:.8rem; color:var(--ink-3); line-height:1.6}
+
+/* ============================================================ QUESTIONS */
+.q-head{display:flex; align-items:baseline; gap:.7rem; margin-bottom:.15rem}
+.q-num{font-family:var(--mono); font-size:.72rem; color:var(--red); direction:ltr; letter-spacing:.1em}
+.q-kind{font-size:.72rem; color:var(--ink-3)}
+.q-title{font-size:clamp(1.1rem,3.7vw,1.26rem); font-weight:700; line-height:1.6; margin:.2rem 0 1.05rem}
+
+.opts{display:grid; gap:.42rem}
+.opt{
+  display:flex; align-items:center; gap:.8rem; cursor:pointer;
+  background:#fff; border:1.5px solid var(--line); border-radius:var(--r-md);
+  padding:.72rem .9rem; text-align:start; width:100%;
+  transition:border-color .16s, background .16s, transform .16s var(--ease);
+  font-size:.95rem; line-height:1.55;
+}
+.opt:hover{border-color:var(--ink-3)}
+.opt .box{
+  flex:0 0 auto; width:21px; height:21px; border-radius:6px;
+  border:1.5px solid var(--line); display:grid; place-items:center;
+  transition:border-color .16s, background .16s; background:#fff;
+}
+.opt.round .box{border-radius:50%}
+.opt .box svg{width:12px; height:12px; opacity:0; transition:opacity .16s}
+.opt[aria-pressed="true"]{border-color:var(--blue); background:var(--blue-soft)}
+.opt[aria-pressed="true"] .box{background:var(--blue); border-color:var(--blue)}
+.opt[aria-pressed="true"] .box svg{opacity:1}
+.opt[data-locked="1"]{opacity:.45}
+.opt .rank{
+  flex:0 0 auto; min-width:24px; height:24px; border-radius:8px; font-size:.8rem; font-weight:700;
+  display:grid; place-items:center; background:var(--line-2); color:var(--ink-3);
+}
+.opt[aria-pressed="true"] .rank{background:var(--blue); color:#fff}
+
+.counter{font-size:.76rem; color:var(--ink-3); margin-top:.8rem; text-align:end}
+.counter.full{color:var(--red)}
+
+/* matrix — یک سطر، یک ردیف امتیاز */
+.legend{display:flex; flex-wrap:wrap; gap:.5rem .9rem; margin:0 0 .9rem; font-size:.74rem; color:var(--ink-3)}
+.legend span{display:inline-flex; align-items:center; gap:.3rem}
+.legend b{font-family:var(--mono); font-weight:500; color:var(--blue); font-size:.78rem}
+.mtx{display:grid; gap:.36rem}
+.mtx-row{
+  display:flex; align-items:center; gap:.6rem; justify-content:space-between;
+  border:1px solid var(--line-2); border-radius:var(--r-md); padding:.5rem .6rem .5rem .5rem; background:#FCFCFB;
+}
+.mtx-row .rw{font-size:.86rem; font-weight:500; line-height:1.5; flex:1; min-width:0}
+.scale{display:flex; gap:.22rem; flex:0 0 auto}
+.sc{
+  cursor:pointer; background:#fff; border:1.5px solid var(--line); border-radius:8px;
+  width:32px; height:32px; display:grid; place-items:center; font-size:.82rem; font-weight:600;
+  color:var(--ink-2); transition:background .14s, border-color .14s, color .14s, transform .14s var(--ease);
+}
+.sc:hover{border-color:var(--ink-3)}
+.sc[aria-pressed="true"]{background:var(--blue); border-color:var(--blue); color:#fff; transform:scale(1.06)}
+@media (max-width:400px){ .sc{width:28px;height:28px;font-size:.76rem} .mtx-row .rw{font-size:.8rem} }
+
+textarea.control{min-height:104px; resize:vertical; line-height:1.8}
+
+/* nav */
+.nav{display:flex; gap:.6rem; align-items:center; margin-top:1.25rem}
+.nav .btn{flex:1}
+.nav .btn-ghost{flex:0 0 auto}
+
+/* ============================================================ DONE */
+.done{text-align:center; padding-block:5rem 4rem}
+.done .seal{width:120px; height:120px; margin:0 auto 1.8rem}
+.done .seal .frame{fill:none; stroke:var(--red); stroke-width:9}
+.done .seal .glass{fill:var(--glass-2)}
+.done .seal .ltr{fill:var(--blue); font-family:var(--font); font-weight:800; font-size:112px; text-anchor:middle}
+.done .seal .tick{stroke:var(--blue); stroke-width:14; fill:none; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:120; stroke-dashoffset:120; animation:draw .7s var(--ease) forwards .25s}
+.done h1{font-size:clamp(1.4rem,4.6vw,1.85rem); font-weight:800; margin:0 0 .7rem}
+.done p{color:var(--ink-2); margin:0 auto 1.7rem; max-width:40ch}
+.done .code{
+  font-family:var(--mono); direction:ltr; display:inline-block;
+  background:#fff; border:1px dashed var(--line); border-radius:var(--r-sm);
+  padding:.5rem .9rem; font-size:.82rem; color:var(--ink-2);
+}
+.save-state{font-size:.8rem; margin-top:1.4rem; color:var(--ink-3)}
+.save-state.bad{color:var(--red)}
+
+/* ============================================================ ADMIN */
+#admin .pane{padding-block:2rem 4rem}
+.tbl-wrap{overflow-x:auto; border:1px solid var(--line-2); border-radius:var(--r-md); background:#fff}
+table{border-collapse:collapse; width:100%; font-size:.82rem; min-width:640px}
+th,td{padding:.6rem .7rem; border-bottom:1px solid var(--line-2); text-align:start; white-space:nowrap}
+th{background:#FBFAF8; font-weight:700; font-size:.76rem; color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+.badge{font-size:.7rem; padding:.15rem .5rem; border-radius:999px; background:var(--glass); color:var(--ink-2)}
+.badge.co{background:var(--blue-soft); color:var(--blue-deep)}
+.admin-actions{display:flex; gap:.6rem; flex-wrap:wrap; margin:1.1rem 0}
+.stat-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:.7rem; margin-bottom:1.2rem}
+.stat{background:#fff; border:1px solid var(--line-2); border-radius:var(--r-md); padding:.9rem 1rem}
+.stat b{display:block; font-size:1.4rem; font-weight:800; color:var(--red)}
+.stat span{font-size:.75rem; color:var(--ink-3)}
+
+footer{padding-block:1.4rem 2.2rem; text-align:center; border-top:1px solid var(--line-2)}
+footer p{margin:0; font-size:.74rem; color:var(--ink-3)}
+footer .dot{cursor:default; user-select:none}
+
+@media (max-width:520px){
+  .card{padding:1.4rem 1.1rem; border-radius:18px}
+  .facts{grid-template-columns:1fr; }
+  .fact{padding:.9rem .5rem; text-align:start; display:flex; align-items:baseline; gap:.7rem}
+  .fact + .fact::before{inset:0 auto auto 0; width:100%; height:1px; inset-inline:0}
+  .fact .n{font-size:1.05rem}
+  .btn{padding:.95rem 1.8rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important; animation-delay:0ms !important; transition-duration:.001ms !important}
+  .mark .frame{stroke-dashoffset:0} .mark .glass,.mark .ltr,.hero-title,.hero-sub,.hero-eyebrow,.hero-cta,.facts{opacity:1}
+  .done .seal .tick{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════ HERO ══════════════════════════════════ -->
+<section class="screen is-on" id="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <span class="org">انجمن صنفی کارفرمایی تولیدکنندگان در و پنجره ایران</span>
+      <span class="since">EST. 1391</span>
+    </div>
+  </div>
+
+  <div class="wrap hero-main">
+    <svg class="mark" viewBox="0 0 420 300" role="img" aria-label="نشان انجمن: چهار قاب پنجره، سه قاب با حروف D، W و A">
+      <defs>
+        <clipPath id="paneClip">
+          <rect x="12" y="12" width="186" height="126" rx="18"/>
+          <rect x="222" y="12" width="186" height="126" rx="18"/>
+          <rect x="12" y="162" width="186" height="126" rx="18"/>
+          <rect x="222" y="162" width="186" height="126" rx="18"/>
+        </clipPath>
+      </defs>
+      <g clip-path="url(#paneClip)">
+        <rect class="glass" x="0" y="0" width="420" height="300"/>
+        <rect class="sweep" x="0" y="-40" width="54" height="380"/>
+      </g>
+      <g class="frame">
+        <rect x="12" y="12" width="186" height="126" rx="18"/>
+        <rect x="222" y="12" width="186" height="126" rx="18"/>
+        <rect x="12" y="162" width="186" height="126" rx="18"/>
+        <rect x="222" y="162" width="186" height="126" rx="18"/>
+      </g>
+      <text class="ltr l1" x="105" y="116">D</text>
+      <text class="ltr l2" x="315" y="116">W</text>
+      <text class="ltr l3" x="105" y="266">A</text>
+      <circle class="wait" cx="315" cy="225" r="13"/>
+    </svg>
+
+    <span class="eyebrow hero-eyebrow">DWA · نظرسنجی سالانه ۱۴۰۵</span>
+
+    <h1 class="hero-title">سه قاب پر است.<br><b>قاب چهارم را شما پر می کنید.</b></h1>
+    <p class="hero-sub">      انجمن از سال ۱۳۹۱ برای استانداردسازی بازار در و پنجره ایران کار میکند. بگویید مشکل شما در این بازار
+      چیست؟
+
+    </p>
+        <p class="hero-sub">  خریدار باشید یا تولیدکننده.
+
+    </p>
+
+    <div class="hero-cta">
+      <button class="btn btn-wide" id="startBtn">شروع نظرسنجی <span class="arw">←</span></button>
+      <span class="hero-note">حدود ۳ دقیقه · · پاسخ ها تماماً محرمانه میمانند</span>
+    </div>
+  </div>
+
+
+</section>
+
+<!-- ══════════════════════════════════ REGISTER ══════════════════════════════════ -->
+<section class="screen overlay" id="register">
+  <div class="topbar"><div class="wrap topbar-in">
+    <svg class="mini" viewBox="0 0 420 300" aria-hidden="true">
+      <g class="glass"><rect x="12" y="12" width="186" height="126" rx="18"/><rect x="222" y="12" width="186" height="126" rx="18"/><rect x="12" y="162" width="186" height="126" rx="18"/><rect x="222" y="162" width="186" height="126" rx="18"/></g>
+      <g class="frame"><rect x="12" y="12" width="186" height="126" rx="18"/><rect x="222" y="12" width="186" height="126" rx="18"/><rect x="12" y="162" width="186" height="126" rx="18"/><rect x="222" y="162" width="186" height="126" rx="18"/></g>
+      <text class="ltr" x="105" y="116">D</text><text class="ltr" x="315" y="116">W</text><text class="ltr" x="105" y="266">A</text>
+    </svg>
+    <div class="meta"><b>مشخصات شما</b><span>پیش از پرسش‌ها</span></div>
+  </div><div class="bar"><i style="width:6%"></i></div></div>
+
+  <div class="wrap pane">
+    <div class="card q-anim">
+      <span class="eyebrow">01</span>
+      <h1 class="step-title">اول بگویید شما کی هستید</h1>
+      <p class="step-sub">این اطلاعات فقط برای اعتبارسنجی پاسخ ها و اطلاع رسانی نتایج نظرسنجی استفاده میشود.</p>
+
+      <div class="field">
+        <label for="fName">نام</label>
+        <input class="control" id="fName" type="text" autocomplete="given-name" placeholder="مثلاً محمد">
+        <p class="err" id="e-fName">نام را وارد کنید.</p>
+      </div>
+      <div class="field">
+        <label for="lName">نام خانوادگی</label>
+        <input class="control" id="lName" type="text" autocomplete="family-name" placeholder="مثلاً رضایی">
+        <p class="err" id="e-lName">نام خانوادگی را وارد کنید.</p>
+      </div>
+      <div class="field">
+        <label for="phone">شماره تلفن همراه <span class="hint">۱۱ رقم، با ۰۹ شروع میشود</span></label>
+        <input class="control" id="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="09121234567" maxlength="13">
+        <p class="err" id="e-phone">شماره همراه معتبر نیست. نمونه درست: ۰۹۱۲۱۲۳۴۵۶۷</p>
+      </div>
+
+      <div class="field" style="margin-top:1.7rem">
+        <label>در این نظرسنجی به عنوان کدام گروه پاسخ میدهید؟</label>
+        <div class="pick" id="audiencePick" role="group" aria-label="گروه پاسخ‌دهنده">
+          <button type="button" data-aud="consumer" aria-pressed="false">
+            <span class="ic" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A81C1C" stroke-width="2" stroke-linecap="round"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M12 4v17M3 12.7h18"/></svg>
+            </span>
+            <span class="tx"><b>خریدار یا مصرف کننده</b><span>مالک ملک، پیمانکار، معمار، یا بازدیدکننده‌ای که پروژه‌ای در دست ندارد</span></span>
+          </button>
+          <button type="button" data-aud="company" aria-pressed="false">
+            <span class="ic" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B34C8" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="9" width="8" height="12" rx="1"/><path d="M6 7h2M6 11h2M6 15h2M16 13h2M16 17h2"/></svg>
+            </span>
+            <span class="tx"><b>فعال صنعت در و پنجره</b><span>تولیدکننده، پروفیل و شیشه و یراق، ماشین آلات، نصب، طراحی، بازرگانی یا شرکت ساختمانی</span></span>
+          </button>
+        </div>
+        <p class="err" id="e-aud">یکی از دو گروه را انتخاب کنید.</p>
+      </div>
+
+      <div id="coFields" hidden>
+        <div class="field">
+          <label for="coName">نام شرکت یا کارگاه</label>
+          <input class="control" id="coName" type="text" placeholder="نام ثبتی یا برند">
+          <p class="err" id="e-coName">نام شرکت را وارد کنید.</p>
+        </div>
+        <div class="field">
+          <label for="coRole">سمت شما در شرکت</label>
+          <div class="select-wrap">
+            <select class="control" id="coRole">
+              <option value="">انتخاب کنید…</option>
+              <option>مدیرعامل یا مالک</option>
+              <option>عضو هیئت مدیره</option>
+              <option>مدیر تولید</option>
+              <option>مدیر فروش یا بازرگانی</option>
+              <option>مدیر فنی یا مهندسی</option>
+              <option>مدیر کیفیت</option>
+              <option>کارشناس یا کارمند</option>
+              <option>سرپرست نصب و اجرا</option>
+              <option>سایر</option>
+            </select>
+          </div>
+          <p class="err" id="e-coRole">سمت خود را انتخاب کنید.</p>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button class="btn" id="toSurvey">ادامه <span class="arw">←</span></button>
+        <button class="btn btn-ghost" id="backHero">بازگشت</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ SURVEY ══════════════════════════════════ -->
+<section class="screen overlay" id="survey">
+  <div class="topbar"><div class="wrap topbar-in">
+    <svg class="mini" viewBox="0 0 420 300" aria-hidden="true">
+      <defs><clipPath id="p4"><rect x="222" y="162" width="186" height="126" rx="18"/></clipPath></defs>
+      <g class="glass"><rect x="12" y="12" width="186" height="126" rx="18"/><rect x="222" y="12" width="186" height="126" rx="18"/><rect x="12" y="162" width="186" height="126" rx="18"/><rect x="222" y="162" width="186" height="126" rx="18"/></g>
+      <g clip-path="url(#p4)"><rect class="fill" id="paneFill" x="222" y="162" width="186" height="126" style="transform:scaleY(0)"/></g>
+      <g class="frame"><rect x="12" y="12" width="186" height="126" rx="18"/><rect x="222" y="12" width="186" height="126" rx="18"/><rect x="12" y="162" width="186" height="126" rx="18"/><rect x="222" y="162" width="186" height="126" rx="18"/></g>
+      <text class="ltr" x="105" y="116">D</text><text class="ltr" x="315" y="116">W</text><text class="ltr" x="105" y="266">A</text>
+    </svg>
+    <div class="meta"><b id="formName">—</b><span id="progressText">—</span></div>
+  </div><div class="bar"><i id="progressBar"></i></div></div>
+
+  <div class="wrap pane">
+    <div class="card" id="qCard"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════ DONE ══════════════════════════════════ -->
+<section class="screen overlay" id="done">
+  <div class="wrap done">
+    <svg class="seal" viewBox="0 0 420 300" aria-hidden="true">
+      <g fill="#F1F6F9"><rect x="12" y="12" width="186" height="126" rx="18"/><rect x="222" y="12" width="186" height="126" rx="18"/><rect x="12" y="162" width="186" height="126" rx="18"/><rect x="222" y="162" width="186" height="126" rx="18"/></g>
+      <g class="frame"><rect x="12" y="12" width="186" height="126" rx="18"/><rect x="222" y="12" width="186" height="126" rx="18"/><rect x="12" y="162" width="186" height="126" rx="18"/><rect x="222" y="162" width="186" height="126" rx="18"/></g>
+      <text class="ltr" x="105" y="116">D</text><text class="ltr" x="315" y="116">W</text><text class="ltr" x="105" y="266">A</text>
+      <path class="tick" d="M270 226 l26 26 l48 -54"/>
+    </svg>
+    <h1>قاب چهارم پر شد</h1>
+    <p id="doneMsg">پاسخ شما ثبت شد. ممنون که وقت گذاشتید!</p>
+    <p id="doneMsg"> پاسخ های شما، برنامه آموزشی و نظارتی آتی انجمن را می‌سازند.</p>
+    <p class="save-state" id="saveState" hidden></p>
+  </div>
+  <div class="wrap"><footer><p>انجمن صنفی کارفرمایی تولیدکنندگان در و پنجره ایران <span class="dot" id="adminDot">·</span> DWA</p></footer></div>
+</section>
+
+<button class="closeX" id="closeX" type="button" aria-label="بستن نظرسنجی">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+</button>
+
+<div class="ask" id="quitAsk" role="dialog" aria-modal="true" aria-labelledby="quitTitle">
+  <div class="box2">
+    <b id="quitTitle">از نظرسنجی خارج می‌شوید؟</b>
+    <p>پاسخ هایی که تا اینجا داده‌اید ثبت نمی‌شود.</p>
+    <div class="row2">
+      <button class="btn" id="stayBtn">ادامه می‌دهم</button>
+      <button class="btn btn-ghost" id="quitBtn">خروج</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ ADMIN ══════════════════════════════════ -->
+<section class="screen overlay" id="admin">
+  <div class="topbar"><div class="wrap topbar-in">
+    <svg class="mini" viewBox="0 0 420 300" aria-hidden="true">
+      <g class="glass"><rect x="12" y="12" width="186" height="126" rx="18"/><rect x="222" y="12" width="186" height="126" rx="18"/><rect x="12" y="162" width="186" height="126" rx="18"/><rect x="222" y="162" width="186" height="126" rx="18"/></g>
+      <g class="frame"><rect x="12" y="12" width="186" height="126" rx="18"/><rect x="222" y="12" width="186" height="126" rx="18"/><rect x="12" y="162" width="186" height="126" rx="18"/><rect x="222" y="162" width="186" height="126" rx="18"/></g>
+      <text class="ltr" x="105" y="116">D</text><text class="ltr" x="315" y="116">W</text><text class="ltr" x="105" y="266">A</text>
+    </svg>
+    <div class="meta"><b>پاسخ های ثبت‌شده</b><span>پنل داخلی انجمن</span></div>
+  </div></div>
+  <div class="wrap pane" id="adminBody"></div>
+</section>
+
+<script>
+"use strict";
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CONFIG
+   apiEndpoint: وقتی بک‌اند PHP/Node را بالا آوردید، آدرس آن را اینجا بگذارید.
+   خالی که باشد، سایت از حافظه پایدار خودِ صفحه استفاده می‌کند.
+   ══════════════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  apiEndpoint: "",            // e.g. "https://example.ir/api.php"
+  adminToken: "",             // همان ADMIN_TOKEN فایل api.php — برای خواندن فهرست پاسخ ها
+  adminPasscode: "dwa1405",   // رمز ورود به پنل داخلی همین صفحه
+  storagePrefix: "dwa:resp:"
+};
+
+/* ─────────────────────────────── helpers ─────────────────────────────── */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const FA_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
+const fa = n => String(n).replace(/\d/g, d => FA_DIGITS[+d]);
+const toLatinDigits = s => String(s)
+  .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+  .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
+
+const PROVINCES = ["آذربایجان شرقی","آذربایجان غربی","اردبیل","اصفهان","البرز","ایلام","بوشهر","تهران","چهارمحال و بختیاری","خراسان جنوبی","خراسان رضوی","خراسان شمالی","خوزستان","زنجان","سمنان","سیستان و بلوچستان","فارس","قزوین","قم","کردستان","کرمان","کرمانشاه","کهگیلویه و بویراحمد","گلستان","گیلان","لرستان","مازندران","مرکزی","هرمزگان","همدان","یزد"];
+
+const SCALE6 = ["بسیار خوب","خوب","متوسط","ضعیف","بسیار ضعیف","اطلاع ندارم"];
+const BIG_PROBLEM = ["محصولات غیراستاندارد","نبود نظارت و برخورد با تولید غیرمجاز","کیفیت پایین نصب","نوسان قیمت","بی اعتمادی میان بازار و مصرف کننده","نبود اطلاعات شفاف برای خریدار","نبود مرجع رسیدگی به شکایت","کمبود نیروی ماهر","مقررات و سیاست های دولتی"];
+const ONE_CHANGE = ["اجرای اجباری استاندارد برای همه تولیدکنندگان","حذف تولیدکنندگان غیرمجاز از بازار","شفاف شدن قیمت ها","الزام گارانتی معتبر و قابل پیگیری","استانداردسازی و صدور مجوز برای نصابان","ایجاد مرجع رسمی شکایت","ارتقای آگاهی مصرف کننده","ارتقای فناوری و ماشین آلات صنعت"];
+
+/* ═════════════════════════ FORM 1 — مصرف کننده ═════════════════════════ */
+const CONSUMER = [
+  { id:"c1", type:"single", title:"نقش شما در خرید پنجره چیست؟",
+    options:["مالک یا مصرف کننده نهایی","پیمانکار ساختمان","معمار یا مهندس","انبوه ساز","بازدیدکننده بدون پروژه فعلی"] },
+  { id:"c2", type:"select", title:"استان محل پروژه یا سکونت شما چیست؟", options:PROVINCES },
+  { id:"c3", type:"single", title:"آیا تاکنون پنجره خریداری یا تعویض کرده اید؟",
+    options:["بله","خیر، اما در یک سال آینده قصد خرید دارم","خیر و فعلاً قصد خرید ندارم"] },
+  { id:"c4", type:"single", title:"پنجره‌ای که خریداری کردید از چه جنسی بود؟",
+    options:["UPVC","آلومینیوم ترمال‌بریک","آلومینیوم معمولی","چوب یا ترکیبی","اطلاع دقیقی ندارم"],
+    showIf:a => a.c3 === "بله" },
+  { id:"c5", type:"rank", limit:3, title:"مهمترین معیارهای شما هنگام خرید پنجره چیست؟",
+    options:["کیفیت و دوام","قیمت","عایق حرارتی و کاهش مصرف انرژی","عایق صوتی","زیبایی و طراحی","برند و اعتبار تولیدکننده","گارانتی و خدمات پس از فروش","کیفیت نصب","دارا بودن استاندارد معتبر","سرعت تحویل"] },
+  { id:"c6", type:"single", title:"تجربه خرید و نصب پنجره شما در مجموع چگونه بود؟",
+    options:["بسیار خوب","خوب","متوسط","ضعیف","بسیار ضعیف"],
+    showIf:a => a.c3 === "بله" },
+  { id:"c7", type:"single", title:"اگر تجربه‌تان مطلوب نبود، مهمترین دلیل چه بود؟",
+    options:["کیفیت پایین محصول","کیفیت پایین نصب","تأخیر در تحویل","بی‌اعتبار بودن گارانتی","بی‌پاسخ ماندن خدمات پس از فروش","تفاوت محصول با آنچه تبلیغ شده بود","افزایش قیمت پس از قرارداد","رفتار غیرحرفه‌ای فروشنده"],
+    showIf:a => ["متوسط","ضعیف","بسیار ضعیف"].includes(a.c6) },
+  { id:"c8", type:"multi", limit:3, title:"بزرگترین نگرانی های شما هنگام خرید پنجره چیست؟",
+    options:["تشخیص محصول باکیفیت","قیمت و نوسان آن","یافتن تولیدکننده معتبر","کیفیت نصب","اعتبار گارانتی","خدمات پس از فروش","تفاوت کیفیت واقعی با تبلیغات","تأخیر در تحویل","نبود مرجعی برای شکایت"] },
+  { id:"c9", type:"multi", limit:2, title:"برای انتخاب پنجره از چه منبعی مشاوره می‌گیرید؟",
+    options:["تولیدکننده یا فروشنده","مهندس، معمار یا ناظر","دوستان و آشنایان","اینترنت و شبکه های اجتماعی","تجربه شخصی قبلی","نمایشگاه های تخصصی","از هیچ منبعی"] },
+  { id:"c10", type:"single", title:"در عمل، کیفیت یک پنجره را چگونه تشخیص میدهید؟",
+    options:["استعلام گواهی استاندارد و مشخصات فنی","از نام و اعتبار برند","از قیمت","از ظاهر و وزن محصول","به توصیه دیگران اعتماد میکنم","توانایی تشخیص آن را ندارم"] },
+  { id:"c11", type:"single", title:"اعتماد شما به ادعا های تبلیغاتی در بازار در و پنجره چقدر است؟",
+    options:["بسیار زیاد","زیاد","متوسط","کم","بسیار کم"] },
+  { id:"c12", type:"single", title:"آیا نام «انجمن تولیدکنندگان در و پنجره ایران» را شنیده اید؟",
+    options:["بله، و با فعالیت‌های آن آشنا هستم","نام آن را شنیده ام، اما اطلاع دقیقی ندارم","خیر، تاکنون نشنیده بودم"] },
+  { id:"c13", type:"multi", limit:3, title:"کدام خدمات انجمن برای شما مفیدتر است؟",
+    options:["سامانه استعلام اعتبار تولیدکننده","راهنمای انتخاب پنجره مناسب","آموزش تشخیص پنجره باکیفیت","راهنمای بازه قیمت منصفانه","چک لیست کنترل نصب و تحویل","داوری و رسیدگی به شکایت","قرارداد نمونه و راهنمای حقوق مصرف کننده","خط مشاوره تلفنی پیش از خرید"] },
+  { id:"c14", type:"single", title:"بزرگترین مشکل امروز صنعت در و پنجره ایران چیست؟", options:BIG_PROBLEM },
+  { id:"c15", type:"single", title:"اگر فقط یک تغییر در این صنعت ایجاد شود، آن تغییر چه باشد؟", options:ONE_CHANGE }
+];
+
+/* ════════════════════ FORM 2 — تولیدکننده و شرکت ════════════════════ */
+const COMPANY = [
+  { id:"p1", type:"select", title:"استان محل فعالیت شما چیست؟", options:PROVINCES },
+  { id:"p2", type:"single", title:"حوزه اصلی فعالیت شما چیست؟",
+    options:["تولید در و پنجره","پروفیل و مواد اولیه","شیشه","یراق آلات","ماشین آلات و تجهیزات","نصب و اجرا","طراحی و مهندسی","بازرگانی و توزیع"] },
+  { id:"p3", type:"single", title:"چند سال در این صنعت فعالیت میکنید؟",
+    options:["کمتر از ۵ سال","۵ تا ۱۰ سال","۱۰ تا ۲۰ سال","بیش از ۲۰ سال"] },
+  { id:"p4", type:"single", title:"وضعیت عضویت شما در انجمن چیست؟",
+    options:["عضو هستم","قبلاً عضو بودم، اما دیگر نیستم","هرگز عضو نبوده‌ام"] },
+  { id:"p5", type:"multi", limit:2, title:"مهمترین دلایل عضو نبودن شما چیست؟",
+    options:["منفعت ملموسی از عضویت ندیدم","هزینه حق عضویت","از شرایط و فرایند عضویت اطلاع نداشتم","به اثربخشی تشکل های صنفی اعتماد ندارم","شرایط و مدارک لازم را ندارم","تجربه یا برخورد نامطلوب قبلی","انجمن نماینده کسب و کار هایی در اندازه من نیست","فرصت پیگیری ندارم"],
+    showIf:a => a.p4 === "قبلاً عضو بودم، اما دیگر نیستم" || a.p4 === "هرگز عضو نبوده‌ام" },
+  { id:"p6", type:"single", title:"میزان آشنایی شما با فعالیت‌ها و اقدامات انجمن چقدر است؟",
+    options:["بسیار زیاد","زیاد","متوسط","کم","بسیار کم"] },
+  { id:"p7", type:"rank", limit:3, title:"مهمترین وظایف انجمن چیست؟",
+    options:["دفاع از منافع صنف","پیگیری مشکلات صنعت از دولت","مقابله با تولید غیرمجاز و غیراستاندارد","تدوین و ترویج استاندارد ها","آموزش و توانمندسازی اعضا","تربیت نیروی کار متخصص","ایجاد فرصت های تجاری میان اعضا","توسعه صادرات","اطلاع رسانی و تحلیل بازار","ارتقای اعتبار صنعت نزد مصرف کننده","ایجاد هم افزایی میان اعضا"] },
+  { id:"p8", type:"matrix", title:"عملکرد انجمن را در موارد زیر ارزیابی کنید.",
+    rows:["دفاع از منافع صنعت","پیگیری مشکلات از دولت","ارتباط و پاسخگویی به اعضا","اطلاع رسانی و شفافیت","برگزاری رویداد های تخصصی","مقابله با فعالیت غیرمجاز","ایجاد هم افزایی میان اعضا","عملکرد کلی انجمن"],
+    options:SCALE6 },
+  { id:"p9", type:"single", title:"تا چه حد عضویت در انجمن را به یک همکار توصیه میکنید؟",
+    options:["قطعاً توصیه میکنم","احتمالاً توصیه میکنم","مطمئن نیستم","احتمالاً توصیه نمیکنم","قطعاً توصیه نمیکنم"] },
+  { id:"p10", type:"rank", limit:3, title:"مهمترین مشکلات فعلی کسب‌وکار شما چیست؟",
+    options:["قوانین و بخشنامه های متغیر","مالیات","بیمه","نوسان قیمت مواد اولیه","تأمین مواد اولیه","کمبود نقدینگی","رقابت ناسالم و قیمت شکنی","محصولات غیراستاندارد در بازار","تولیدکنندگان و مجریان غیرمجاز","کاهش تقاضا و رکود ساخت و ساز","کمبود نیروی انسانی ماهر","موانع صادرات","فرسودگی فناوری و ماشین آلات","بی اعتمادی مصرف کننده به صنعت"] },
+  { id:"p11", type:"multi", limit:3, title:"انتظار دارید انجمن کدام خدمات را بیشتر ارائه کند؟",
+    options:["آموزش های فنی و تخصصی","مشاوره حقوقی","مشاوره مالیاتی و بیمه","آموزش مدیریت و فروش","بازاریابی و برندسازی صنعت","صادرات و بازارهای بین المللی","ارتباط مؤثرتر با دولت","اطلاع رسانی به روز قوانین","ارتباط تجاری و جلسات B2B میان اعضا","برگزاری رویداد و نمایشگاه","پژوهش و مطالعات بازار","تدوین استاندارد های تخصصی","رتبه بندی و اعتبارسنجی تولیدکنندگان","تأمین نیروی کار ماهر"] },
+  { id:"p12", type:"multi", limit:2, title:"برای کدام خدمت حاضرید هزینه‌ای جدا از حق عضویت بپردازید؟",
+    options:["آموزش تخصصی و صدور گواهی مهارت","مشاوره حقوقی و مالیاتی اختصاصی","رتبه بندی و اعتبارسنجی شرکت","خدمات صادرات و اتصال به بازار خارجی","گزارش‌های تحلیل بازار","آزمون و کنترل کیفیت محصول","هیچکدام؛ باید در قالب حق عضویت باشد"] },
+  { id:"p13", type:"multi", limit:2, title:"در کدام بخش آماده مشارکت فعال هستید؟",
+    options:["کمیته فنی و استاندارد","کمیته آموزش","کمیته اطلاع رسانی و روابط عمومی","کمیته بازرگانی و صادرات","کمیته حقوقی","کمیته رسیدگی به شکایات","هیئت مدیره","بازرسین","انتقال تجربه بدون عضویت در کمیته","فعلاً تمایلی ندارم"] },
+  { id:"p14", type:"single", title:"بزرگترین مشکل امروز صنعت در و پنجره ایران چیست؟", options:BIG_PROBLEM },
+  { id:"p15", type:"single", title:"اگر فقط یک تغییر در این صنعت ایجاد شود، آن تغییر چه باشد؟", options:ONE_CHANGE }
+];
+
+/* ═══════════════════════════ STORAGE LAYER ═══════════════════════════
+   ترتیب تلاش: API شما ← حافظه پایدار صفحه ← حافظه موقت همین نشست
+   ═════════════════════════════════════════════════════════════════════ */
+const memory = [];
+const Store = {
+  mode(){
+    if (CONFIG.apiEndpoint) return "api";
+    if (typeof window.storage !== "undefined") return "storage";
+    return "memory";
+  },
+  async save(rec){
+    const mode = this.mode();
+    if (mode === "api"){
+      const res = await fetch(CONFIG.apiEndpoint, {
+        method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(rec)
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return "api";
+    }
+    if (mode === "storage"){
+      await window.storage.set(CONFIG.storagePrefix + rec.id, JSON.stringify(rec), true);
+      return "storage";
+    }
+    memory.push(rec);
+    return "memory";
+  },
+  async list(){
+    const mode = this.mode();
+    if (mode === "api"){
+      const res = await fetch(`${CONFIG.apiEndpoint}?list=1&token=${encodeURIComponent(CONFIG.adminToken)}`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      return Array.isArray(data) ? data : (data.rows || []);
+    }
+    if (mode === "storage"){
+      const out = [];
+      try{
+        const idx = await window.storage.list(CONFIG.storagePrefix, true);
+        for (const k of (idx?.keys || [])){
+          try{ const r = await window.storage.get(k, true); if (r?.value) out.push(JSON.parse(r.value)); }
+          catch(e){ /* کلید ناخوانا، رد می‌شود */ }
+        }
+      }catch(e){ /* هنوز پاسخی ثبت نشده */ }
+      return out.sort((a,b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+    }
+    return memory.slice().reverse();
+  }
+};
+
+/* ═══════════════════════════ APP STATE ═══════════════════════════ */
+const state = {
+  audience:null, first:"", last:"", phone:"", coName:"", coRole:"",
+  answers:{}, note:"", startedAt:null, id:null
+};
+let deck = [], pointer = 0;
+
+const show = id => {
+  const open = id !== "hero";
+  $$(".overlay").forEach(o => {
+    const on = o.id === id;
+    o.classList.toggle("is-on", on);
+    if (on) o.scrollTop = 0;
+  });
+  document.body.classList.toggle("locked", open);
+  $("#closeX").classList.toggle("is-on", id === "register" || id === "survey");
+  if (!open) window.scrollTo(0, 0);
+};
+
+/* ─────────────────────────── HERO → REGISTER ─────────────────────────── */
+$("#startBtn").addEventListener("click", () => {
+  state.startedAt = new Date().toISOString();
+  show("register");
+  setTimeout(() => $("#fName")?.focus(), 320);
+});
+$("#backHero").addEventListener("click", () => show("hero"));
+
+/* خروج از نظرسنجی */
+const askQuit = () => $("#quitAsk").classList.add("is-on");
+const hideQuit = () => $("#quitAsk").classList.remove("is-on");
+$("#closeX").addEventListener("click", () => {
+  const touched = Object.keys(state.answers).length > 0 || $("#fName").value.trim() !== "";
+  touched ? askQuit() : show("hero");
+});
+$("#stayBtn").addEventListener("click", hideQuit);
+$("#quitBtn").addEventListener("click", () => { hideQuit(); resetAll(); show("hero"); });
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if ($("#quitAsk").classList.contains("is-on")) hideQuit();
+  else if ($("#closeX").classList.contains("is-on")) askQuit();
+});
+
+$$("#audiencePick button").forEach(b => b.addEventListener("click", () => {
+  $$("#audiencePick button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  state.audience = b.dataset.aud;
+  $("#coFields").hidden = state.audience !== "company";
+  $("#e-aud").classList.remove("is-on");
+}));
+
+const setErr = (id, on) => {
+  const e = $("#e-" + id), f = $("#" + id);
+  if (e) e.classList.toggle("is-on", on);
+  if (f) f.classList.toggle("bad", on);
+};
+
+$("#phone").addEventListener("input", ev => {
+  ev.target.value = toLatinDigits(ev.target.value).replace(/[^\d+]/g, "");
+});
+
+const validPhone = v => {
+  const d = toLatinDigits(v).replace(/\D/g, "").replace(/^0098/, "0").replace(/^98(?=9)/, "0");
+  return /^09\d{9}$/.test(d) ? d : null;
+};
+
+$("#toSurvey").addEventListener("click", () => {
+  let ok = true;
+  const f = $("#fName").value.trim(), l = $("#lName").value.trim(), p = validPhone($("#phone").value);
+  setErr("fName", !f); if (!f) ok = false;
+  setErr("lName", !l); if (!l) ok = false;
+  setErr("phone", !p); if (!p) ok = false;
+  if (!state.audience){ $("#e-aud").classList.add("is-on"); ok = false; }
+  if (state.audience === "company"){
+    const cn = $("#coName").value.trim(), cr = $("#coRole").value;
+    setErr("coName", !cn); if (!cn) ok = false;
+    setErr("coRole", !cr); if (!cr) ok = false;
+    state.coName = cn; state.coRole = cr;
+  }
+  if (!ok){ $(".err.is-on")?.scrollIntoView?.({ behavior:"smooth", block:"center" }); return; }
+
+  state.first = f; state.last = l; state.phone = p;
+  deck = state.audience === "company" ? COMPANY : CONSUMER;
+  pointer = 0;
+  $("#formName").textContent = state.audience === "company" ? "پرسش‌های فعالان صنعت" : "پرسش‌های خریدار پنجره";
+  show("survey");
+  renderQ();
+});
+
+/* ─────────────────────────── QUESTION ENGINE ─────────────────────────── */
+const visible = () => deck.filter(q => !q.showIf || q.showIf(state.answers));
+const kindLabel = q => ({
+  single:"یک گزینه", select:"از فهرست انتخاب کنید",
+  multi:`حداکثر ${fa(q.limit)} مورد`, rank:`${fa(q.limit)} مورد را به ترتیب اهمیت انتخاب کنید`,
+  matrix:"برای هر سطر یک گزینه"
+}[q.type] || "");
+
+function tick(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.6 9.2 18 20 6.4"/></svg>`;
+}
+
+function renderQ(){
+  const vis = visible();
+  if (pointer >= vis.length){ renderNote(); return; }
+  const q = vis[pointer];
+  const pos = pointer + 1, total = vis.length;
+
+  let body = "";
+  if (q.type === "select"){
+    const v = state.answers[q.id] || "";
+    body = `<div class="select-wrap"><select class="control" id="selCtl">
+      <option value="">استان را انتخاب کنید…</option>
+      ${q.options.map(o => `<option${o === v ? " selected" : ""}>${esc(o)}</option>`).join("")}
+    </select></div>`;
+  } else if (q.type === "single"){
+    const v = state.answers[q.id];
+    body = `<div class="opts">${q.options.map((o,i) =>
+      `<button type="button" class="opt round" data-o="${i}" aria-pressed="${o === v}">
+        <span class="box">${tick()}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
+  } else if (q.type === "multi"){
+    const sel = state.answers[q.id] || [];
+    const full = sel.length >= q.limit;
+    body = `<div class="opts">${q.options.map((o,i) => {
+      const on = sel.includes(o);
+      return `<button type="button" class="opt" data-o="${i}" aria-pressed="${on}" data-locked="${(!on && full) ? 1 : 0}">
+        <span class="box">${tick()}</span><span>${esc(o)}</span></button>`;
+    }).join("")}</div>
+    <p class="counter${full ? " full" : ""}" id="cnt">${fa(sel.length)} از ${fa(q.limit)} انتخاب شد</p>`;
+  } else if (q.type === "rank"){
+    const sel = state.answers[q.id] || [];
+    body = `<div class="opts">${q.options.map((o,i) => {
+      const r = sel.indexOf(o);
+      return `<button type="button" class="opt" data-o="${i}" aria-pressed="${r > -1}">
+        <span class="rank">${r > -1 ? fa(r + 1) : "—"}</span><span>${esc(o)}</span></button>`;
+    }).join("")}</div>
+    <p class="counter${sel.length >= q.limit ? " full" : ""}" id="cnt">${fa(sel.length)} از ${fa(q.limit)} — دوباره بزنید تا حذف شود</p>`;
+  } else if (q.type === "matrix"){
+    const cur = state.answers[q.id] || {};
+    const marks = ["۵","۴","۳","۲","۱","؟"];
+    body = `<div class="legend">
+        <span><b>۵</b> بسیار خوب</span><span><b>۳</b> متوسط</span><span><b>۱</b> بسیار ضعیف</span><span><b>؟</b> اطلاع ندارم</span>
+      </div>
+      <div class="mtx">${q.rows.map((row,ri) =>
+        `<div class="mtx-row"><span class="rw">${esc(row)}</span><div class="scale">${q.options.map((o,oi) =>
+          `<button type="button" class="sc" data-r="${ri}" data-o="${oi}" aria-pressed="${cur[row] === o}" title="${esc(o)}" aria-label="${esc(row)}: ${esc(o)}">${marks[oi]}</button>`
+        ).join("")}</div></div>`).join("")}</div>`;
+  }
+
+  $("#qCard").className = "card q-anim";
+  $("#qCard").innerHTML = `
+    <div class="q-head"><span class="q-num">Q${String(pos).padStart(2,"0")}</span><span class="q-kind">${kindLabel(q)}</span></div>
+    <h2 class="q-title">${esc(q.title)}</h2>
+    ${body}
+    <div class="nav">
+      <button class="btn" id="nextBtn">${pos === total ? "پایان پرسش ها" : "پرسش بعد"} <span class="arw">←</span></button>
+      ${pointer > 0 ? `<button class="btn btn-ghost" id="prevBtn">قبلی</button>` : ""}
+    </div>
+    <p class="err" id="e-q">برای ادامه به این پرسش پاسخ دهید.</p>`;
+
+  const flag = pos === total ? " · آخرین پرسش"
+             : (total > 5 && pos === Math.ceil(total / 2)) ? " · نیمه راه" : "";
+  $("#progressText").textContent = `پرسش ${fa(pos)} از ${fa(total)}${flag}`;
+  const frac = (pos - 1) / total;
+  $("#progressBar").style.width = (frac * 100).toFixed(1) + "%";
+  $("#paneFill").style.transform = `scaleY(${frac.toFixed(3)})`;
+
+  wireQ(q);
+}
+
+function wireQ(q){
+  const card = $("#qCard");
+  const clearErr = () => $("#e-q").classList.remove("is-on");
+
+  if (q.type === "select"){
+    $("#selCtl").addEventListener("change", e => { state.answers[q.id] = e.target.value; clearErr(); });
+  }
+  if (q.type === "single"){
+    $$(".opt", card).forEach(b => b.addEventListener("click", () => {
+      $$(".opt", card).forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      state.answers[q.id] = q.options[+b.dataset.o];
+      clearErr();
+      setTimeout(next, 190);       // یک گزینه‌ای‌ها خودشان جلو می‌روند
+    }));
+  }
+  if (q.type === "multi"){
+    $$(".opt", card).forEach(b => b.addEventListener("click", () => {
+      const o = q.options[+b.dataset.o];
+      const sel = state.answers[q.id] = state.answers[q.id] || [];
+      const at = sel.indexOf(o);
+      if (at > -1) sel.splice(at, 1);
+      else { if (sel.length >= q.limit) return; sel.push(o); }
+      clearErr(); renderQ();
+    }));
+  }
+  if (q.type === "rank"){
+    $$(".opt", card).forEach(b => b.addEventListener("click", () => {
+      const o = q.options[+b.dataset.o];
+      const sel = state.answers[q.id] = state.answers[q.id] || [];
+      const at = sel.indexOf(o);
+      if (at > -1) sel.splice(at, 1);
+      else { if (sel.length >= q.limit) return; sel.push(o); }
+      clearErr(); renderQ();
+    }));
+  }
+  if (q.type === "matrix"){
+    $$(".sc", card).forEach(c => c.addEventListener("click", () => {
+      const row = q.rows[+c.dataset.r], val = q.options[+c.dataset.o];
+      state.answers[q.id] = state.answers[q.id] || {};
+      state.answers[q.id][row] = val;
+      $$(`.sc[data-r="${c.dataset.r}"]`, card).forEach(x => x.setAttribute("aria-pressed", String(x === c)));
+      clearErr();
+      const nextRow = q.rows.findIndex(r => !state.answers[q.id][r]);
+      if (nextRow > -1) $(`.sc[data-r="${nextRow}"]`, card)?.closest(".mtx-row")
+        ?.scrollIntoView?.({ behavior:"smooth", block:"center" });
+    }));
+  }
+
+  $("#nextBtn").addEventListener("click", next);
+  $("#prevBtn")?.addEventListener("click", () => { pointer = Math.max(0, pointer - 1); renderQ(); });
+
+  function next(){
+    if (!answered(q)){
+      const e = $("#e-q");
+      e.textContent = q.type === "rank"
+        ? `${fa(q.limit)} مورد را به ترتیب اهمیت انتخاب کنید.`
+        : q.type === "matrix" ? "همه سطرها را ارزیابی کنید." : "برای ادامه به این پرسش پاسخ دهید.";
+      e.classList.add("is-on");
+      return;
+    }
+    pruneHidden();
+    pointer++;
+    renderQ();
+  }
+}
+
+function answered(q){
+  const v = state.answers[q.id];
+  if (q.type === "single" || q.type === "select") return !!v;
+  if (q.type === "multi") return Array.isArray(v) && v.length > 0;
+  if (q.type === "rank")  return Array.isArray(v) && v.length === q.limit;
+  if (q.type === "matrix") return v && q.rows.every(r => v[r]);
+  return true;
+}
+
+/* اگر پاسخی عوض شد و پرسش شرطی دیگر نمایش داده نمی‌شود، پاسخ قدیمی‌اش پاک شود */
+function pruneHidden(){
+  deck.forEach(q => { if (q.showIf && !q.showIf(state.answers)) delete state.answers[q.id]; });
+}
+
+/* ─────────────────────────── OPTIONAL NOTE + SUBMIT ─────────────────────────── */
+function renderNote(){
+  $("#progressText").textContent = "آخرین مرحله";
+  $("#progressBar").style.width = "100%";
+  $("#paneFill").style.transform = "scaleY(1)";
+  $("#qCard").className = "card q-anim";
+  $("#qCard").innerHTML = `
+    <div class="q-head"><span class="q-num">END</span><span class="q-kind">اختیاری</span></div>
+    <h2 class="q-title">حرفی مانده که در گزینه ها جا نشد؟</h2>
+    <textarea class="control" id="noteBox" placeholder="اگر نکته ای برای انجمن دارید بنویسید."></textarea>
+    <div class="nav">
+      <button class="btn" id="submitBtn">ثبت پاسخ ها</button>
+      <button class="btn btn-ghost" id="prevBtn2">قبلی</button>
+    </div>`;
+  $("#noteBox").value = state.note || "";
+  $("#prevBtn2").addEventListener("click", () => { pointer = Math.max(0, visible().length - 1); renderQ(); });
+  $("#submitBtn").addEventListener("click", submit);
+}
+
+function buildRecord(){
+  const id = new Date().toISOString().replace(/[-:.TZ]/g, "").slice(0, 14) + "-" +
+             Math.random().toString(36).slice(2, 7);
+  return {
+    id,
+    createdAt:new Date().toISOString(),
+    audience:state.audience,                 // consumer | company
+    firstName:state.first, lastName:state.last, phone:state.phone,
+    companyName:state.coName || "", companyRole:state.coRole || "",
+    answers:JSON.parse(JSON.stringify(state.answers)),
+    note:state.note,
+    meta:{
+      startedAt:state.startedAt,
+      durationSec:state.startedAt ? Math.round((Date.now() - new Date(state.startedAt)) / 1000) : null,
+      userAgent:navigator.userAgent,
+      screen:`${window.screen.width}x${window.screen.height}`,
+      lang:navigator.language
+    }
+  };
+}
+
+async function submit(){
+  state.note = $("#noteBox").value.trim();
+  const btn = $("#submitBtn");
+  btn.disabled = true; btn.textContent = "در حال ثبت…";
+  const rec = buildRecord();
+  state.id = rec.id;
+  show("done");
+  const st = $("#saveState");
+  st.hidden = true; st.classList.remove("bad");
+  try{
+    await Store.save(rec);
+  }catch(err){
+    memory.push(rec);
+    st.hidden = false; st.classList.add("bad");
+    st.textContent = "ارسال به سرور انجام نشد. پاسخ شما در همین دستگاه نگه داشته شد؛ لطفاً به مسئول غرفه اطلاع دهید.";
+  }
+}
+
+function resetAll(){
+  state.audience = null; state.answers = {}; state.note = ""; state.id = null;
+  state.first = state.last = state.phone = state.coName = state.coRole = "";
+  ["fName","lName","phone","coName"].forEach(k => $("#" + k).value = "");
+  $("#coRole").value = ""; $("#coFields").hidden = true;
+  $$("#audiencePick button").forEach(x => x.setAttribute("aria-pressed","false"));
+  $$(".err").forEach(e => e.classList.remove("is-on"));
+  $$(".control").forEach(c => c.classList.remove("bad"));
+  pointer = 0;
+}
+$("#againBtn").addEventListener("click", () => {
+  resetAll();
+  state.startedAt = new Date().toISOString();
+  show("register");
+  $("#fName")?.focus();
+});
+
+/* ─────────────────────────── ADMIN ─────────────────────────── */
+let dotHits = 0;
+$("#adminDot").addEventListener("click", () => { if (++dotHits >= 5){ dotHits = 0; openAdmin(); } });
+window.addEventListener("hashchange", () => { if (location.hash === "#admin") openAdmin(); });
+if (location.hash === "#admin") setTimeout(openAdmin, 60);
+
+function openAdmin(){
+  show("admin");
+  $("#adminBody").innerHTML = `<div class="card q-anim" style="max-width:420px;margin-inline:auto">
+      <span class="eyebrow">INTERNAL</span>
+      <h1 class="step-title">پنل انجمن</h1>
+      <p class="step-sub">برای دیدن پاسخ های ثبت‌شده رمز پنل را وارد کنید.</p>
+      <div class="field">
+        <label for="passIn">رمز پنل</label>
+        <input class="control" id="passIn" type="password" autocomplete="off" placeholder="••••••••">
+        <p class="err" id="e-pass">رمز درست نیست.</p>
+      </div>
+      <div class="nav">
+        <button class="btn" id="passBtn">ورود</button>
+        <button class="btn btn-ghost" id="passBack">بازگشت</button>
+      </div>
+    </div>`;
+  const go = async () => {
+    if ($("#passIn").value !== CONFIG.adminPasscode){
+      $("#e-pass").classList.add("is-on"); $("#passIn").classList.add("bad"); return;
+    }
+    $("#adminBody").innerHTML = `<div class="card">در حال خواندن پاسخ ها…</div>`;
+    let rows = [];
+    try{ rows = await Store.list(); }
+    catch(e){ $("#adminBody").innerHTML = `<div class="card">خواندن پاسخ ها انجام نشد: ${esc(e.message)}</div>`; return; }
+    renderAdmin(rows);
+  };
+  $("#passBtn").addEventListener("click", go);
+  $("#passIn").addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  $("#passIn").addEventListener("input", () => { $("#e-pass").classList.remove("is-on"); $("#passIn").classList.remove("bad"); });
+  $("#passBack").addEventListener("click", () => { location.hash = ""; show("hero"); });
+  setTimeout(() => $("#passIn")?.focus(), 200);
+}
+
+function renderAdmin(rows){
+  const co = rows.filter(r => r.audience === "company").length;
+  const cs = rows.length - co;
+  $("#adminBody").innerHTML = `
+    <div class="stat-row">
+      <div class="stat"><b>${fa(rows.length)}</b><span>کل پاسخ ها</span></div>
+      <div class="stat"><b>${fa(cs)}</b><span>خریدار / مصرف کننده</span></div>
+      <div class="stat"><b>${fa(co)}</b><span>فعال صنعت</span></div>
+      <div class="stat"><b style="font-size:.95rem;line-height:2.05">${Store.mode() === "api" ? "سرور" : Store.mode() === "storage" ? "حافظه پایدار" : "موقت"}</b><span>محل ذخیره</span></div>
+    </div>
+    <div class="admin-actions">
+      <button class="btn btn-ghost" id="csvBtn">دریافت فایل CSV</button>
+      <button class="btn btn-ghost" id="jsonBtn">دریافت فایل JSON</button>
+      <button class="btn btn-ghost" id="exitAdmin">بازگشت به نظرسنجی</button>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>زمان</th><th>نام</th><th>تلفن</th><th>گروه</th><th>شرکت</th><th>سمت</th><th>پاسخ ها</th></tr></thead>
+      <tbody>${rows.length ? rows.map((r,i) => `<tr>
+        <td class="pnum">${fa(i + 1)}</td>
+        <td class="pnum" style="direction:ltr">${esc(String(r.createdAt).replace("T"," ").slice(0,16))}</td>
+        <td>${esc(r.firstName + " " + r.lastName)}</td>
+        <td class="pnum" style="direction:ltr">${esc(r.phone)}</td>
+        <td><span class="badge ${r.audience === "company" ? "co" : ""}">${r.audience === "company" ? "فعال صنعت" : "مصرف کننده"}</span></td>
+        <td>${esc(r.companyName || "—")}</td>
+        <td>${esc(r.companyRole || "—")}</td>
+        <td class="pnum">${fa(Object.keys(r.answers || {}).length)} پرسش</td>
+      </tr>`).join("") : `<tr><td colspan="8" style="padding:2rem;text-align:center;color:var(--ink-3)">هنوز پاسخی ثبت نشده است.</td></tr>`}</tbody>
+    </table></div>`;
+  $("#exitAdmin").addEventListener("click", () => { location.hash = ""; show("hero"); });
+  $("#jsonBtn").addEventListener("click", () => download("dwa-survey.json", JSON.stringify(rows, null, 2), "application/json"));
+  $("#csvBtn").addEventListener("click", () => download("dwa-survey.csv", toCSV(rows), "text/csv"));
+}
+
+function toCSV(rows){
+  const qCols = [...CONSUMER, ...COMPANY].map(q => q.id);
+  const head = ["id","createdAt","audience","firstName","lastName","phone","companyName","companyRole", ...qCols, "note","durationSec"];
+  const cell = v => {
+    if (v == null) return "";
+    if (Array.isArray(v)) return v.map((x,i) => `${i + 1}. ${x}`).join(" | ");
+    if (typeof v === "object") return Object.entries(v).map(([k,x]) => `${k}: ${x}`).join(" | ");
+    return String(v);
+  };
+  const q = s => `"${String(s).replace(/"/g, '""')}"`;
+  const lines = [head.map(q).join(",")];
+  rows.forEach(r => lines.push(head.map(h => {
+    if (h === "durationSec") return q(cell(r.meta?.durationSec));
+    if (qCols.includes(h))    return q(cell(r.answers?.[h]));
+    return q(cell(r[h]));
+  }).join(",")));
+  return "\ufeff" + lines.join("\r\n");
+}
+
+function download(name, text, type){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type:type + ";charset=utf-8" }));
+  a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+}
+
+/* Enter برای ادامه در فرم مشخصات */
+$("#register").addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const t = e.target.tagName;
+  if (t === "BUTTON" || t === "SELECT" || t === "TEXTAREA") return;
+  e.preventDefault(); $("#toSurvey").click();
+});
+</script>
+</body>
+</html>
