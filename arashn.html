@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arash Nazar  Flute  Pars Music Institute</title>
+<meta name="description" content="Arash Nazar. Master of Music, University of Tehran. Flute and piccolo, Tehran Symphony Orchestra. Teaching at Pars Music Institute since 2010.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   TOKENS
+   ========================================================================== */
+:root{
+  --paper:#ffffff;
+  --paper-alt:#f5f5f7;
+  --ink:#1d1d1f;
+  --ink-soft:#6e6e73;
+  --ink-faint:#86868b;
+  --rule:rgba(0,0,0,.10);
+  --night:#0b0b0d;          /* dark sections, matched to the studio backdrop */
+  --night-soft:#16161a;
+  --link:#14487f;           /* Pars navy, drawn from the portraits */
+  --radius:28px;
+  --gutter:clamp(22px,5vw,80px);
+  --measure:62ch;
+  --pad-section:clamp(90px,14vh,190px);
+  --nav-h:52px;
+  --ease:cubic-bezier(.28,.11,.32,1);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:17px;line-height:1.5;letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased;
+}
+img,video{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--link);outline-offset:3px;border-radius:6px}
+
+.wrap{max-width:1240px;margin:0 auto;padding-inline:var(--gutter)}
+[id]{scroll-margin-top:calc(var(--nav-h) + 26px)}
+.section{padding-block:var(--pad-section)}
+.section--flush{padding-block:0}
+.section--pad-b{padding-bottom:var(--pad-section)}
+.section--alt{background:var(--paper-alt)}
+.section--night{background:var(--night);color:#f5f5f7}
+
+/* ---- type scale ---- */
+.eyebrow{
+  font-size:clamp(19px,2.2vw,25px);font-weight:600;letter-spacing:-.015em;
+  margin:0 0 .25em;color:var(--ink-soft);
+}
+.section--night .eyebrow{color:rgba(245,245,247,.62)}
+.display{
+  font-size:clamp(38px,6.4vw,84px);font-weight:600;line-height:1.05;
+  letter-spacing:-.028em;margin:0;text-wrap:balance;
+}
+.headline{
+  font-size:clamp(30px,4.4vw,54px);font-weight:600;line-height:1.09;
+  letter-spacing:-.024em;margin:0 0 .45em;text-wrap:balance;
+}
+.lede{
+  font-size:clamp(19px,1.55vw,23px);line-height:1.42;letter-spacing:-.012em;
+  max-width:var(--measure);margin:0;color:var(--ink);
+}
+.section--night .lede{color:rgba(245,245,247,.86)}
+.note{font-size:14px;line-height:1.45;color:var(--ink-faint);letter-spacing:0}
+sup.fn{font-size:.62em;vertical-align:.42em;line-height:0}
+sup.fn a{color:inherit;text-decoration:none}
+sup.fn a:hover{text-decoration:underline}
+
+/* ---- section headers ---- */
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap;margin-bottom:44px}
+.sec-head h2{font-size:clamp(30px,4vw,52px);font-weight:600;letter-spacing:-.025em;line-height:1.07;margin:0}
+.sec-head .sec-link{font-size:17px;font-weight:400;white-space:nowrap;padding-bottom:6px}
+.sec-head--center{justify-content:center;text-align:center}
+.sec-head--center h2{max-width:18ch;margin-inline:auto}
+
+/* ---- buttons ---- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--ink);color:#fff;border-radius:980px;
+  padding:12px 22px;font-size:17px;font-weight:500;letter-spacing:-.01em;white-space:nowrap;
+  transition:opacity .2s var(--ease),transform .2s var(--ease);
+}
+.btn:hover{opacity:.86;text-decoration:none}
+.btn:active{transform:scale(.98)}
+.btn--light{background:#fff;color:var(--ink)}
+.btn--sm{padding:7px 15px;font-size:15px}
+
+/* ==========================================================================
+   LOCAL NAV
+   ========================================================================== */
+.localnav{
+  position:fixed;top:0;left:0;right:0;z-index:80;height:var(--nav-h);
+  background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--rule);color:var(--ink);
+  transition:background .45s var(--ease),border-color .45s var(--ease),color .45s var(--ease);
+}
+.localnav.on-dark{
+  background:rgba(22,22,24,.5);border-bottom-color:rgba(255,255,255,.12);color:#fff;
+}
+.localnav__in{max-width:1240px;margin:0 auto;padding-inline:var(--gutter);
+  height:100%;display:flex;align-items:center;gap:20px}
+.localnav__brand{display:flex;align-items:center;gap:11px;font-weight:600;
+  font-size:19px;letter-spacing:-.018em;color:inherit;white-space:nowrap}
+.localnav__brand:hover{text-decoration:none}
+.localnav__logo{width:26px;height:26px;object-fit:contain;position:relative}
+.localnav__logo-wrap{position:relative;width:26px;height:26px;flex:0 0 26px}
+.localnav__logo-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  transition:opacity .45s var(--ease)}
+.localnav__logo-wrap .lg-white{opacity:0}
+.localnav.on-dark .localnav__logo-wrap .lg-white{opacity:1}
+.localnav.on-dark .localnav__logo-wrap .lg-black{opacity:0}
+.localnav__div{width:1px;height:17px;background:currentColor;opacity:.28}
+.localnav__links{margin-left:auto;display:flex;align-items:center;gap:26px}
+.localnav__links a{color:inherit;font-size:14px;letter-spacing:-.006em;opacity:.82}
+.localnav__links a:hover{opacity:1;text-decoration:none}
+.localnav__links a.btn{color:#fff;opacity:1;background:var(--ink)}
+.localnav.on-dark .localnav__links a.btn{background:#fff;color:var(--ink)}
+.localnav__links a.btn:hover{opacity:.86}
+@media(max-width:820px){
+  .localnav__links a:not(.btn){display:none}
+  .localnav__links{gap:0}
+}
+
+/* ==========================================================================
+   1  HERO
+   ========================================================================== */
+.hero{position:relative;height:100svh;min-height:620px;display:flex;background:var(--night);overflow:hidden}
+.hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:78% 34%;
+  transform:scale(1.06);animation:heroIn 1.7s var(--ease) forwards}
+@keyframes heroIn{to{transform:scale(1)}}
+.hero__scrim{position:absolute;inset:0;
+  background:
+    linear-gradient(to top,rgba(6,6,8,.92) 0%,rgba(6,6,8,.55) 26%,rgba(6,6,8,0) 58%),
+    linear-gradient(to right,rgba(6,6,8,.7) 0%,rgba(6,6,8,0) 52%);
+}
+.hero__in{position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;
+  padding:clamp(28px,5vh,64px) var(--gutter);display:flex;align-items:flex-end;
+  justify-content:space-between;gap:34px;flex-wrap:wrap;margin-top:auto}
+.hero__copy{color:#fff;max-width:min(56%,620px)}
+.hero__title{max-width:13ch}
+.hero__eyebrow{font-size:clamp(18px,2vw,23px);font-weight:600;letter-spacing:-.015em;
+  margin:0 0 .3em;color:rgba(255,255,255,.9)}
+.hero__title{font-size:clamp(34px,4.9vw,62px);font-weight:600;line-height:1.05;
+  letter-spacing:-.03em;margin:0 0 .5em;color:#fff}
+.hero__sub{font-size:clamp(15px,1.25vw,18px);line-height:1.45;color:rgba(255,255,255,.78);
+  margin:0;max-width:38ch;letter-spacing:-.006em}
+.hero__act{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.13);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-radius:980px;padding:8px 8px 8px 22px}
+.hero__price{color:#fff;font-size:17px;font-weight:500;white-space:nowrap;letter-spacing:-.01em}
+@media(max-width:700px){
+  .hero__in{flex-direction:column;align-items:stretch;gap:22px}
+  .hero__copy{max-width:none}
+  .hero__act{justify-content:space-between;padding-left:18px}
+  .hero__act .btn{padding-inline:18px;font-size:16px}
+  .hero__price{font-size:15px}
+}
+
+/* ==========================================================================
+   2  HIGHLIGHTS GALLERY
+   ========================================================================== */
+.gal{position:relative}
+.gal__track{
+  display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-inline:max(var(--gutter),calc((100vw - 1240px)/2 + var(--gutter)));
+  padding-bottom:6px;scrollbar-width:none;
+}
+.gal__track::-webkit-scrollbar{display:none}
+.gal__card{
+  position:relative;flex:0 0 min(86vw,1000px);aspect-ratio:16/10;
+  scroll-snap-align:center;border-radius:var(--radius);overflow:hidden;
+  background:var(--night-soft);
+}
+.gal__card img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.gal__card--face img{object-position:50% 20%}
+.gal__card figcaption{
+  position:absolute;inset:0;padding:clamp(24px,3.4vw,48px);
+  display:flex;color:#fff;
+  background:linear-gradient(to bottom,rgba(4,4,6,.72) 0%,rgba(4,4,6,.12) 46%,rgba(4,4,6,.02) 100%);
+}
+.gal__card p{margin:0;font-size:clamp(20px,2.35vw,32px);font-weight:600;
+  line-height:1.16;letter-spacing:-.022em;max-width:19ch;text-wrap:balance}
+.gal__card--bottom figcaption{align-items:flex-end;
+  background:linear-gradient(to top,rgba(4,4,6,.8) 0%,rgba(4,4,6,.16) 48%,rgba(4,4,6,0) 100%)}
+.gal__card--right figcaption{justify-content:flex-end;text-align:right}
+.gal__card--right p{text-align:right}
+@media(max-width:700px){
+  .gal__card{flex-basis:84vw;aspect-ratio:4/5}
+  .gal__card p{max-width:none}
+}
+
+.gal__bar{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:34px}
+.gal__dots{display:flex;align-items:center;gap:9px;background:rgba(0,0,0,.05);
+  border-radius:980px;padding:9px 14px}
+.gal__dot{width:8px;height:8px;border-radius:980px;background:rgba(0,0,0,.24);
+  transition:width .45s var(--ease),background .3s var(--ease)}
+.gal__dot[aria-selected="true"]{width:26px;background:rgba(0,0,0,.55)}
+.gal__pp{width:38px;height:38px;border-radius:980px;background:rgba(0,0,0,.05);
+  display:grid;place-items:center}
+.gal__pp:hover{background:rgba(0,0,0,.09)}
+.gal__pp svg{width:17px;height:17px;fill:rgba(0,0,0,.62)}
+.gal__pp .ic-pause{display:block}.gal__pp .ic-play{display:none}
+.gal__pp[aria-pressed="true"] .ic-pause{display:none}
+.gal__pp[aria-pressed="true"] .ic-play{display:block}
+
+/* ==========================================================================
+   3  PRODUCT VIEWER  (Take a closer look)
+   ========================================================================== */
+.viewer{
+  position:relative;border-radius:var(--radius);background:var(--paper-alt);
+  display:grid;grid-template-columns:minmax(280px,400px) 1fr;gap:20px;
+  padding:clamp(26px,4vw,56px);min-height:min(62vh,540px);align-items:center;
+}
+.viewer__list{display:flex;flex-direction:column;gap:11px;align-items:flex-start;z-index:2}
+.viewer__item{width:100%}
+.viewer__btn{
+  display:inline-flex;align-items:center;gap:11px;background:rgba(0,0,0,.045);
+  border-radius:980px;padding:12px 20px 12px 13px;font-size:17px;font-weight:600;
+  letter-spacing:-.014em;text-align:left;transition:background .22s var(--ease);
+}
+.viewer__btn:hover{background:rgba(0,0,0,.08)}
+.viewer__btn .plus{width:22px;height:22px;flex:0 0 22px;border-radius:980px;
+  border:1px solid rgba(0,0,0,.42);display:grid;place-items:center;position:relative}
+.viewer__btn .plus::before,.viewer__btn .plus::after{
+  content:"";position:absolute;background:rgba(0,0,0,.72);border-radius:2px;
+  transition:transform .28s var(--ease)}
+.viewer__btn .plus::before{width:10px;height:1.6px}
+.viewer__btn .plus::after{width:1.6px;height:10px}
+.viewer__item.is-open .viewer__btn{display:none}
+.viewer__item.is-open .plus::after{transform:rotate(90deg)}
+.viewer__panel{
+  display:none;background:rgba(0,0,0,.045);border-radius:20px;
+  padding:18px 22px;font-size:16px;line-height:1.45;letter-spacing:-.008em;
+  max-width:44ch;
+}
+.viewer__item.is-open .viewer__panel{display:block;animation:panelIn .4s var(--ease)}
+@keyframes panelIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.viewer__panel strong{font-weight:600}
+.viewer__stage{position:relative;justify-self:center;width:100%;height:100%;
+  min-height:320px;display:grid;place-items:center}
+.viewer__shot{position:absolute;inset:0;display:grid;place-items:center;
+  opacity:0;transform:scale(1.03);transition:opacity .6s var(--ease),transform .8s var(--ease);
+  pointer-events:none}
+.viewer__shot.is-active{opacity:1;transform:none}
+.viewer__frame{position:relative;display:inline-block}
+.viewer__shot img{max-height:min(52vh,470px);width:auto;object-fit:contain}
+.viewer__shot--wide img{max-height:none;width:100%;max-width:min(100%,620px)}
+.hotspot{position:absolute;width:58px;height:58px;border-radius:980px;
+  background:rgba(20,72,127,.16);transform:translate(-50%,-50%);pointer-events:none}
+.hotspot::after{content:"";position:absolute;inset:0;border-radius:980px;
+  background:rgba(20,72,127,.26);animation:pulse 2.8s var(--ease) infinite}
+@keyframes pulse{0%{transform:scale(.7);opacity:.9}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
+.viewer__close{position:absolute;top:18px;right:18px;width:36px;height:36px;
+  border-radius:980px;background:rgba(0,0,0,.06);display:none;place-items:center;z-index:3}
+.viewer.is-open .viewer__close{display:grid}
+.viewer__close:hover{background:rgba(0,0,0,.11)}
+@media(max-width:860px){
+  .viewer{grid-template-columns:1fr;gap:30px}
+  .viewer__stage{min-height:280px;order:-1}
+  .viewer__shot img{max-height:38vh}
+}
+
+/* ==========================================================================
+   4  SCROLL-SCRUBBED ENSEMBLE
+   ========================================================================== */
+.scrub{position:relative;height:245vh;background:var(--night);margin-top:var(--pad-section)}
+.scrub__pin{position:sticky;top:0;height:100vh;overflow:hidden}
+.scrub__media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:saturate(.4) contrast(1.04) brightness(.94)}
+.scrub__poster{z-index:1}
+.scrub__video{z-index:2;background:transparent}
+.scrub__scrim{position:absolute;inset:0;z-index:3;
+  background:radial-gradient(112% 86% at 50% 46%,rgba(6,6,8,.06) 0%,rgba(6,6,8,.52) 62%,rgba(6,6,8,.78) 100%)}
+.scrub__copy{z-index:4}
+.scrub__copy{position:absolute;inset:0;display:grid;place-items:center;text-align:center;
+  padding-inline:var(--gutter)}
+.scrub__copy h2{
+  margin:0;color:#fff;font-size:clamp(34px,6.6vw,86px);font-weight:600;
+  line-height:1.04;letter-spacing:-.03em;max-width:15ch;text-wrap:balance;
+  opacity:0;transform:translateY(22px);transition:opacity .9s var(--ease),transform .9s var(--ease);
+}
+.scrub.is-lit .scrub__copy h2{opacity:1;transform:none}
+.scrub__hint{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);
+  color:rgba(255,255,255,.5);font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+
+/* ==========================================================================
+   5  WAYS TO PERFORM (tabnav)
+   ========================================================================== */
+.tabs__nav{display:flex;justify-content:center;margin-bottom:34px}
+.tabs__pill{position:relative;display:flex;gap:2px;background:rgba(0,0,0,.05);
+  border-radius:980px;padding:5px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs__pill::-webkit-scrollbar{display:none}
+.tabs__tab{position:relative;z-index:2;white-space:nowrap;border-radius:980px;
+  padding:9px 18px;font-size:15px;font-weight:500;letter-spacing:-.008em;
+  color:var(--ink);transition:color .3s var(--ease)}
+.tabs__tab[aria-selected="true"]{color:#fff}
+.tabs__ind{position:absolute;z-index:1;top:5px;bottom:5px;left:0;width:0;
+  background:var(--ink);border-radius:980px;
+  transition:transform .42s var(--ease),width .42s var(--ease)}
+.tabs__stage{position:relative;border-radius:var(--radius);overflow:hidden;
+  background:var(--night-soft);aspect-ratio:16/9}
+.tabs__panel{position:absolute;inset:0;opacity:0;transition:opacity .55s var(--ease);
+  pointer-events:none}
+.tabs__panel.is-active{opacity:1;pointer-events:auto}
+.tabs__panel img,.tabs__panel video{width:100%;height:100%;object-fit:cover}
+.tabs__panel--fade img,.tabs__panel--fade video{transition:filter 1.4s var(--ease);filter:saturate(0)}
+.tabs__panel--fade.is-active img,.tabs__panel--fade.is-active video{filter:saturate(1)}
+.tabs__caption{max-width:var(--measure);margin:30px auto 0;text-align:center;
+  font-size:clamp(17px,1.4vw,21px);line-height:1.45;letter-spacing:-.01em}
+.tabs__caption strong{font-weight:600}
+.sound{position:absolute;right:16px;bottom:16px;z-index:4;width:40px;height:40px;
+  border-radius:980px;display:grid;place-items:center;
+  background:rgba(0,0,0,.42);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.16);
+  transition:background .22s var(--ease),transform .18s var(--ease)}
+.sound:hover{background:rgba(0,0,0,.6)}
+.sound:active{transform:scale(.94)}
+.sound svg{width:19px;height:19px;fill:#fff}
+.sound .ic-on{display:none}
+.sound[aria-pressed="false"] .ic-on{display:block}
+.sound[aria-pressed="false"] .ic-off{display:none}
+@media(max-width:700px){.tabs__stage{aspect-ratio:4/3}}
+
+/* ==========================================================================
+   6  RONDO
+   ========================================================================== */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,80px);align-items:center;
+  background:var(--paper);border-radius:var(--radius);padding:clamp(30px,5vw,72px)}
+.split__fig{justify-self:center;width:100%;max-width:330px}
+.split__fig img{width:100%;height:auto;filter:drop-shadow(0 34px 60px rgba(0,0,0,.26))}
+@media(max-width:860px){.split{grid-template-columns:1fr}.split__fig{order:-1;max-width:280px}}
+
+/* ==========================================================================
+   7  WHY PARS
+   ========================================================================== */
+.why__track{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-inline:max(var(--gutter),calc((100vw - 1240px)/2 + var(--gutter)));
+  padding-bottom:8px;scrollbar-width:none}
+@media(min-width:1040px){
+  .why__track{display:grid;grid-template-columns:repeat(4,1fr);overflow:visible;
+    max-width:1240px;margin-inline:auto;padding-inline:var(--gutter)}
+  .why__card{flex:initial;min-height:0}
+}
+.why__track::-webkit-scrollbar{display:none}
+.deck-hint{display:flex;justify-content:center;gap:7px;margin-top:26px}
+.deck-hint i{width:7px;height:7px;border-radius:980px;background:rgba(0,0,0,.18)}
+@media(min-width:1040px){.deck-hint{display:none}}
+.why__card{flex:0 0 min(78vw,320px);scroll-snap-align:center;background:var(--paper);
+  border-radius:var(--radius);padding:clamp(26px,3vw,38px);min-height:340px;
+  display:flex;flex-direction:column;gap:14px}
+.why__label{font-size:14px;font-weight:500;color:var(--ink-soft);letter-spacing:-.004em;margin:0}
+.why__card h3{margin:0;font-size:clamp(22px,2.1vw,26px);font-weight:600;
+  letter-spacing:-.02em;line-height:1.16}
+.why__card{position:relative;cursor:pointer;transition:transform .3s var(--ease)}
+.why__card:hover{transform:translateY(-3px)}
+.why__card p{margin:0;font-size:16px;line-height:1.45;color:var(--ink-soft);letter-spacing:-.006em}
+.why__more{margin-top:auto;align-self:flex-start;width:32px;height:32px;border-radius:980px;
+  background:var(--ink);display:grid;place-items:center;position:relative}
+.why__more::before,.why__more::after{content:"";position:absolute;background:#fff;border-radius:2px}
+.why__more::before{width:13px;height:1.8px}
+.why__more::after{width:1.8px;height:13px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:200;display:none;
+  align-items:center;justify-content:center;padding:var(--gutter)}
+.modal.is-open{display:flex}
+.modal__scrim{position:absolute;inset:0;background:rgba(0,0,0,.42);
+  backdrop-filter:saturate(160%) blur(26px);-webkit-backdrop-filter:saturate(160%) blur(26px);
+  opacity:0;transition:opacity .38s var(--ease)}
+.modal.is-in .modal__scrim{opacity:1}
+.modal__card{position:relative;background:var(--paper);border-radius:var(--radius);
+  max-width:660px;width:100%;max-height:86vh;overflow:auto;
+  padding:clamp(34px,5vw,64px);
+  opacity:0;transform:translateY(22px) scale(.98);
+  transition:opacity .42s var(--ease),transform .42s var(--ease)}
+.modal.is-in .modal__card{opacity:1;transform:none}
+.modal__label{font-size:15px;font-weight:500;color:var(--ink-soft);margin:0 0 8px}
+.modal__card h3{margin:0 0 22px;font-size:clamp(26px,3.2vw,38px);font-weight:600;
+  letter-spacing:-.024em;line-height:1.12}
+.modal__card p{margin:0 0 16px;font-size:17px;line-height:1.5;color:var(--ink)}
+.modal__card p:last-of-type{margin-bottom:0}
+.modal__x{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:980px;
+  background:rgba(0,0,0,.06);display:grid;place-items:center}
+.modal__x:hover{background:rgba(0,0,0,.11)}
+body.is-locked{overflow:hidden}
+
+/* ==========================================================================
+   FINAL CTA + FOOTER
+   ========================================================================== */
+.close{text-align:center}
+.close .display{max-width:16ch;margin-inline:auto}
+.close__act{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.foot{background:var(--paper-alt);border-top:1px solid var(--rule);
+  padding-block:44px;font-size:12px;line-height:1.5;color:var(--ink-faint)}
+.foot ol{margin:0 0 26px;padding-left:1.3em}
+.foot li{margin-bottom:7px}
+.foot__end{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  border-top:1px solid var(--rule);padding-top:18px}
+.foot__end a{color:var(--ink-faint)}
+
+/* reveal-on-scroll */
+.rise{opacity:0;transform:translateY(26px);
+  transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rise.is-in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important}
+  .rise{opacity:1;transform:none}
+  .scrub__copy h2{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== LOCAL NAV ===================== -->
+<nav class="localnav" aria-label="Faculty">
+  <div class="localnav__in">
+    <a class="localnav__brand" href="/">
+      <span class="localnav__logo-wrap">
+        <img class="lg-black" src="assets/img/logo-black.png" alt="Pars Music Institute">
+        <img class="lg-white" src="assets/img/logo-white.png" alt="" aria-hidden="true">
+      </span>
+      <span class="localnav__div" aria-hidden="true"></span>
+      <span>Arash Nazar</span>
+    </a>
+    <div class="localnav__links">
+      <a href="#highlights">Highlights</a>
+      <a href="#instrument">The flute</a>
+      <a href="#ensembles">Ensembles</a>
+      <a href="#rondo">Practice</a>
+      <a class="btn btn--sm" href="#start">Request placement</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================== 1 · HERO ===================== -->
+<header class="hero">
+  <img class="hero__img" src="assets/img/arash-hero.jpg"
+       alt="Arash Nazar playing the flute">
+  <div class="hero__scrim" aria-hidden="true"></div>
+  <div class="hero__in">
+    <div class="hero__copy">
+      <p class="hero__eyebrow">Arash Nazar</p>
+      <h1 class="hero__title">Fifteen years teaching. Twenty on the concert stage.</h1>
+      <p class="hero__sub">Master of Music, University of Tehran. Flute and piccolo,
+        Tehran Symphony Orchestra.</p>
+    </div>
+    <div class="hero__act">
+      <span class="hero__price">Trial lesson&nbsp;$40<sup class="fn"><a href="#fn1">1</a></sup></span>
+      <a class="btn btn--light" href="#start">Request placement</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== 2 · HIGHLIGHTS ===================== -->
+<section class="section" id="highlights" aria-labelledby="hl-h">
+  <div class="wrap sec-head rise">
+    <h2 id="hl-h">Get the highlights.</h2>
+    <a class="sec-link" href="#ensembles">Hear him play&nbsp;›</a>
+  </div>
+
+  <div class="gal" data-gallery>
+    <div class="gal__track" data-gal-track role="group" aria-label="Highlights">
+
+      <figure class="gal__card gal__card--bottom gal__card--face">
+        <img src="assets/img/arash-standing.jpg" alt="Arash Nazar holding his flute">
+        <figcaption><p>Master of Music, University of Tehran and first prize at the
+          national conservatory festival, 2006.</p></figcaption>
+      </figure>
+
+      <figure class="gal__card">
+        <img src="assets/img/arash-playing.jpg" alt="Arash Nazar playing">
+        <figcaption><p>Flute and piccolo with the Tehran Symphony Orchestra, then the
+          National Orchestra of Iran.</p></figcaption>
+      </figure>
+
+      <figure class="gal__card gal__card--right gal__card--face">
+        <img src="assets/img/arash-reflective.jpg" alt="Arash Nazar with his flute">
+        <figcaption><p>Twenty-one years studying under one teacher. He knows what a long
+          apprenticeship costs  and what it buys.</p></figcaption>
+      </figure>
+
+      <figure class="gal__card gal__card--bottom">
+        <img src="assets/img/stage-accompaniment.jpg" alt="A Pars student playing flute with piano accompaniment">
+        <figcaption><p>Students perform with accompaniment from the first year, not the
+          fifth.</p></figcaption>
+      </figure>
+
+      <figure class="gal__card gal__card--bottom gal__card--right">
+        <img src="assets/img/poster-quartet.jpg" alt="Four Pars flute students playing as a quartet">
+        <figcaption><p>Teaching at Pars since 2010. Three published flute methods, all
+          arranged and recorded by him.</p></figcaption>
+      </figure>
+
+      <figure class="gal__card gal__card--bottom">
+        <img src="assets/img/stage-ensemble.jpg" alt="Arash Nazar conducting the Pars woodwind ensemble">
+        <figcaption><p>He conducts the woodwind ensemble your child will sit in.</p></figcaption>
+      </figure>
+
+    </div>
+
+    <div class="gal__bar">
+      <div class="gal__dots" role="tablist" aria-label="Choose a highlight" data-gal-dots></div>
+      <button class="gal__pp" data-gal-pp aria-pressed="false" aria-label="Pause highlights">
+        <svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3v14H7zM14 5h3v14h-3z"/></svg>
+        <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 3 · TAKE A CLOSER LOOK ===================== -->
+<section class="section" id="instrument" aria-labelledby="cl-h">
+  <div class="wrap">
+    <div class="sec-head rise">
+      <h2 id="cl-h">Take a closer look.</h2>
+      <span class="sec-link note">Before you buy or rent anything</span>
+    </div>
+
+    <div class="viewer" data-viewer>
+      <button class="viewer__close" data-viewer-close aria-label="Close">
+        <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg>
+      </button>
+
+      <div class="viewer__list" role="list">
+        <div class="viewer__item is-open" data-shot="head" role="listitem">
+          <button class="viewer__btn"><span class="plus" aria-hidden="true"></span>Where the sound is made</button>
+          <div class="viewer__panel"><strong>Where the sound is made.</strong>
+            Nothing touches a reed. You shape a column of air across an open hole and the
+            edge splits it. That is why the first six weeks are almost entirely tone, and
+            why a beginner sounds like wind before they sound like music.</div>
+        </div>
+
+        <div class="viewer__item" data-shot="keys" role="listitem">
+          <button class="viewer__btn"><span class="plus" aria-hidden="true"></span>Keys and fingering</button>
+          <div class="viewer__panel"><strong>Keys and fingering.</strong>
+            Student flutes use closed keys, so a fingertip that lands slightly off still
+            seals. Open-hole models come later, when the hand is big enough and the ear is
+            ready for the tuning control they allow.</div>
+        </div>
+
+        <div class="viewer__item" data-shot="foot" role="listitem">
+          <button class="viewer__btn"><span class="plus" aria-hidden="true"></span>The footjoint</button>
+          <div class="viewer__panel"><strong>The footjoint.</strong>
+            A C foot is standard. A B foot adds one low note and a little weight, and it
+            matters for orchestral repertoire  not for a first instrument. Nobody needs to
+            pay for it in year one.</div>
+        </div>
+
+        <div class="viewer__item" data-shot="full" role="listitem">
+          <button class="viewer__btn"><span class="plus" aria-hidden="true"></span>The whole instrument</button>
+          <div class="viewer__panel"><strong>The whole instrument.</strong>
+            Around 67&nbsp;cm in three pieces, and light. The real constraint is arm span and
+            breath, not strength, which is why most students start between eight and ten.
+            Rent before you buy. We will tell you honestly at the trial whether the hands are
+            ready.</div>
+        </div>
+      </div>
+
+      <div class="viewer__stage" data-viewer-stage>
+        <div class="viewer__shot is-active" data-shot-for="head">
+          <span class="viewer__frame"><img src="assets/img/flute-headjoint.png" alt="Flute headjoint and embouchure hole"><span class="hotspot" style="left:70%;top:60%"></span></span>
+        </div>
+        <div class="viewer__shot" data-shot-for="keys">
+          <span class="viewer__frame"><img src="assets/img/flute-keys.png" alt="Flute key mechanism"><span class="hotspot" style="left:40%;top:56%"></span></span>
+        </div>
+        <div class="viewer__shot" data-shot-for="foot">
+          <span class="viewer__frame"><img src="assets/img/flute-footjoint.png" alt="Flute footjoint keys"><span class="hotspot" style="left:33%;top:36%"></span></span>
+        </div>
+        <div class="viewer__shot viewer__shot--wide" data-shot-for="full">
+          <span class="viewer__frame"><img src="assets/img/flute-full.png" alt="A complete concert flute"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 4 · SCROLL SCRUB ===================== -->
+<section class="scrub" id="ensembles" data-scrub aria-labelledby="sc-h">
+  <div class="scrub__pin">
+    <img class="scrub__media scrub__poster" src="assets/img/scrub-poster.jpg" alt="" aria-hidden="true">
+    <video class="scrub__media scrub__video" data-scrub-video
+           muted playsinline preload="auto" aria-hidden="true">
+      <source src="assets/video/scrub-ensemble.webm" type="video/webm">
+      <source src="assets/video/scrub-ensemble.mp4" type="video/mp4">
+    </video>
+    <div class="scrub__scrim" aria-hidden="true"></div>
+    <div class="scrub__copy">
+      <h2 id="sc-h">You are never the only one playing.</h2>
+    </div>
+    <p class="scrub__hint" aria-hidden="true">Scroll</p>
+  </div>
+</section>
+
+<!-- ===================== 5 · WAYS TO PERFORM ===================== -->
+<section class="section section--alt" aria-labelledby="wp-h">
+  <div class="wrap">
+    <div class="sec-head sec-head--center rise">
+      <h2 id="wp-h">Five ways your part gets heard.</h2>
+    </div>
+
+    <div class="tabs" data-tabs>
+      <div class="tabs__nav">
+        <div class="tabs__pill" role="tablist" aria-label="Ways to perform">
+          <span class="tabs__ind" data-tab-ind aria-hidden="true"></span>
+          <button class="tabs__tab" role="tab" aria-selected="true"  data-tab="solo">Solo</button>
+          <button class="tabs__tab" role="tab" aria-selected="false" data-tab="accomp">With accompaniment</button>
+          <button class="tabs__tab" role="tab" aria-selected="false" data-tab="duet">Duet</button>
+          <button class="tabs__tab" role="tab" aria-selected="false" data-tab="quartet">Quartet</button>
+          <button class="tabs__tab" role="tab" aria-selected="false" data-tab="ensemble">Woodwind ensemble</button>
+        </div>
+      </div>
+
+      <div class="tabs__stage">
+        <div class="tabs__panel is-active" role="tabpanel" data-panel="solo">
+          <video src="assets/video/solo.mp4" poster="assets/img/poster-solo.jpg" muted playsinline loop preload="metadata"
+                 aria-label="A Pars student performing a flute solo"></video>
+        </div>
+        <div class="tabs__panel" role="tabpanel" data-panel="accomp">
+          <video src="assets/video/accompaniment.mp4" poster="assets/img/poster-accompaniment.jpg"
+                 muted playsinline loop preload="none"
+                 aria-label="A Pars student playing flute with piano accompaniment"></video>
+        </div>
+        <div class="tabs__panel" role="tabpanel" data-panel="duet">
+          <video src="assets/video/duo.mp4" poster="assets/img/poster-duo.jpg" muted playsinline loop preload="none"
+                 aria-label="Two Pars students playing a flute duet"></video>
+        </div>
+        <div class="tabs__panel" role="tabpanel" data-panel="quartet">
+          <video src="assets/video/quartet.mp4" poster="assets/img/poster-quartet.jpg" muted playsinline loop preload="none"
+                 aria-label="A Pars flute quartet performing"></video>
+        </div>
+        <div class="tabs__panel tabs__panel--fade" role="tabpanel" data-panel="ensemble">
+          <video src="assets/video/ensemble.mp4" poster="assets/img/poster-ensemble.jpg"
+                 muted playsinline loop preload="none"
+                 aria-label="Arash Nazar conducting the Pars woodwind ensemble"></video>
+        </div>
+        <button class="sound" data-sound aria-pressed="true" aria-label="Unmute performance audio">
+          <svg class="ic-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2v15.6c0 .7-.85 1.06-1.35.56L6.6 16.5H3.6c-.55 0-1-.45-1-1v-7c0-.55.45-1 1-1h3l4.05-3.86c.5-.5 1.35-.14 1.35.56zM21.3 9.3a1 1 0 0 0-1.4 0L18 11.2l-1.9-1.9a1 1 0 1 0-1.4 1.4l1.9 1.9-1.9 1.9a1 1 0 1 0 1.4 1.4l1.9-1.9 1.9 1.9a1 1 0 0 0 1.4-1.4L19.4 12.6l1.9-1.9a1 1 0 0 0 0-1.4z"/></svg>
+          <svg class="ic-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.2v15.6c0 .7-.85 1.06-1.35.56L6.6 16.5H3.6c-.55 0-1-.45-1-1v-7c0-.55.45-1 1-1h3l4.05-3.86c.5-.5 1.35-.14 1.35.56zM16.2 8.4a1 1 0 0 1 1.4.1 5.4 5.4 0 0 1 0 7 1 1 0 1 1-1.5-1.3 3.4 3.4 0 0 0 0-4.4 1 1 0 0 1 .1-1.4zm2.9-2.7a1 1 0 0 1 1.4.06 9.2 9.2 0 0 1 0 12.48 1 1 0 1 1-1.46-1.36 7.2 7.2 0 0 0 0-9.76 1 1 0 0 1 .06-1.42z"/></svg>
+        </button>
+      </div>
+
+      <p class="tabs__caption" data-tab-caption>
+        <strong>Solo.</strong> One player, one stage, nowhere to hide. Every student takes a
+        solo slot at least once a year  usually sooner than they feel ready, which is the point.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 6 · RONDO ===================== -->
+<section class="section" id="rondo" aria-labelledby="rd-h">
+  <div class="wrap">
+    <div class="split rise">
+      <div>
+        <p class="eyebrow">Practice</p>
+        <h2 class="headline" id="rd-h">Your teacher already knows how your week went.</h2>
+        <p class="lede">Rondo records what you practiced, how long, and where the intonation
+          drifted. When you arrive on Sunday, the lesson starts where you actually are</p>
+        <p class="note" style="margin-top:26px">Rondo is free for Pars students.<sup class="fn"><a href="#fn2">2</a></sup></p>
+      </div>
+      <div class="split__fig">
+        <img src="assets/img/rondo-phone.png" width="450" height="920"
+             alt="Rondo on iPhone, showing a practice session ready to start">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 7 · WHY PARS ===================== -->
+<section class="section section--alt" aria-labelledby="wy-h">
+  <div class="wrap sec-head rise">
+    <h2 id="wy-h">Why Pars is the best place<br>to learn flute.</h2>
+    <a class="sec-link" href="#start">See all instruments&nbsp;›</a>
+  </div>
+  <div class="why__track">
+    <article class="why__card" tabindex="0" role="button" data-why="placement">
+      <p class="why__label">Placement</p>
+      <h3>Placed, not searched.</h3>
+      <p>A musician listens to your goals and recommends one teacher, with reasons. If it
+        isn't right after the trial, you don't pay the placement fee.</p>
+      <span class="why__more" aria-hidden="true"></span>
+    </article>
+    <article class="why__card" tabindex="0" role="button" data-why="continuity">
+      <p class="why__label">Continuity</p>
+      <h3>One teacher, all the way through.</h3>
+      <p>No rotating instructors, no starting over each term. Lesson notes and repertoire
+        follow the student, not the schedule.</p>
+      <span class="why__more" aria-hidden="true"></span>
+    </article>
+    <article class="why__card" tabindex="0" role="button" data-why="performance">
+      <p class="why__label">Performance</p>
+      <h3>You perform from the first year.</h3>
+      <p>Recitals and ensemble are included, never sold as an upgrade. Playing in front of
+        people is part of learning, not a reward for it.</p>
+      <span class="why__more" aria-hidden="true"></span>
+    </article>
+    <article class="why__card" tabindex="0" role="button" data-why="formats">
+      <p class="why__label">Formats</p>
+      <h3>Four ways to take a lesson.</h3>
+      <p>Our studio, your home, online, or a small group. Change format without changing
+        teacher.</p>
+      <span class="why__more" aria-hidden="true"></span>
+    </article>
+  </div>
+  <div class="deck-hint" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</section>
+
+<!-- ===================== 8 · CLOSE ===================== -->
+<section class="section" id="start">
+  <div class="wrap close rise">
+    <p class="eyebrow">Get started</p>
+    <h2 class="display">Start with one lesson.</h2>
+    <p class="lede" style="margin:22px auto 0;text-align:center">
+      Tell us about the student. We'll set up a $40 trial with the teacher we think fits 
+      and only charge the placement fee if you decide to continue.</p>
+    <div class="close__act">
+      <a class="btn" href="#">Request placement</a>
+      <a class="btn btn--light" style="border:1px solid var(--rule)" href="#">Ask a question first</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== MODAL ===================== -->
+<div class="modal" id="whyModal" role="dialog" aria-modal="true" aria-labelledby="whyModalTitle">
+  <div class="modal__scrim" data-modal-dismiss></div>
+  <div class="modal__card">
+    <button class="modal__x" data-modal-dismiss aria-label="Close">
+      <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg>
+    </button>
+    <p class="modal__label" data-modal-label></p>
+    <h3 id="whyModalTitle" data-modal-title></h3>
+    <div data-modal-body></div>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <ol>
+      <li id="fn1">Trial lessons are 30 minutes and are billed by Pars Music Institute. The
+        one-time placement fee is charged only if the student continues after the trial.</li>
+      <li id="fn2">Rondo is an independent practice app. Access for Pars students is subject
+        to a separate agreement and is not included in tuition.</li>
+    </ol>
+    <div class="foot__end">
+      <span>Copyright © 2026 Pars Music Institute. All rights reserved.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Policies</a> · <a href="#">Contact</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- reveal on scroll ---------- */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("is-in"); io.unobserve(e.target);} });
+  },{threshold:.08, rootMargin:"0px 0px -6% 0px"});
+  document.querySelectorAll(".rise").forEach(function(el){ io.observe(el); });
+
+  /* ---------- nav goes translucent-dark while the hero is behind it ---------- */
+  (function(){
+    var nav = document.querySelector(".localnav"), hero = document.querySelector(".hero");
+    if(!nav || !hero) return;
+    new IntersectionObserver(function(es){
+      nav.classList.toggle("on-dark", es[0].intersectionRatio > 0.12);
+    },{threshold:[0,.12,.3]}).observe(hero);
+  })();
+
+  /* ---------- highlights gallery ---------- */
+  (function(){
+    var root = document.querySelector("[data-gallery]");
+    if(!root) return;
+    var track = root.querySelector("[data-gal-track]");
+    var dots  = root.querySelector("[data-gal-dots]");
+    var pp    = root.querySelector("[data-gal-pp]");
+    var cards = Array.prototype.slice.call(track.children);
+    var i = 0, timer = null, paused = reduce;
+
+    cards.forEach(function(c,n){
+      var d = document.createElement("button");
+      d.className = "gal__dot"; d.setAttribute("role","tab");
+      d.setAttribute("aria-selected", n===0 ? "true" : "false");
+      d.setAttribute("aria-label","Highlight "+(n+1)+" of "+cards.length);
+      d.addEventListener("click", function(){ go(n, true); });
+      dots.appendChild(d);
+    });
+    var dotEls = Array.prototype.slice.call(dots.children);
+
+    function paint(){
+      dotEls.forEach(function(d,n){ d.setAttribute("aria-selected", n===i ? "true":"false"); });
+    }
+    function go(n, user){
+      i = (n + cards.length) % cards.length;
+      var c = cards[i];
+      track.scrollTo({ left: c.offsetLeft - (track.clientWidth - c.clientWidth)/2,
+                       behavior: reduce ? "auto" : "smooth" });
+      paint();
+      if(user) stop();
+    }
+    function start(){ if(paused||reduce) return; stopTimer(); timer = setInterval(function(){ go(i+1); }, 5200); }
+    function stopTimer(){ if(timer){ clearInterval(timer); timer = null; } }
+    function stop(){ paused = true; stopTimer(); pp.setAttribute("aria-pressed","true"); pp.setAttribute("aria-label","Play highlights"); }
+
+    pp.addEventListener("click", function(){
+      paused = !paused;
+      pp.setAttribute("aria-pressed", paused ? "true":"false");
+      pp.setAttribute("aria-label", paused ? "Play highlights" : "Pause highlights");
+      paused ? stopTimer() : start();
+    });
+
+    // keep dots in sync when the user swipes
+    var t;
+    track.addEventListener("scroll", function(){
+      clearTimeout(t);
+      t = setTimeout(function(){
+        var mid = track.scrollLeft + track.clientWidth/2, best = 0, bd = Infinity;
+        cards.forEach(function(c,n){
+          var d = Math.abs(c.offsetLeft + c.clientWidth/2 - mid);
+          if(d < bd){ bd = d; best = n; }
+        });
+        i = best; paint();
+      }, 90);
+    }, {passive:true});
+
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ e.isIntersecting ? start() : stopTimer(); });
+    },{threshold:.3}).observe(root);
+
+    go(0);
+  })();
+
+  /* ---------- product viewer ---------- */
+  (function(){
+    var root = document.querySelector("[data-viewer]");
+    if(!root) return;
+    var items = Array.prototype.slice.call(root.querySelectorAll(".viewer__item"));
+    var shots = Array.prototype.slice.call(root.querySelectorAll(".viewer__shot"));
+
+    function open(key){
+      items.forEach(function(it){ it.classList.toggle("is-open", it.dataset.shot === key); });
+      shots.forEach(function(s){ s.classList.toggle("is-active", s.dataset.shotFor === key); });
+      root.classList.add("is-open");
+    }
+    items.forEach(function(it){
+      it.querySelector(".viewer__btn").addEventListener("click", function(){ open(it.dataset.shot); });
+    });
+    root.querySelector("[data-viewer-close]").addEventListener("click", function(){
+      open("head"); root.classList.remove("is-open");
+    });
+  })();
+
+  /* ---------- scroll-scrubbed ensemble video ---------- */
+  (function(){
+    var sec = document.querySelector("[data-scrub]");
+    if(!sec) return;
+    var vid = sec.querySelector("[data-scrub-video]");
+    var target = 0, current = 0, ticking = false;
+
+    // metadata can land before this script runs, so read the state as well as listen
+    function isReady(){ return vid.readyState >= 1 && !isNaN(vid.duration) && vid.duration > 0; }
+    ["loadedmetadata","loadeddata","canplay"].forEach(function(ev){
+      vid.addEventListener(ev, function(){
+        try{ if(vid.currentTime === 0) vid.currentTime = 0.02; }catch(e){}  // force a first paint
+        measure();
+      });
+    });
+
+    function measure(){
+      var r = sec.getBoundingClientRect();
+      var total = sec.offsetHeight - window.innerHeight;
+      var p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
+      sec.classList.toggle("is-lit", p > 0.02);
+      if(isReady()) target = p * (vid.duration - 0.05);
+      if(!ticking){ ticking = true; requestAnimationFrame(tick); }
+    }
+    function tick(){
+      // ease toward the scroll target so the picture glides instead of snapping
+      current += (target - current) * (reduce ? 1 : 0.16);
+      if(isReady() && !vid.seeking){
+        try{ vid.currentTime = current; }catch(e){}
+      }
+      if(Math.abs(target - current) > 0.003){ requestAnimationFrame(tick); }
+      else { ticking = false; }
+    }
+    window.addEventListener("scroll", measure, {passive:true});
+    window.addEventListener("resize", measure);
+    measure();
+  })();
+
+  /* ---------- mute / unmute for the performance clips ---------- */
+  var soundOn = false;
+  (function(){
+    var btn = document.querySelector("[data-sound]");
+    if(!btn) return;
+    btn.addEventListener("click", function(){
+      soundOn = !soundOn;
+      btn.setAttribute("aria-pressed", soundOn ? "false" : "true");
+      btn.setAttribute("aria-label", soundOn ? "Mute performance audio" : "Unmute performance audio");
+      document.querySelectorAll(".tabs__panel video").forEach(function(v){
+        v.muted = !soundOn;
+        if(soundOn && v.closest(".tabs__panel").classList.contains("is-active")){
+          v.play().catch(function(){});
+        }
+      });
+    });
+  })();
+
+  /* ---------- ways to perform ---------- */
+  (function(){
+    var root = document.querySelector("[data-tabs]");
+    if(!root) return;
+    var tabs   = Array.prototype.slice.call(root.querySelectorAll(".tabs__tab"));
+    var panels = Array.prototype.slice.call(root.querySelectorAll(".tabs__panel"));
+    var ind    = root.querySelector("[data-tab-ind]");
+    var cap    = root.querySelector("[data-tab-caption]");
+
+    var copy = {
+      solo:     ["Solo.","One player, one stage, nowhere to hide. Every student takes a solo slot at least once a year  usually sooner than they feel ready, which is the point."],
+      accomp:   ["With accompaniment.","A pianist listens and follows. Learning to be followed, and to wait, is a different skill from playing alone, and it is the one most students are missing."],
+      duet:     ["Duet.","Two flutes, two lines, one pulse. The fastest way to fix rhythm is to make somebody else depend on it."],
+      quartet:  ["Quartet.","Four parts, no conductor. Students count their own entries and tune to each other  the point at which reading turns into listening."],
+      ensemble: ["Woodwind ensemble.","Fifteen to twenty players, conducted by Arash. Rehearsals run weekly through the term and finish in a recital. This is the reason students stay."]
+    };
+
+    function move(tab){
+      ind.style.width = tab.offsetWidth + "px";
+      ind.style.transform = "translateX(" + (tab.offsetLeft - 5) + "px)";
+    }
+    function select(tab){
+      tabs.forEach(function(t){ t.setAttribute("aria-selected", t === tab ? "true":"false"); });
+      var key = tab.dataset.tab;
+      panels.forEach(function(p){
+        var on = p.dataset.panel === key;
+        p.classList.toggle("is-active", on);
+        var v = p.querySelector("video");
+        if(v){
+          v.muted = !soundOn;
+          if(on && !reduce){ v.play().catch(function(){}); }
+          else { v.pause(); v.currentTime = 0; }
+        }
+      });
+      var c = copy[key];
+      cap.innerHTML = "<strong>" + c[0] + "</strong> " + c[1];
+      move(tab);
+    }
+    tabs.forEach(function(t){
+      t.addEventListener("click", function(){ select(t); });
+      t.addEventListener("keydown", function(e){
+        var n = tabs.indexOf(t);
+        if(e.key === "ArrowRight"){ e.preventDefault(); tabs[(n+1)%tabs.length].focus(); tabs[(n+1)%tabs.length].click(); }
+        if(e.key === "ArrowLeft"){ e.preventDefault(); tabs[(n-1+tabs.length)%tabs.length].focus(); tabs[(n-1+tabs.length)%tabs.length].click(); }
+      });
+    });
+    window.addEventListener("resize", function(){
+      var cur = tabs.filter(function(t){ return t.getAttribute("aria-selected")==="true"; })[0];
+      if(cur) move(cur);
+    });
+    // fonts can shift widths; settle the indicator once they land
+    if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ select(tabs[0]); }); }
+    select(tabs[0]);
+  })();
+
+  /* ---------- Why Pars modals ---------- */
+  (function(){
+    var modal = document.getElementById("whyModal");
+    if(!modal) return;
+    var card  = modal.querySelector(".modal__card");
+    var elLab = modal.querySelector("[data-modal-label]");
+    var elTit = modal.querySelector("[data-modal-title]");
+    var elBod = modal.querySelector("[data-modal-body]");
+    var opener = null;
+
+    var content = {
+      placement: ["Placement","Placed, not searched.",[
+        "You tell us about the student  age, goals, schedule, whether they have an instrument yet. A musician reads it, and if anything is unclear, calls you.",
+        "Then we recommend one teacher and explain why that teacher and not another. There is a named alternative if the first doesn't feel right, but there is no list to scroll. Choosing well is the thing you are paying us to do.",
+        "The trial lesson is $40 and is billed by the Institute. The one-time placement fee is charged only if you decide to carry on. If the match is wrong, we place again at no extra cost."
+      ]],
+      continuity: ["Continuity","One teacher, all the way through.",[
+        "Most schools rotate students between whoever has a free slot that term. Progress restarts every time, because the new teacher has no idea what the last one was working on.",
+        "Here the teacher is assigned once. After every lesson they file a short note  what was covered, what to practice, what is still shaky. The record follows the student, so a change of format, term or even teacher never resets the work.",
+        "It also means somebody notices when things slip, usually weeks before a family would think to raise it."
+      ]],
+      performance: ["Performance","You perform from the first year.",[
+        "Recitals and ensemble places are included in tuition. They are not a paid extra and not a reward reserved for advanced students.",
+        "A first-year student plays a short solo with piano accompaniment. By the second year most are sitting in the woodwind ensemble, counting their own entries and tuning to the person beside them.",
+        "Playing in front of people is not a test of what has been learned. It is a large part of how it gets learned."
+      ]],
+      formats: ["Formats","Four ways to take a lesson.",[
+        "Lessons run in our studio, at your home, online over Zoom, or in a small group of up to four.",
+        "The format is a scheduling decision, not a commitment. Families switch between them as terms, travel and traffic change, and the teacher stays the same throughout.",
+        "Home lessons carry a travel component based on distance, quoted before anything is booked. Group lessons are priced per student and are the least expensive way in."
+      ]]
+    };
+
+    function open(key, from){
+      var c = content[key]; if(!c) return;
+      opener = from || null;
+      elLab.textContent = c[0];
+      elTit.textContent = c[1];
+      elBod.innerHTML = c[2].map(function(t){ return "<p>" + t + "</p>"; }).join("");
+      modal.classList.add("is-open");
+      document.body.classList.add("is-locked");
+      requestAnimationFrame(function(){ modal.classList.add("is-in"); });
+      card.setAttribute("tabindex","-1"); card.focus({preventScroll:true});
+    }
+    function close(){
+      modal.classList.remove("is-in");
+      window.setTimeout(function(){
+        modal.classList.remove("is-open");
+        document.body.classList.remove("is-locked");
+        if(opener) opener.focus({preventScroll:true});
+      }, reduce ? 0 : 380);
+    }
+
+    document.querySelectorAll("[data-why]").forEach(function(el){
+      el.addEventListener("click", function(){ open(el.dataset.why, el); });
+      el.addEventListener("keydown", function(e){
+        if(e.key === "Enter" || e.key === " "){ e.preventDefault(); open(el.dataset.why, el); }
+      });
+    });
+    modal.querySelectorAll("[data-modal-dismiss]").forEach(function(el){
+      el.addEventListener("click", close);
+    });
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape" && modal.classList.contains("is-open")) close();
+    });
+  })();
+})();
+</script>
+</body>
+</html>
